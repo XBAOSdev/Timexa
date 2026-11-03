@@ -89,6 +89,7 @@ class Changelog : BaseActivity() {
          * 版本名与 app/build.gradle.kts 的 versionName 对应；日期为发布日。
          */
         private val ENTRIES = listOf(
+            Entry("2.0.14", "2026-11-03", R.string.changelog_2_0_14_body),
             Entry("2.0.13", "2026-09-30", R.string.changelog_2_0_13_body),
             Entry("2.0.12", "2026-09-26", R.string.changelog_2_0_12_body),
             Entry("2.0.11", "2026-09-26", R.string.changelog_2_0_11_body),
