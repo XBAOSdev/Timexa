@@ -705,15 +705,17 @@ class miaobiao : BaseActivity() {
         }
 
         /**
-         * 归零（列表卡片上的快捷入口，2026-11-03 用户反馈新增）。
+         * 复位（列表卡片上的快捷入口，2026-11-03 用户反馈新增）。
          *
-         * 语义与专注页的「归零」（[StopwatchFocus.confirmReset]）严格一致：
-         * 时长清零 + 清空本表计次，名称与运行状态保留 —— 正在跑的表归零后立刻从 0 继续走，
-         * 这正是「重开一局」类用法想要的节奏，不必先暂停再归零。
+         * 语义：时长清零 + 清空本表计次 + **转入已暂停**，名称保留。
+         * 最后这条（2026-11-03 第二轮用户要求）是有意与专注页的「归零」区分开的：
+         * 卡片是「管理多块表」的地方，复位意味着把这块表放回待用状态（0:00 停着），
+         * 而不是让它一边归零一边继续跑 —— 否则用户刚清完零，抬头又看到时间在走。
+         * ⚠ 专注页 `StopwatchFocus.confirmReset()` 仍保持「保留运行状态」（原地重计），
+         *   两处不是笔误，是两种使用场景；改其中一处前请先想清楚要不要一起改。
          *
-         * 弹窗与文案也完全复用专注页那套（零新增字符串）：毕竟两处写的是同一个动作，
-         * 用户在哪儿看到它都该长一个样。本表本来就在零点且没有计次时直接不响应
-         * （没有东西可清，弹窗只会让人困惑）。
+         * 确认键文案用 [R.string.stopwatch_reset_action]「复位」而不是「删除」：
+         * 这个动作不删秒表，沿用「删除」会让用户以为整块表要没了。
          */
         private fun confirmReset() {
             val hasLaps = (lapCounts[record.id] ?: 0) > 0
@@ -722,7 +724,7 @@ class miaobiao : BaseActivity() {
                 context = this@miaobiao,
                 title = getString(R.string.stopwatch_focus_reset),
                 message = getString(R.string.stopwatch_focus_reset_confirm),
-                positive = getString(R.string.dialog_delete),
+                positive = getString(R.string.stopwatch_reset_action),
                 negative = getString(R.string.stopwatch_cancel),
                 positiveIsDanger = true,
                 onPositive = {
@@ -730,8 +732,13 @@ class miaobiao : BaseActivity() {
                     record.pausedElapsed = 0L
                     // createdTimestamp 重新当「本段起点」用（计时模型决定的，见类注释）
                     record.createdTimestamp = System.currentTimeMillis()
+                    // 走 pause 的「结果」而不走 pause()：后者会把已跑时长折进 pausedElapsed，
+                    // 而这里要的就是归零。置停必须放在清零之后，否则 pausedElapsed 会带回旧值。
+                    record.isRunning = false
                     renderLapBadge(lapCounts[record.id] ?: 0)
                     renderState()
+                    // 运行态变了 → 刷新节拍与常驻通知都跟着变，必须走一遍 refreshChrome()
+                    refreshChrome()
                     persist()
                 }
             )
