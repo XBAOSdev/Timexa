@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 次按钮：白底描边，按下轻微下沉 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/surface_pressed" />
+            <corners android:radius="@dimen/radius_button" />
+            <stroke
+                android:width="@dimen/stroke_hairline"
+                android:color="@color/stroke" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/surface" />
+            <corners android:radius="@dimen/radius_button" />
+            <stroke
+                android:width="@dimen/stroke_hairline"
+                android:color="@color/stroke" />
+        </shape>
+    </item>
+</selector>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      系统栏图标明暗。
+      抽成 bool 资源是为了让主题里可以引用 —— style 无法按夜间目录切换，
+      values-night 里重定义同名 style 会整块覆盖（而不是合并），极易把主题写坏。
+      这里走 bool + 颜色资源，主题一处引用即可自动跟随昼夜。
+    -->
+    <bool name="window_light_status_bar">true</bool>
+</resources>

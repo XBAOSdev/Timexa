@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  分段控件单元。
+  背景恒为透明：选中态的白底已经交给轨道里的独立滑块（bg_segment_slider），
+  若这里再画一层白底，切换过程中会出现「滑块还没到、白底已经亮了」的重影。
+  按压反馈由 PressFeedback 的缩放承担，不再依赖背景变色。
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@android:color/transparent" />
+    <corners android:radius="@dimen/radius_input" />
+</shape>

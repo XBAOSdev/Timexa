@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  「组件」中心：把应用图标快捷方式与桌面小组件放到系统桌面。
+
+  页面结构遵循全 App 的统一骨架：
+    顶栏 ／ 可滚动内容区（分组标题 + 分组卡片）／ 底部无操作条。
+
+  ⚠ 顶栏的分割线要**通栏**：根布局刻意不写 paddingHorizontal，
+    横向留白由内容区（ScrollView 的 layout_marginStart/End）自己承担。
+    详见 item_topbar.xml 顶部注释里的实测记录。
+
+  ========== 桌面组件区为什么是「一个组件一张卡」 ==========
+
+  早先只放一张卡：预览 + 一行「添加到桌面」。多一个组件之后这种结构就撑不住了 ——
+  两个预览挤在一张卡里，用户分不清下面那行「添加到桌面」是加哪一个。
+  改成「一组件一卡（预览 + 隔线 + 添加行）」之后，卡片边界天然把「这个预览」与
+  「加这个」绑在一起；再加第三个组件也只是多一张卡，不用重新设计。
+
+  ⚠ 预览区是**真实渲染**：RemoteViews 由代码在这里 inflate 进来，
+    与桌面上的组件走同一条渲染路径（见各 Provider 的 previewViews），
+    所以预览里的数字、字号、配色与拖到桌面后完全一致。
+    尺寸也按「桌面上真实占多大」估算（WidgetPin.estimateSizePx），
+    而不是拿 provider 声明的 minWidth —— 后者只是「系统据此推算占几格」的值，
+    直接拿来当预览尺寸会让预览里的字明显偏大。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_light"
+    android:orientation="vertical"
+    tools:context=".appsys.WidgetCenter">
+
+    <include layout="@layout/item_topbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginStart="@dimen/screen_padding"
+        android:layout_marginEnd="@dimen/screen_padding"
+        android:clipToPadding="false"
+        android:paddingTop="@dimen/topbar_gap"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/space_m">
+
+            <!--
+              厂商限制提示（关于页同款背景框）：
+              定制系统（vivo 等）可能拦截「应用内请求固定」——小组件与快捷方式都会中招，
+              所以这条常驻页首、同时覆盖两个分组。与「添加失败才弹」的手动指引不同，
+              它先说在前头：用户点了没动静时，答案就在同一屏。
+              文案口径：小组件有系统桌面这条后路；快捷方式目前无解。
+            -->
+            <LinearLayout
+                style="@style/Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/Text.Value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:lineSpacingExtra="@dimen/line_spacing"
+                    android:text="@string/widget_center_pin_hint"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="@dimen/text_body" />
+            </LinearLayout>
+
+            <!-- ==================== 桌面组件 ==================== -->
+
+            <TextView
+                style="@style/Text.Caption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/setting_group_gap"
+                android:layout_marginBottom="@dimen/setting_group_title_gap"
+                android:text="@string/widget_center_group_widget" />
+
+            <!-- 秒表组件：一张卡 = 一个预览 + 对应的一行「添加到桌面」 -->
+            <LinearLayout
+                style="@style/Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="0dp">
+
+                <FrameLayout
+                    android:id="@+id/widget_sw_preview_area"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/card_padding">
+
+                    <!-- 真实组件在这里由代码 inflate 进来，尺寸按桌面上的实际占位估算 -->
+                    <FrameLayout
+                        android:id="@+id/widget_sw_preview_box"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal" />
+                </FrameLayout>
+
+                <!-- 卡片内分隔线：单侧内缩，不贯通整张卡片（与功能列表同一种线） -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/stroke_hairline"
+                    android:layout_marginStart="@dimen/divider_inset"
+                    android:background="@color/stroke_soft" />
+
+                <!--
+                  添加行直接复用设置页的动作行。好处不只是省一个布局：
+                  Card.Row 自带 clickable，因此 BaseActivity 的按下回弹会自动挂上，
+                  不需要像代码动态建行那样再手工 attach 一次。
+                -->
+                <include
+                    android:id="@+id/widget_sw_add_row"
+                    layout="@layout/item_setting_action"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <!-- 纪念日组件 -->
+            <LinearLayout
+                style="@style/Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/list_gap"
+                android:orientation="vertical"
+                android:padding="0dp">
+
+                <FrameLayout
+                    android:id="@+id/widget_anniversary_preview_area"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/card_padding">
+
+                    <FrameLayout
+                        android:id="@+id/widget_anniversary_preview_box"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal" />
+                </FrameLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/stroke_hairline"
+                    android:layout_marginStart="@dimen/divider_inset"
+                    android:background="@color/stroke_soft" />
+
+                <include
+                    android:id="@+id/widget_anniversary_add_row"
+                    layout="@layout/item_setting_action"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <!-- ==================== 应用快捷方式 ==================== -->
+
+            <TextView
+                style="@style/Text.Caption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/setting_group_gap"
+                android:layout_marginBottom="@dimen/setting_group_title_gap"
+                android:text="@string/widget_center_group_apps" />
+
+            <!-- 行由代码按功能目录装配（与设置页、功能列表同一套做法） -->
+            <include
+                android:id="@+id/widget_apps"
+                layout="@layout/item_card_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

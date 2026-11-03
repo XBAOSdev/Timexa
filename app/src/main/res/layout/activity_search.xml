@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  搜索页：顶栏 + 输入框 + 结果列表。
+  结果同样是「一张卡片 + 多行」，与其它列表页保持同一种卡片形态。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_light"
+    android:orientation="vertical"
+    tools:context=".appsys.SearchActivity">
+
+    <include layout="@layout/item_topbar" />
+
+    <EditText
+        android:id="@+id/search_input"
+        style="@style/Field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/topbar_gap"
+        android:drawableStart="@drawable/ic_search"
+        android:drawablePadding="@dimen/space_s"
+        android:drawableTint="@color/text_tertiary"
+        android:hint="@string/search_hint"
+        android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:importantForAutofill="no"
+        app:drawableTint="@color/text_tertiary" 
+        android:layout_marginStart="@dimen/screen_padding"
+        android:layout_marginEnd="@dimen/screen_padding"/>
+
+    <TextView
+        android:id="@+id/search_empty"
+        style="@style/Text.Label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_xl"
+        android:gravity="center"
+        android:lineSpacingExtra="@dimen/line_spacing"
+        android:paddingHorizontal="@dimen/space_l"
+        android:visibility="gone" 
+        android:layout_marginStart="@dimen/screen_padding"
+        android:layout_marginEnd="@dimen/screen_padding"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/space_m"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:scrollbars="none"
+        android:layout_marginStart="@dimen/screen_padding"
+        android:layout_marginEnd="@dimen/screen_padding">
+
+        <LinearLayout
+            android:id="@+id/search_results"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/space_l" />
+    </ScrollView>
+</LinearLayout>

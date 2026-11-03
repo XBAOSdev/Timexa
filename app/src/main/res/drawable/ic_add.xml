@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  加号：编辑态「添加应用」的空格，以及「选择应用」弹窗里的行首标记。
+  来源 Material Design Icons（Apache License 2.0）。
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M19,13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+</vector>

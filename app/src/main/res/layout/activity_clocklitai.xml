@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  时钟立台：全屏大字时钟，背景必须为纯黑。
+  这个功能仿照熄屏显示（AOD）设计：OLED 屏显示纯黑像素不发光，
+  因此纯黑底能显著省电，同时也避免夜间刺眼。
+  推论有两条，改动时不要破坏：
+    1. 背景恒为 @color/oled_black，不允许出现卡片、描边、渐变等任何浅色元素；
+    2. 系统栏图标必须是浅色（由 BaseActivity 的 lightSystemBarIcons 关闭深色图标）。
+  整屏可点即退出，界面上只保留一条极弱提示。
+-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/oled_black"
+    android:clickable="true"
+    android:focusable="true"
+    tools:context=".appyy.clocklitai">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/timeTextView"
+            style="@style/Text.Display.Oled"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:text="00:00"
+            android:textSize="@dimen/text_display_oled" />
+
+        <TextView
+            android:id="@+id/dateTextView"
+            style="@style/Text.Title.Oled"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_s"
+            android:text="00:00"
+            android:textColor="@color/oled_text_dim"
+            android:textSize="@dimen/text_title"
+            android:textStyle="normal" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space_l"
+        android:text="@string/clock_tap_to_exit"
+        android:textColor="@color/oled_text_dim"
+        android:textSize="@dimen/text_caption"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

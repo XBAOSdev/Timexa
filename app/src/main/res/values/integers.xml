@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      动画时长（毫秒）。
+      统一放在这里，是为了让「全 App 的手感」有一个可调的旋钮 ——
+      如果要整体调快/调慢，只改这一处，不必去每个 animator / 每个 Kotlin 常量里翻。
+
+      取值依据：Material 的反馈动画标准区间约 100~200ms。
+      按下要「跟手」，所以短；回弹允许稍长一点点，让余韵收得住。
+    -->
+
+    <!-- 通用按压反馈：按下 -->
+    <integer name="press_anim_duration">90</integer>
+    <!-- 通用按压反馈：松手回弹 -->
+    <integer name="release_anim_duration">170</integer>
+
+    <!-- 分段控件选中指示块的滑动 -->
+    <integer name="segment_anim_duration">220</integer>
+
+    <!-- 列表项入场（逐条延迟，形成轻微的依次浮现） -->
+    <integer name="list_item_anim_duration">220</integer>
+    <integer name="list_item_stagger_step">30</integer>
+    <integer name="list_item_stagger_max_index">8</integer>
+
+    <!--
+      权限申请原因横幅：滑入 / 淡出的时长。
+      比按压反馈长一些 —— 它是一次「新元素出现」，太快的滑入会显得突兀。
+    -->
+    <integer name="banner_anim_duration">240</integer>
+
+    <!--
+      定位高亮闪动：**单程**时长（一次「亮起」或一次「暗下」）。
+      闪两次 = 0→亮→暗→亮→暗 共 4 程，总时长约 1.1 秒。
+      比按压反馈长得多是刻意的：它要引导视线在整页里找到一个位置，
+      太快会被当成一次闪烁噪声、根本来不及定位。
+    -->
+    <integer name="highlight_pulse_duration">270</integer>
+
+    <!--
+      ========== 首页「常用应用」 ==========
+    -->
+    <!--
+      一行最多几个。不设上限的话，横屏或平板上一行会排出十几个小方块，
+      每个只剩拇指盖大，既点不准也看不出是什么。
+    -->
+    <integer name="favorite_max_columns">8</integer>
+    <!--
+      翻页动画时长。与 segment_anim_duration 同档：
+      换页与切分段是同一类「内容整体平移」的动作，手感应当一致。
+    -->
+    <integer name="favorite_page_anim_duration">220</integer>
+
+    <!--
+      拖拽排序时，被让位的那些格子滑到新位置的时长。
+      比翻页略短：它跟随手指，慢了会「拖泥带水」、与手指节奏脱节。
+    -->
+    <integer name="favorite_reorder_anim_duration">170</integer>
+    <!-- 松手后，被拎起的格子落回格位的时长。落位要干脆，不拖尾。 -->
+    <integer name="favorite_drop_anim_duration">160</integer>
+    <!-- 新加入的格子「长出来」的时长 -->
+    <integer name="favorite_enter_anim_duration">200</integer>
+    <!--
+      被移除的格子缩小淡出的时长。
+      ⚠ 这个值同时决定「重排延后多久开始」—— 见 FavoritesGridView.render：
+      淡出与让位**串行**而不是并行，否则前一项还在淡、后面的已经挤过来，会糊成一团。
+    -->
+    <integer name="favorite_exit_anim_duration">130</integer>
+    <!-- 已有格子因为增删而改变格位时的位移时长 -->
+    <integer name="favorite_move_anim_duration">190</integer>
+    <!-- 新增格子依次入场时每条错开的步长（与列表项入场同源的手法） -->
+    <integer name="favorite_stagger_step">24</integer>
+
+    <!--
+      ========== 日期计算器 · 快捷日期条 ==========
+    -->
+    <!--
+      浮层进出场时长。
+      入场比退场长一点：出现要「展开」得看得清，消失要干脆 ——
+      与按压反馈「按下短、回弹长」是同一个道理，只是这里方向反过来。
+    -->
+    <integer name="quick_bar_enter_duration">180</integer>
+    <integer name="quick_bar_exit_duration">130</integer>
+    <!--
+      点中一枚胶囊后「亮一下」的总时长（底色翻成实心强调色，再落回常态）。
+      明显长于一次按压反馈：它的职责是「点完浮层不会收起，所以你得比平时更明确地
+      看到自己点到了」。压到 100ms 出头会被当成没反应。
+    -->
+    <integer name="quick_chip_flash_duration">420</integer>
+    <!-- 胶囊缩放脉冲：先捏小（跟手）、再弹回（有余韵），两段各自计时 -->
+    <integer name="quick_chip_pulse_down_duration">110</integer>
+    <integer name="quick_chip_pulse_up_duration">150</integer>
+</resources>

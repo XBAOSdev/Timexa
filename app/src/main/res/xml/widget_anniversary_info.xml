@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  「纪念日」桌面组件的元数据。2×2，与秒表组件同规格。
+
+  与秒表组件的三点不同：
+    1. **不需要 updatePeriodMillis 轮询** —— 倒数天数只在跨零点时变，
+       而跨零点时会由纪念日页 / 首页 onResume 主动刷新，没必要每分钟醒来数一次。
+    2. **没有 android:configure** —— 组件的配置入口是「点组件本身」，
+       而不是「拖上桌面的那一刻」。理由见 AnniversaryWidgetPicker 顶部注释。
+    3. previewLayout 指向同一个布局：微件选择器里就能直接看到真实样子。
+
+  ⚠ minWidth/minHeight 仍是经验式 `70 × 格数 − 30`：2 格 → 110dp。
+    给大了会被判成 3 格、白占一行。这条与秒表组件一致，别改。
+-->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/widget_anniversary_desc"
+    android:initialLayout="@layout/widget_anniversary"
+    android:minHeight="@dimen/widget_min_height"
+    android:minWidth="@dimen/widget_min_width"
+    android:previewLayout="@layout/widget_anniversary"
+    android:resizeMode="horizontal|vertical"
+    android:targetCellHeight="2"
+    android:targetCellWidth="2"
+    android:updatePeriodMillis="0"
+    android:widgetCategory="home_screen" />

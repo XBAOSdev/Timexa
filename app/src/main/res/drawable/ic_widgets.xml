@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  组件：首页顶栏进入「组件中心」的入口图标。
+  三块方 + 一块菱形，是 Material 的 widgets 标准造型。
+  来源 Material Design Icons（Apache License 2.0）。
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M13,13h8v8h-8zM3,21h8v-8H3zM3,3v8h8V3zM16.66,1.69L9.34,9.01l7.32,7.32l7.32,-7.32z" />
+</vector>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 运行中状态胶囊：极淡的强调色底 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/accent_tint" />
+    <corners android:radius="@dimen/radius_chip" />
+</shape>

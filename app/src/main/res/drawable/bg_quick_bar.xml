@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  快捷日期条（输入框上方的浮层）底板：白底 + 1dp 淡描边 + 卡片圆角。
+
+  为什么用「白底 + 描边」而不是阴影：
+    全 App 的层次语言就是这一套（卡片、弹窗都是白底描边，不堆阴影），
+    浮层再单独引入一种表达方式，会像是从别的地方拼过来的。
+    它与背后内容的分离感由 PopupWindow 自身那层 elevation 提供。
+
+  ⚠ 这里必须是**不透明**的白底：它是浮层唯一的背景，
+    镂空的话会直接透出底下的日期输入框，字叠字。
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/surface" />
+    <corners android:radius="@dimen/radius_card" />
+    <stroke
+        android:width="@dimen/stroke_hairline"
+        android:color="@color/stroke" />
+</shape>

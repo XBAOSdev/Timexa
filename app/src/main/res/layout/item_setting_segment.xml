@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 设置行：分段选择型（标题 + 说明 + 下方分段控件） -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/row_padding_h"
+    android:paddingVertical="@dimen/setting_segment_padding_v">
+
+    <TextView
+        android:id="@+id/setting_title"
+        style="@style/Text.Row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/setting_desc"
+        style="@style/Text.Caption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_xxs"
+        android:visibility="gone" />
+
+    <!--
+      分段控件轨道。
+      第一个子节点是「选中滑块」：它必须排在所有分段单元之前，
+      这样分段单元会画在它上面，文字不会被白块盖住。
+      滑块的位置与宽度由 SegmentAnim 在切换时动画过去。
+
+      padding 用 segment_track_padding：它同时是「滑块的内缩量」，
+      滑块的圆角 = 轨道圆角 − 这个内边距（同心圆角），两者要一起改（见 dimens.xml）。
+    -->
+    <LinearLayout
+        android:id="@+id/setting_segment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_s"
+        android:background="@drawable/bg_segment_track"
+        android:orientation="horizontal"
+        android:padding="@dimen/segment_track_padding">
+
+        <View
+            android:id="@+id/setting_segment_slider"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_segment_slider"
+            android:visibility="invisible" />
+    </LinearLayout>
+</LinearLayout>

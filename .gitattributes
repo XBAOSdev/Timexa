@@ -1,0 +1,19 @@
+# 自动检测文本文件并做 LF 规范化
+* text=auto
+
+# Shell 脚本必须保持 LF：gradlew 是无扩展名的 sh 脚本，
+# 被转成 CRLF 后在 Linux / macOS / CI 上会直接报 bad interpreter。
+*.sh    text eol=lf
+gradlew text eol=lf
+*.bat   text eol=crlf
+
+# 二进制文件，别让 git 当文本处理（否则 diff 膨胀、可能损坏）
+*.jar   binary
+*.apk   binary
+*.aab   binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.webp  binary
+*.ttf   binary
+*.otf   binary

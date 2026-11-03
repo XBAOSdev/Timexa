@@ -1,0 +1,70 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!--
+      统一主题：跟随系统深浅（DayNight），配色一律走颜色资源，
+      因此 values-night/colors.xml 一改，全 App 同步变化，主题本身不需要分叉。
+
+      父级用 DayNight 而不是固定的 Light：
+        本 App 现在提供「跟随系统 / 浅色 / 深色」三态切换，
+        实际生效值由 ShijianApp 里 setDefaultNightMode 决定。
+      forceDarkAllowed 关闭：配色完全由我们自己的 values-night 决定，
+        不接受系统对浅色资源做自动反色（那会把莫兰迪色调成脏灰）。
+    -->
+    <style name="Base.Theme.Shijianapp" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- 品牌色 -->
+        <item name="colorPrimary">@color/accent</item>
+        <item name="colorOnPrimary">@color/text_on_accent</item>
+        <item name="colorSecondary">@color/accent_deep</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="android:colorBackground">@color/background_light</item>
+
+        <!-- 文字语义 -->
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="android:textColorHint">@color/text_tertiary</item>
+
+        <!-- 系统栏：透明（由页面背景透上去）+ 图标明暗跟随昼夜 -->
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:statusBarColor">@color/status_bar</item>
+        <item name="android:navigationBarColor">@color/status_bar</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">@bool/window_light_status_bar</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">@bool/window_light_status_bar</item>
+
+        <!-- 窗口背景 = 页面底色，消除冷启动时的白屏割裂 -->
+        <item name="android:windowBackground">@color/background_light</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
+
+        <item name="alertDialogTheme">@style/Theme.Shijianapp.Dialog</item>
+        <item name="materialAlertDialogTheme">@style/Theme.Shijianapp.Dialog</item>
+    </style>
+
+    <style name="Theme.Shijianapp" parent="Base.Theme.Shijianapp" />
+
+    <!--
+      时钟立台专用主题：纯黑全屏。
+      这是仿熄屏显示（AOD）的功能，OLED 屏显示纯黑像素不发光，能显著省电；
+      因此这里不能用浅色，系统栏图标也必须翻成浅色。深浅模式都不改变它。
+    -->
+    <style name="Theme.Shijianapp.Oled">
+        <item name="android:windowBackground">@color/oled_black</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
+    </style>
+
+    <!--
+      日期选择器等系统对话框的主题。
+      应用内的提示/确认弹窗已全部改为自绘（见 ui/AppDialog.kt），不再走这里；
+      但日期选择器仍复用系统实现，因此必须把按钮文字色显式钉死，
+      否则它会按主题继承链推导成与底板同色 —— 这正是用户实测报过的「按钮看不见」。
+    -->
+    <style name="Theme.Shijianapp.Dialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/bg_dialog</item>
+        <item name="android:colorBackground">@color/surface</item>
+        <item name="android:windowMinWidthMajor">82%</item>
+        <item name="android:windowMinWidthMinor">92%</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="textColorAlertDialogListItem">@color/accent</item>
+        <item name="android:textColorAlertDialogListItem">@color/accent</item>
+    </style>
+</resources>

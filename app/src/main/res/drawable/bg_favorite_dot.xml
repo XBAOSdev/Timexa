@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  「常用应用」翻页指示点。
+  纯白底，实际颜色由代码用 backgroundTintList 指定（当前页 accent、其余 stroke_strong）——
+  这样一颗 drawable 就能表达两种状态，不必为深浅两色各写一份。
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="@color/surface" />
+</shape>

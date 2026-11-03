@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  「就是这一项」的定位高亮底色（见 ui/Highlight.kt）。
+
+  圆角刻意与 bg_row_tappable 的按下态取同一个 radius_input：
+  高亮与按下反馈是同一类「这一行被选中」的视觉，圆角不一致会看起来像两套东西。
+
+  透明度不写在这里：Highlight 用动画实时改 Drawable 的 alpha，
+  这里只提供形状与色相。
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/accent" />
+    <corners android:radius="@dimen/radius_input" />
+</shape>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  快捷日期条里胶囊的文字色。
+
+  常态是 accent_deep（淡蓝底上的深蓝字，对比度约 4.6:1，够 AA）；
+  被点中「亮一下」的那 ~420ms 里底色会翻成实心 accent_deep，文字必须同时翻成反色，
+  否则深蓝字压在深蓝底上等于把字抹掉了。
+
+  ⚠ 反色用 text_on_accent 而不是写死白色：深色模式里 accent_deep 是**浅**蓝，
+    同一个令牌在那边会自动变成近黑（见 values-night/colors.xml），两边都读得清。
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/text_on_accent" android:state_selected="true" />
+    <item android:color="@color/accent_deep" />
+</selector>

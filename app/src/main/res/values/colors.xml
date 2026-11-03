@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      调色板：莫兰迪低饱和纯色（Morandi）。
+      规则：
+        · 页面背景恒为纯色 background_light，不使用任何渐变 / 光斑 / 高光；
+        · 卡片用白色 surface + 1dp 淡描边 stroke 区分层次，不依赖阴影，保持素净；
+        · 强调色取莫兰迪灰蓝系，避免出现高饱和的“AI 感”跳色。
+      历史 morandi_* 色值全部原样沿用，未作改动。
+    -->
+
+    <!-- ========== 使用约定 ========== -->
+    <!-- UI 里禁止出现 #RRGGBB 之类的硬编码色值，一律走下面的语义令牌，
+         否则深色模式（res/values-night/colors.xml）无法覆盖。 -->
+
+    <!-- ========== 背景与容器（全部纯色） ========== -->
+    <color name="background_light">#FFF2F2F2</color>
+    <color name="surface">#FFFFFFFF</color>
+    <color name="surface_sunken">#FFFAFAFA</color>
+    <color name="surface_pressed">#FFF5F5F5</color>
+    <color name="stroke">#FFE8E8E8</color>
+    <color name="stroke_soft">#FFEEEEEE</color>
+    <color name="stroke_strong">#FFDDDDDD</color>
+
+    <!-- ========== 文字 ========== -->
+    <color name="text_primary">#FF333333</color>
+    <color name="text_secondary">#FF666666</color>
+    <color name="text_tertiary">#FF999999</color>
+    <color name="text_on_accent">#FFFFFFFF</color>
+
+    <!-- ========== 强调色（莫兰迪灰蓝） ========== -->
+    <color name="accent">#FF7D8CA3</color>
+    <color name="accent_deep">#FF6B7A90</color>
+    <color name="accent_tint">#FFE9EDF1</color>
+    <!-- 「发现新版本」卡片按下时用的加深一档的淡蓝底（比 accent_tint 再沉一点） -->
+    <color name="accent_tint_pressed">#FFDCE3EA</color>
+
+    <!-- ========== 语义色（与莫兰迪同调的低饱和） ========== -->
+    <color name="danger">#FFB5807A</color>
+    <color name="danger_tint">#FFF7EFEE</color>
+    <color name="warning">#FFC99A6E</color>
+
+    <!--
+      「有新版本」提示点：全应用唯一一处刻意保留高饱和的红。
+      其余界面一律低饱和，而红点的职责就是「从素净的画面里跳出来」，
+      复用 danger（莫兰迪砖粉）在白底圆钮上会淡到像装饰，起不到提醒作用。
+      仅用于首页设置按钮右上角，直径 11dp，别处请勿引用。
+    -->
+    <color name="update_dot">#FFE14B45</color>
+
+    <!-- ========== 过渡态专用（时钟立台：OLED 息屏显示，纯黑不发光的省电底色） ========== -->
+    <color name="oled_black">#FF000000</color>
+    <color name="oled_text_bright">#FFE8E8E8</color>
+    <color name="oled_text_dim">#FF6E6E6E</color>
+
+    <!-- ========== 状态栏 ========== -->
+    <color name="status_bar">#00000000</color>
+
+    <!--
+      ========== 莫兰迪原色板（预留，当前 UI 未直接引用） ==========
+      上面那批语义令牌的取值就来自这一族（例如 accent = morandi_denim、
+      stroke 系灰阶与 morandi_ash 同调），所以观感与历史版本一致。
+      这里保留原色名，是为了以后要加新组件时能直接挑色而不用重新调色；
+      如果确认用不上，整块删掉即可，不影响编译与运行。
+    -->
+
+    <!-- ========== 莫兰迪色系 - 红色系（低饱和） ========== -->
+    <color name="morandi_rose">#C9A9A6</color>
+    <color name="morandi_rust">#D7BEA8</color>
+    <color name="morandi_coral">#E0BFB8</color>
+    <color name="morandi_brick">#C19A6B</color>
+
+    <!-- ========== 莫兰迪色系 - 蓝色系（低饱和） ========== -->
+    <color name="morandi_azure">#A6BFD1</color>
+    <color name="morandi_slate">#8CA3AF</color>
+    <color name="morandi_denim">#7D8CA3</color>
+    <color name="morandi_water">#B4C7D6</color>
+
+    <!-- ========== 莫兰迪色系 - 绿色系（低饱和） ========== -->
+    <color name="morandi_sage">#A9B388</color>
+    <color name="morandi_moss">#94A684</color>
+    <color name="morandi_teal">#8FB996</color>
+    <color name="morandi_olive">#A4A786</color>
+
+    <!-- ========== 莫兰迪色系 - 黄色系（低饱和） ========== -->
+    <color name="morandi_cream">#E8DCCA</color>
+    <color name="morandi_sand">#D9C5B4</color>
+    <color name="morandi_sand_light">#F8F0E9</color>
+    <color name="morandi_honey">#D4C2AD</color>
+    <color name="morandi_straw">#E6D2AA</color>
+
+    <!-- ========== 莫兰迪色系 - 紫色系（低饱和） ========== -->
+    <color name="morandi_lavender">#B8A9C9</color>
+    <color name="morandi_plum">#9E7C9F</color>
+    <color name="morandi_violet">#A18F9E</color>
+    <color name="morandi_iris">#9B82A7</color>
+
+    <!-- ========== 莫兰迪色系 - 灰色系（带色彩倾向） ========== -->
+    <color name="morandi_greige">#B9B4C7</color>
+    <color name="morandi_ash">#A2AAB0</color>
+    <color name="morandi_stone">#B3ABA1</color>
+    <color name="morandi_smoke">#9DA2A6</color>
+
+    <!-- ==================== 桌面小组件（莫兰迪纯色） ==================== -->
+    <!--
+      组件底板是莫兰迪淡黄纯色（取自 morandi_straw 一族），文字用加深的莫兰迪蓝。
+
+      为什么从毛玻璃改成纯色：
+        半透明底要透出桌面壁纸，而壁纸明暗完全不可控 —— 同一块组件在深色壁纸上发灰、
+        在浅色壁纸上发白，数字的可读性全凭运气。纯色底 + 高对比深蓝字在任何壁纸下
+        观感一致，也更贴合全 App 一贯的「莫兰迪纯色」语言。
+
+      ⚠ 这一组**刻意不在 values-night 里覆盖**：
+        组件自带完整底色，既不依赖壁纸也不依赖系统昼夜，
+        深色模式下保持同一副面孔才不会出现「深色底 + 深色字」读不清的情况。
+    -->
+    <color name="widget_solid_fill">#FFE6D2AA</color>
+
+    <!--
+      组件文字：都是莫兰迪蓝的加深版本（原色板最深的 morandi_denim #7D8CA3
+      在淡黄底上只有约 2.3:1，远达不到可读标准，因此按同一色相压暗）。
+      对比度：主数字 ≈ 5.8:1，单位文案 ≈ 4.8:1，均高于 WCAG AA 正文要求的 4.5:1。
+    -->
+    <color name="widget_text_primary">#FF3F4C63</color>
+    <color name="widget_text_secondary">#FF4A5870</color>
+</resources>

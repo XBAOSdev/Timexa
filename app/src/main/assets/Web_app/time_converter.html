@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时间换算</title>
+    
+    <!-- 移除所有在线依赖，使用纯CSS实现所需样式 -->
+    <style>
+        /* 基础样式设置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        }
+        
+        body {
+            background-color: #F2F2F2;
+            min-height: 100vh;
+            padding: 16px;
+            color: #333333;
+        }
+        
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        /* 标题样式 */
+        h1 {
+            font-size: clamp(1.5rem, 5vw, 2rem);
+            font-weight: 500;
+            color: #7D8CA3; /* morandi_denim */
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        /* 按钮样式 */
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+        
+        .btn {
+            flex: 1;
+            max-width: 120px;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .neumorphic {
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05), -2px -2px 5px rgba(255, 255, 255, 0.7);
+            background-color: #F2F2F2;
+        }
+        
+        .btn-active {
+            background-color: #7D8CA3; /* morandi_denim */
+            color: white;
+            box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn:not(.btn-active) {
+            color: #8CA3AF; /* morandi_slate */
+        }
+        
+        /* 列表样式 */
+        .time-units-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .list-item {
+            display: flex;
+            border-bottom: 1px solid rgba(179, 171, 161, 0.3); /* morandi_stone/30 */
+            padding: 8px 0;
+        }
+        
+        .list-item:last-child {
+            border-bottom: none;
+        }
+        
+        .unit-name {
+            width: 50%;
+            padding-right: 16px;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            display: flex;
+            align-items: center;
+            color: #8CA3AF; /* morandi_slate */
+            font-weight: 500;
+        }
+        
+        .value-input {
+            width: 50%;
+            border-radius: 6px;
+            padding: 8px 12px;
+            text-align: right;
+            color: #7D8CA3; /* morandi_denim */
+            border: none;
+            outline: none;
+        }
+        
+        .neumorphic-inset {
+            box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.05), inset -1px -1px 3px rgba(255, 255, 255, 0.7);
+            background-color: #F2F2F2;
+        }
+        
+        .value-input:focus {
+            box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.05), inset -1px -1px 3px rgba(255, 255, 255, 0.7), 0 0 0 1px #A6BFD1; /* morandi_azure */
+        }
+    </style>
+    <!-- 玻璃皮肤：统一覆盖层，须位于本页样式之后以便生效 -->
+    <link rel="stylesheet" href="morandi.css">
+    <script src="i18n.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- 标题 -->
+        <!-- <h1>时间换算</h1> -->
+        
+        <!-- 模式切换按钮 -->
+        <div class="btn-group">
+            <button id="commonBtn" class="btn neumorphic btn-active">
+                常用
+            </button>
+            <button id="fullBtn" class="btn neumorphic">
+                完整
+            </button>
+        </div>
+        
+        <!-- 时间单位列表 -->
+        <div id="timeUnitsList" class="time-units-list">
+            <!-- 内容将通过JavaScript动态生成 -->
+        </div>
+    </div>
+
+    <script>
+        /**
+         * 动态文案翻译：i18n.js 在 <head> 里同步加载并暴露 window.AppI18n.t()。
+         * 本页的单位名是由 JS 生成 DOM 后才写进去的，i18n.js 那套「扫描静态 DOM 字典替换」
+         * 扫不到，所以在这里逐条调用 t()。简体、或单独用浏览器打开本页（没有 i18n.js）时，
+         * t() 查不到 key 就原样返回 —— 直通，不会显示成空白。
+         */
+        function t(key) {
+            return (window.AppI18n && window.AppI18n.t) ? window.AppI18n.t(key) : key;
+        }
+
+        // 定义所有时间单位及其与秒的换算比例。
+        // ⚠ 数值曾整批出错（2026-09-26 修正）：短时长链每档大了 1000 倍（SI 前缀错位）、
+        //   时辰写成 12 小时（应为 2 小时）、候写成 3 天（应为 5 天）、季度写成 3 个年（大 12 倍）。
+        //   本表以 SI 词头与主流历法为准：
+        //   · 短时长：幺(z)→毫(m) 逐级 ×10^3，与 SI 词头一一对应；
+        //   · 年的基准：平均格里历年 = 365.2425 天 = 31 556 952 s（公历四年一闰、百年不闰的平均）；
+        //     另列儒略年 365.25 天（天文学的标准年，光年即以它定义）；
+        //   · 农历月取朔望月平均值（无固定长度），农历年同理不收录（353~385 天波动，写死必错）。
+        const timeUnits = [
+            // 极短时间单位（SI 分数词头）
+            { unit: '幺秒', ratio: 1e-24, isCommon: false }, // yocto-, 10^-24秒
+            { unit: '仄秒', ratio: 1e-21, isCommon: false }, // zepto-, 10^-21秒
+            { unit: '阿秒', ratio: 1e-18, isCommon: false }, // atto-, 10^-18秒
+            { unit: '飞秒', ratio: 1e-15, isCommon: false }, // femto-, 10^-15秒
+            { unit: '皮秒', ratio: 1e-12, isCommon: false }, // pico-, 10^-12秒
+            { unit: '纳秒', ratio: 1e-9, isCommon: false },  // nano-, 10^-9秒
+            { unit: '微秒', ratio: 1e-6, isCommon: false },  // micro-, 10^-6秒
+            { unit: '毫秒', ratio: 1e-3, isCommon: true },   // milli-, 10^-3秒
+
+            // 基本时间单位
+            { unit: '秒', ratio: 1, isCommon: true },
+            { unit: '分', ratio: 60, isCommon: true },
+            { unit: '刻', ratio: 900, isCommon: false },     // 15分钟
+            { unit: '小时', ratio: 3600, isCommon: true },
+
+            // 天相关单位
+            { unit: '时辰', ratio: 7200, isCommon: false },  // 2小时（十二时辰制，一时辰=两小时）
+            { unit: '天', ratio: 86400, isCommon: true },
+            { unit: '候', ratio: 432000, isCommon: false },  // 5天（五日为一候，三候为一气）
+
+            // 周和月相关单位
+            { unit: '周', ratio: 604800, isCommon: true },
+            { unit: '旬', ratio: 864000, isCommon: false },  // 10天
+            { unit: '月(朔望)', ratio: 2551443, isCommon: false }, // 朔望月平均 29.5306天（农历月无固定长度）
+            { unit: '月(公历)', ratio: 2629746, isCommon: true },  // 平均公历年/12 = 30.4369天
+
+            // 季度和年相关单位
+            { unit: '季度', ratio: 7889238, isCommon: false }, // 平均公历年/4 = 3个月
+            { unit: '年(平年)', ratio: 31536000, isCommon: false }, // 365天
+            { unit: '年(公历)', ratio: 31556952, isCommon: true },  // 平均格里历年 365.2425天
+            { unit: '年(儒略)', ratio: 31557600, isCommon: false }, // 365.25天，天文学标准年
+            { unit: '年(闰年)', ratio: 31622400, isCommon: false }, // 366天
+
+            // 长期时间单位（按平均公历年累计）
+            { unit: '年代', ratio: 315569520, isCommon: false },   // 10年
+            { unit: '世纪', ratio: 3155695200, isCommon: false },  // 100年
+            { unit: '千年', ratio: 31556952000, isCommon: false }  // 1000年
+        ];
+        
+        // 当前模式：common 或 full
+        let currentMode = 'common';
+        // 正在编辑的输入框ID，用于避免循环更新
+        let editingInputId = null;
+        
+        // DOM元素
+        const commonBtn = document.getElementById('commonBtn');
+        const fullBtn = document.getElementById('fullBtn');
+        const timeUnitsList = document.getElementById('timeUnitsList');
+        
+        // 初始化页面
+        function init() {
+            renderTimeUnits();
+            setupEventListeners();
+        }
+        
+        // 渲染时间单位列表
+        function renderTimeUnits() {
+            timeUnitsList.innerHTML = '';
+            
+            // 根据当前模式筛选要显示的单位
+            const unitsToShow = currentMode === 'common' 
+                ? timeUnits.filter(unit => unit.isCommon)
+                : timeUnits;
+            
+            // 按比例从小到大排序（即单位从小到大）
+            unitsToShow.sort((a, b) => a.ratio - b.ratio);
+            
+            // 生成列表项
+            unitsToShow.forEach((unit, index) => {
+                const listItem = document.createElement('div');
+                listItem.className = 'list-item';
+                
+                // 单位名称（左列）—— 经 t() 走字典，未命中则原样显示中文
+                const unitName = document.createElement('div');
+                unitName.className = 'unit-name';
+                unitName.textContent = t(unit.unit);
+                
+                // 数值输入框（右列）
+                const valueInput = document.createElement('input');
+                valueInput.type = 'text';
+                valueInput.id = `unit-${index}`;
+                valueInput.dataset.unit = unit.unit;
+                valueInput.dataset.ratio = unit.ratio;
+                valueInput.className = 'value-input neumorphic-inset';
+                valueInput.placeholder = '0';
+                
+                // 添加到列表项
+                listItem.appendChild(unitName);
+                listItem.appendChild(valueInput);
+                timeUnitsList.appendChild(listItem);
+                
+                // 添加输入事件监听
+                valueInput.addEventListener('input', handleInputChange);
+            });
+        }
+        
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 常用按钮点击事件
+            commonBtn.addEventListener('click', () => {
+                if (currentMode !== 'common') {
+                    currentMode = 'common';
+                    commonBtn.classList.add('btn-active');
+                    fullBtn.classList.remove('btn-active');
+                    renderTimeUnits();
+                }
+            });
+            
+            // 完整按钮点击事件
+            fullBtn.addEventListener('click', () => {
+                if (currentMode !== 'full') {
+                    currentMode = 'full';
+                    fullBtn.classList.add('btn-active');
+                    commonBtn.classList.remove('btn-active');
+                    renderTimeUnits();
+                }
+            });
+        }
+        
+        // 处理输入框变化
+        function handleInputChange(e) {
+            const input = e.target;
+            editingInputId = input.id;
+            const inputValue = input.value.trim();
+            
+            // 验证输入是否为数字（支持浮点数）
+            if (!inputValue && inputValue !== '0') {
+                // 清空所有输入
+                clearAllInputs();
+                return;
+            }
+            
+            const numericValue = parseFloat(inputValue);
+            if (isNaN(numericValue)) {
+                // 不是有效数字，只保留数字和小数点
+                input.value = inputValue.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+                return;
+            }
+            
+            // 获取当前单位的比例
+            const currentRatio = parseFloat(input.dataset.ratio);
+            // 计算对应的秒数
+            const seconds = numericValue * currentRatio;
+            
+            // 更新所有其他单位的值
+            updateAllUnits(seconds);
+        }
+        
+        // 清空所有输入框
+        function clearAllInputs() {
+            document.querySelectorAll('#timeUnitsList input').forEach(input => {
+                input.value = '';
+            });
+        }
+        
+        // 更新所有单位的值
+        function updateAllUnits(seconds) {
+            document.querySelectorAll('#timeUnitsList input').forEach(input => {
+                if (input.id === editingInputId) return; // 跳过正在编辑的输入框
+                
+                const ratio = parseFloat(input.dataset.ratio);
+                const value = seconds / ratio;
+                
+                // 处理极小或极大的数，使用科学计数法
+                if (Math.abs(value) < 0.001 && value !== 0) {
+                    input.value = value.toExponential(3);
+                } else {
+                    // 保留最多三位小数，自动去除末尾多余的零
+                    input.value = value.toFixed(3)
+                        .replace(/\.000$/, '')
+                        .replace(/(\.\d*[1-9])0+$/, '$1');
+                }
+            });
+        }
+        
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

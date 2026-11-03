@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  顶栏分割线。**单独成一个可 include 的文件**，因为线的两个属性必须只有一处定义 ——
+  分开写就会出现「这条线粗一点、那条细一点」这种逐页漂移，而集中定义之后，
+  调粗细/换颜色只需要动这一个文件和 dimens.xml。
+
+  目前唯一引用方：`item_topbar.xml`（所有二级页的统一顶栏）。
+  ⚠ 首页（`activity_main.xml`）**刻意不画**这条线（用户 2026-09-25 要求），别给它补 —— 理由见该文件里的注释。
+
+  颜色取 stroke_strong 而不是 stroke_soft：
+  stroke_soft(#EEEEEE) 与页面底色 background_light(#F2F2F2) 只差 4 个灰阶，
+  1dp 的线在深色/低对比屏幕上基本看不见，看起来像一条「没画完的裂缝」。
+
+  粗细取 stroke_topbar（= 1dp，3px @ density 420），**不复用 stroke_hairline** —— 后者同时管着
+  卡片描边、输入框描边与行内分隔线，改它会连带把整页的线一起加重。
+  曾用过 1.5dp，用户反馈「太粗」，已回到 1dp。
+-->
+<View xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/stroke_topbar"
+    android:background="@color/stroke_strong" />

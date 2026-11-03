@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 弹窗底板：白底大圆角（appcompat 的对话框面板自身无背景，故此处可直接生效） -->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:insetLeft="0dp"
+    android:insetRight="0dp">
+    <shape android:shape="rectangle">
+        <solid android:color="@color/surface" />
+        <corners android:radius="@dimen/radius_dialog" />
+        <stroke
+            android:width="@dimen/stroke_hairline"
+            android:color="@color/stroke" />
+    </shape>
+</inset>

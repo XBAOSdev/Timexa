@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  番茄钟。
+  结构：统一顶栏 ／ 环形进度 + 剩余时间（随键盘与浅屏自动可滚）／ 底部等宽等高操作条。
+  三个按钮的顺序与秒表页一致：左「重置」、中「开始/暂停」、右「跳过」，
+  保证同一类"计时工具页"的操作记忆可以复用。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_light"
+    android:orientation="vertical"
+    tools:context=".appyy.Pomodoro">
+
+    <include layout="@layout/item_topbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingTop="@dimen/topbar_gap"
+        android:scrollbars="none"
+        android:layout_marginStart="@dimen/screen_padding"
+        android:layout_marginEnd="@dimen/screen_padding">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/space_m">
+
+            <TextView
+                android:id="@+id/pomodoro_phase"
+                style="@style/Text.Section"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_l"
+                android:text="@string/pomodoro_phase_focus" />
+
+            <FrameLayout
+                android:layout_width="@dimen/pomodoro_ring_size"
+                android:layout_height="@dimen/pomodoro_ring_size"
+                android:layout_marginTop="@dimen/space_l">
+
+                <com.xbaos.shijianapp.ui.RingProgressView
+                    android:id="@+id/pomodoro_ring"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <LinearLayout
+                    android:layout_width="@dimen/pomodoro_inner_size"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/pomodoro_remaining"
+                        style="@style/Text.Display"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="monospace"
+                        android:textSize="@dimen/text_timer_display"
+                        tools:text="25:00" />
+
+                    <TextView
+                        android:id="@+id/pomodoro_round"
+                        style="@style/Text.Caption"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_xs"
+                        tools:text="本轮 0/4 · 累计 0" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/pomodoro_hint"
+                style="@style/Text.Caption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_l"
+                android:gravity="center"
+                android:lineSpacingExtra="@dimen/line_spacing_tight"
+                android:text="@string/pomodoro_idle_tip" />
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- 内容区与底部操作条的交界：1dp hairline -->
+    <include layout="@layout/item_bottom_divider" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_s"
+        android:layout_marginBottom="@dimen/screen_padding_bottom"
+        android:orientation="horizontal"
+        android:layout_marginStart="@dimen/screen_padding"
+        android:layout_marginEnd="@dimen/screen_padding">
+
+        <TextView
+            android:id="@+id/pomodoro_reset"
+            style="@style/Btn.Secondary.Flex"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="@string/pomodoro_reset" />
+
+        <TextView
+            android:id="@+id/pomodoro_primary"
+            style="@style/Btn.Primary.Flex"
+            android:layout_width="0dp"
+            android:layout_marginStart="@dimen/space_s"
+            android:layout_weight="1"
+            android:text="@string/pomodoro_start" />
+
+        <TextView
+            android:id="@+id/pomodoro_skip"
+            style="@style/Btn.Secondary.Flex"
+            android:layout_width="0dp"
+            android:layout_marginStart="@dimen/space_s"
+            android:layout_weight="1"
+            android:text="@string/pomodoro_skip" />
+    </LinearLayout>
+</LinearLayout>

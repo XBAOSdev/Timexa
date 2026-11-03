@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  主页：顶栏（标题 + 搜索 + 组件 + 设置）+ 实时时钟 + 功能入口。
+  「关于」不再占顶栏位置，改由设置页进入；「组件」是新加的一档（把功能摆到桌面），
+  三个入口各自只做一件事，顶栏因此只多了一个图标、没有变拥挤。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_light"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/screen_padding"
+    android:paddingEnd="@dimen/screen_padding"
+    tools:context=".MainActivity">
+
+    <!--
+      id 是给进场动画用的锚点（MainActivity.playEnterAnimation 按这个顺序把首页各块依次浮现）。
+      顶栏整条作为一个动画单位：标题与三个按钮同一时刻出现，才像「一条栏」而不是三块拼图。
+    -->
+    <FrameLayout
+        android:id="@+id/home_topbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/topbar_height">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/app_name"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/text_title"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/T_search"
+                android:layout_width="@dimen/back_button_size"
+                android:layout_height="@dimen/back_button_size"
+                android:background="@drawable/bg_circle"
+                android:contentDescription="@string/home_search"
+                android:padding="@dimen/icon_button_padding"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_search" />
+
+            <!--
+              组件中心：位置刻意**夹在搜索与设置之间** —— 搜索与设置是「关于本应用」的操作，
+              而这里是「把功能摆到桌面」，同属顶栏这一层。放在设置右边会被挤到最外侧、
+              也离屏幕边缘太近，放左边又会打乱既有的两个常用入口。
+            -->
+            <ImageButton
+                android:id="@+id/T_widgets"
+                android:layout_width="@dimen/back_button_size"
+                android:layout_height="@dimen/back_button_size"
+                android:layout_marginStart="@dimen/space_s"
+                android:background="@drawable/bg_circle"
+                android:contentDescription="@string/widget_center_title"
+                android:padding="@dimen/icon_button_padding"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_widgets"
+                app:tint="@color/accent" />
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_s">
+
+                <ImageButton
+                    android:id="@+id/T_settings"
+                    android:layout_width="@dimen/back_button_size"
+                    android:layout_height="@dimen/back_button_size"
+                    android:background="@drawable/bg_circle"
+                    android:contentDescription="@string/settings_title"
+                    android:padding="@dimen/icon_button_padding"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_settings" />
+
+                <!--
+                  发现新版本时的提示点。默认隐藏，由 MainActivity 在版本比对后点亮；
+                  「关于」被收进设置页之后，这颗点就是首页唯一能看见的更新信号。
+                -->
+                <View
+                    android:id="@+id/T_settings_dot"
+                    android:layout_width="@dimen/update_dot_size"
+                    android:layout_height="@dimen/update_dot_size"
+                    android:layout_gravity="top|end"
+                    android:layout_marginTop="@dimen/update_dot_inset"
+                    android:layout_marginEnd="@dimen/update_dot_inset"
+                    android:background="@drawable/bg_update_dot"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+            </FrameLayout>
+        </LinearLayout>
+        <!--
+          ⚠ 首页**刻意不画**顶栏分割线（用户 2026-09-25 要求）。
+          首页顶栏下方紧接着就是大号时钟，「标题 — 时钟」本身就是强视觉分区，
+          再加一条线反而显得碎。二级页才有 item_topbar 的那条线。
+          所以首页顶栏这个 FrameLayout 的底部是空的，不要再把 item_topbar_divider include 回来。
+        -->
+    </FrameLayout>
+
+    <!--
+      时钟区：大号时钟 + 日期 + **紧贴其下**的「常用应用」。
+      三者同处一个垂直居中的容器里：时钟回答「现在几点」，常用应用是「我最常按的那几个」，
+      合起来构成首页的「即时信息 + 快捷启动」核心，与下方那组卡片在语义上明确分开。
+      用 weight 撑满剩余空间并居中，是为了小屏上不被挤扁、大屏上也不至于全飘在顶部。
+    -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/realtime"
+            style="@style/Text.Display"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="00:00:00"
+            android:textSize="@dimen/text_display"
+            android:textStyle="bold" />
+
+        <!--
+          日期行：日期（自带星期）+ 12 小时制时的「上午 / 下午」，两者同一字号、空格分隔。
+
+          「上午 / 下午」原先挂在时间旁边当一个独立小字号视图 —— 那时的理由是
+          时间格式串 `hh:mm a` 在 72sp 下会被「上午」撑到换行。改为放在这一行之后：
+            · 时间行只剩数字与冒号，长度固定，永远不换行（理由不变，做法更彻底）；
+            · 标记与日期同字号，不再出现「时间旁边一个孤零零的小字」的层级错乱；
+            · 它本身讲的也是「这是哪一天里的一半」，与日期同处一行语义更顺。
+          24 小时制下这一行只显示日期，不留多余空格；日期关闭时若仍是 12 小时制，
+          这一行会保留下来只显示「上午 / 下午」，免得整天看不到上下午。
+        -->
+        <TextView
+            android:id="@+id/realtime_date"
+            style="@style/Text.Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_s"
+            tools:text="2026年1月1日 星期四 上午" />
+
+        <!--
+          常用应用：可在首页直接点开常用功能，右上角「编辑 / 完成」文字按钮可增删与拖拽排序。
+          紧贴时钟下方 —— 它是最常按的几个，离时钟越近、一次点击的路越短。
+          与日期的间距用 space_s：文字表头压到最低高度（上下 padding 只有 4dp）之后，
+          衔接要紧凑才像「同一块」；太开会在日期和图标行之间留出一段没内容的空档
+          （用户 2026-09-26 两轮收紧后的定稿值）。
+          无卡片背景，所以图标只有一两个时也不会像上一版那样在右侧留出一大片白。
+          整块显隐由设置项「首页 · 常用应用」控制（代码里控制 container 的可见性）。
+        -->
+        <include
+            layout="@layout/item_home_favorites"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_s" />
+    </LinearLayout>
+
+    <!-- 纪念日倒数：默认显示，可在设置里关闭。内容与显隐由代码装配 -->
+    <LinearLayout
+        android:id="@+id/home_anniversary_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/list_gap"
+        android:orientation="vertical" />
+
+    <!-- 功能入口。id 只给进场动画用（这一块是首页最下面一块，最后一个浮现） -->
+    <include
+        android:id="@+id/home_entries"
+        layout="@layout/card_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space_l" />
+</LinearLayout>

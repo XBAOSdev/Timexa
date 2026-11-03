@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  非布局用的 id 资源。
+  这些 id 只作为「视图上的标记位」（ViewCompat.setTag 的 key）存在，不出现在任何布局里，
+  集中放在这里以免和 layout 里声明的 @+id 混在一起。
+-->
+<resources>
+    <!-- PressFeedback 用它标记「这个控件已经挂过按压反馈」，避免重复挂载 -->
+    <item name="press_feedback_tag" type="id" />
+
+    <!-- ItemAnim 用它标记「这条列表项已经播过入场动画」，避免每次可见都重放 -->
+    <item name="item_anim_tag" type="id" />
+
+    <!-- SegmentAnim 用它在轨道上标记「已挂过布局监听」，避免重复挂载 -->
+    <item name="segment_track_bound_tag" type="id" />
+
+    <!-- Highlight 用它挂住当前正在跑的闪动动画，重复触发时先取消上一次，避免两段动画互相抢 alpha -->
+    <item name="highlight_anim_tag" type="id" />
+</resources>

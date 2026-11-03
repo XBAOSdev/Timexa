@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  内置网页容器。
+  顶部一条与页面同底的标题栏：返回按钮 + 页面标题（由调用方通过 page_title 传入）。
+  不套卡片外壳，让网页内容与原生界面保持同一种素净观感。
+
+  边距：**顶栏和 WebView 都不吃左右安全边距**。
+  因为网页里已经有自己的 body 内边距（见 assets/Web_app/morandi.css），
+  容器再加一层会把内容挤到中间，两侧白白多出 32dp 空白。
+  顶栏这边：左右边距由 item_topbar 内部自己留（返回键的 marginStart），
+  这样顶栏容器可以通栏、底部那条分割线才能顶到屏幕两边。
+  纵向仍由 BaseActivity 按系统栏内边距处理，网页不会被状态栏或导航栏压住。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_light"
+    android:orientation="vertical"
+    tools:context=".appyy.WebPages">
+
+    <!--
+      顶栏容器**不写左右 padding**：写了会把顶栏（含其底部分割线）一起内缩、分割线不通栏。
+      ⚠ 这里曾写过 paddingHorizontal 来给顶栏留边距 —— 那条路走不通（负 margin 抵消不掉），
+        现在边距改由 item_topbar 内部承担。
+    -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include layout="@layout/item_topbar" />
+    </LinearLayout>
+
+    <WebView
+        android:id="@+id/webappview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@android:color/transparent" />
+</LinearLayout>

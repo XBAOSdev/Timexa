@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  呼吸放松。
+  圆形主按钮承担唯一主动作，文案随阶段变化（开始 / 吸气 / 呼气 / 重新开始），
+  下方提示与倒计时给出「还剩多久」的确定性，避免旧版结束后面板停在一个
+  无意义的「结束」状态。
+  顶栏改为与其它页面共用的 item_topbar，标题位置不再各页各异。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_light"
+    android:orientation="vertical"
+    tools:context=".ftt.huxifangsong">
+
+    <include layout="@layout/item_topbar" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/topbar_gap"
+        android:layout_weight="1"
+        android:layout_marginStart="@dimen/screen_padding"
+        android:layout_marginEnd="@dimen/screen_padding">
+
+        <!-- 呼吸按钮：外层留出放大空间，避免缩放动画被父容器裁切 -->
+        <FrameLayout
+            android:id="@+id/breath_ring"
+            android:layout_width="@dimen/breath_ring_outer"
+            android:layout_height="@dimen/breath_ring_outer"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.38">
+
+            <TextView
+                android:id="@+id/breath_button"
+                android:layout_width="@dimen/breath_ring_inner"
+                android:layout_height="@dimen/breath_ring_inner"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_circle_accent"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="@string/breath_start"
+                android:textColor="@color/text_on_accent"
+                android:textSize="@dimen/text_breath_count" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tip_text"
+            style="@style/Text.Value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_l"
+            android:gravity="center"
+            android:text="@string/breath_idle_tip"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/breath_ring" />
+
+        <TextView
+            android:id="@+id/breath_countdown"
+            style="@style/Text.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_s"
+            tools:text="共 1 分钟"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tip_text" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

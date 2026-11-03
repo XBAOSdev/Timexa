@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  复合秒表小组件（2×2）。
+
+  信息取舍：只呈现「有几个秒表正在计时」这一件事。
+    · 时钟组件已整条移除 —— 当前时间在状态栏、锁屏、桌面别处都能看到，重复呈现没有价值；
+    · 「有几个秒表在跑」是**只有本应用才知道**的状态，也恰好是用户离开应用后最想确认的
+      （有没有忘了停的表），因此它值得占这块位置；
+    · 刻意不再放「点一下查看详情」这类说明行：2×2 的空间很小，
+      而「点组件进应用」是桌面组件最不需要教的交互。
+
+  ========== 排版 ==========
+  两行：第一行「数字 + 个」、第二行「秒表正在计时」。
+
+  为什么把「个」从第二行提到第一行：
+    原先两行是「数字」/「个秒表正在计时」，第二行 7 个汉字在 13sp 下约 91dp 宽，
+    而 2×2 的可用宽度只有约 82dp —— 英文的 "stopwatches running" 更是远超，
+    也就是说第二行**本来就被裁掉了一截**。把量词并到数字后面，
+    第二行只剩 6 个汉字（约 78dp），中文正好放得下；英文则靠 maxLines=2 折成两行。
+
+  为什么「个」单独一个视图、且字号更小：
+    字号由代码按组件实际高度与宽度算，拼成一整串就没法只放大数字部分。
+    拆开后数字可以长到 60sp 以上，量词保持「数字的 45%」，层级一眼可辨。
+
+  RemoteViews 限制：只支持 LinearLayout/FrameLayout/RelativeLayout/GridLayout 与
+  少数几种基础控件，不支持 ConstraintLayout / 自定义 View / 动画 / selector / 自适应字号。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_widget_solid"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/widget_padding">
+
+    <!--
+      第一行：数字 + 量词。
+      gravity 取 center_vertical 而不是 bottom：两个 TextView 都开了 includeFontPadding=false，
+      此时行框 = ascent + descent，而数字与「个」的 descent 空间比例相同，
+      居中对齐就等于让两者的视觉中心重合（bottom 对齐反而会把小字抬高半格）。
+    -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <!-- 核心数字：正在计时的秒表个数。字号由 Provider 按组件实际尺寸折算 -->
+        <TextView
+            android:id="@+id/widget_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:text="@string/widget_placeholder_count"
+            android:textColor="@color/widget_text_primary"
+            android:textSize="@dimen/widget_count_size"
+            android:textStyle="bold" />
+
+        <!--
+          量词「个」。英文里没有对应成分，此时 Provider 会把它整条置为 GONE。
+        -->
+        <TextView
+            android:id="@+id/widget_count_suffix"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/widget_suffix_gap"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:text="@string/widget_unit_count_suffix"
+            android:textColor="@color/widget_text_primary"
+            android:textSize="@dimen/widget_count_suffix_size" />
+    </LinearLayout>
+
+    <!--
+      第二行：说明文案。maxLines=2 是给英文留的（"stopwatches running" 一行放不下），
+      中文下始终只占一行，高度预算由 Provider 按估算行数扣减。
+    -->
+    <TextView
+        android:id="@+id/widget_unit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/widget_unit_gap"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:maxLines="2"
+        android:text="@string/widget_unit_running"
+        android:textColor="@color/widget_text_secondary"
+        android:textSize="@dimen/widget_unit_size" />
+</LinearLayout>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 卡片底板：白底 + 1dp 淡描边，纯色无渐变 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/surface" />
+    <corners android:radius="@dimen/radius_card" />
+    <stroke
+        android:width="@dimen/stroke_hairline"
+        android:color="@color/stroke" />
+</shape>

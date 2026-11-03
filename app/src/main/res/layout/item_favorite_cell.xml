@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  「常用应用」网格里的一个格子：圆角方形图标 + 下方名称（+ 编辑态角标）。
+
+  ⚠ 宽度由容器（ui/FavoritesGridView.kt）在 onMeasure 里按算好的列宽精确指定，
+    这里写什么都会被覆盖；高度则恒为 favorite_cell_height，保证每行等高。
+  ⚠ 同一个布局承担三种角色，由代码切换外观：
+      · 普通应用：bg_app_tile 底 + 图标 + 名称
+      · 编辑态：额外显示 fav_badge（右上角减号）
+      · 「＋ 添加」空位：底换成 bg_favorite_add、图标换 ic_add、名称换成提示文案
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fav_cell"
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/favorite_cell_height"
+    android:gravity="center_horizontal|center_vertical"
+    android:orientation="vertical">
+
+    <!-- 图标底板 48dp。角标必须与它在同一个 FrameLayout 里才能叠上去 -->
+    <FrameLayout
+        android:layout_width="@dimen/favorite_tile_size"
+        android:layout_height="@dimen/favorite_tile_size">
+
+        <ImageView
+            android:id="@+id/fav_icon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_app_tile"
+            android:contentDescription="@null"
+            android:padding="@dimen/favorite_tile_padding"
+            android:scaleType="fitCenter"
+            app:tint="@color/accent"
+            tools:src="@drawable/ic_timer" />
+
+        <!--
+          编辑态的移除角标。默认 gone，进入编辑态才显示。
+          contentDescription 用「移除」而不是图标名 —— 它本身就是一个可点操作，
+          读屏必须说出「移除 xx」才可用。
+        -->
+        <ImageView
+            android:id="@+id/fav_badge"
+            android:layout_width="@dimen/favorite_badge_size"
+            android:layout_height="@dimen/favorite_badge_size"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="@dimen/favorite_badge_inset"
+            android:layout_marginEnd="@dimen/favorite_badge_inset"
+            android:background="@drawable/bg_favorite_badge"
+            android:contentDescription="@string/favorite_remove"
+            android:padding="@dimen/favorite_badge_padding"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_remove"
+            android:visibility="gone"
+            app:tint="@color/text_on_accent"
+            tools:visibility="visible" />
+    </FrameLayout>
+
+    <!--
+      名称：一格里只给一行。
+      长名字（「趣味年龄计算器」7 字）靠 autoSize 缩到 9sp 收进一行，
+      **不折行、不省略号** —— 一格里出现「趣味年龄…」比小一号字难看得多。
+      ⚠ 必须在布局里用 app: 前缀的 autoSize 系列（minSdk 24 用不了 android: 版本）。
+    -->
+    <TextView
+        android:id="@+id/fav_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/favorite_label_gap"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:textColor="@color/text_secondary"
+        android:textSize="@dimen/text_favorite_label"
+        app:autoSizeMaxTextSize="@dimen/text_favorite_label"
+        app:autoSizeMinTextSize="@dimen/text_favorite_label_min"
+        app:autoSizeStepGranularity="1sp"
+        app:autoSizeTextType="uniform"
+        tools:text="时钟立台" />
+</LinearLayout>

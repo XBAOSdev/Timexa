@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  可关闭的提示行（目前只用于设置页「系统时区已变更」）。
+
+  刻意**只有右侧圆形按钮可点**，整行不做成可点：
+  若整行可点，用户想凑近看清提示内容时一点就把它关掉了，反而更容易搞错 ——
+  而这条提示存在的意义正是「防止用户搞错」。
+
+  内边距写 paddingStart/End/Top/Bottom 而不是 paddingHorizontal/Vertical：
+  后者是 API 26 才有的属性，在 minSdk 24 的设备上会被静默忽略（内边距整个丢失）。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:minHeight="@dimen/row_min_height_icon"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/row_padding_h"
+    android:paddingTop="@dimen/row_padding_v"
+    android:paddingEnd="@dimen/space_s"
+    android:paddingBottom="@dimen/row_padding_v">
+
+    <ImageView
+        android:layout_width="@dimen/icon_chevron_size"
+        android:layout_height="@dimen/icon_chevron_size"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_info"
+        app:tint="@color/warning" />
+
+    <TextView
+        android:id="@+id/notice_text"
+        style="@style/Text.Caption"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_s"
+        android:layout_weight="1"
+        android:lineSpacingExtra="@dimen/line_spacing_tight" />
+
+    <ImageButton
+        android:id="@+id/notice_close"
+        android:layout_width="@dimen/icon_button_size"
+        android:layout_height="@dimen/icon_button_size"
+        android:layout_marginStart="@dimen/space_xs"
+        android:background="@drawable/bg_circle"
+        android:contentDescription="@string/timezone_notice_dismiss"
+        android:padding="@dimen/row_action_padding"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_close" />
+</LinearLayout>

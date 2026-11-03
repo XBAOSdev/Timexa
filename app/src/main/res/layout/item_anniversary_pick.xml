@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  组件选择页里的一行：纪念日名称 + 目标日期 + 右侧选中勾。
+
+  为什么不复用 item_setting_action：那一行右边是「箭头」，语义是「点进去还有下一页」；
+  这里是「选中这一条」，两件事的视觉语言不同，混用会让人以为点下去是进详情。
+
+  ⚠ 内边距用 paddingStart/End/Top/Bottom 而不是 paddingHorizontal/Vertical ——
+    后者是 API 26 才有的属性，本项目 minSdk 24，在 7.x 上会被静默忽略、行会丢失横向内边距。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Card.Row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/row_min_height"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/row_padding_h"
+    android:paddingTop="@dimen/row_padding_v"
+    android:paddingEnd="@dimen/row_padding_h"
+    android:paddingBottom="@dimen/row_padding_v">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/pick_name"
+            style="@style/Text.Row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            tools:text="跨年旅行" />
+
+        <TextView
+            android:id="@+id/pick_date"
+            style="@style/Text.Caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_xxs"
+            tools:text="2026-12-31" />
+    </LinearLayout>
+
+    <!-- 选中勾。未选中时用 invisible 占位，避免选中项一出现就把名称挤窄 -->
+    <ImageView
+        android:id="@+id/pick_check"
+        android:layout_width="@dimen/icon_chevron_size"
+        android:layout_height="@dimen/icon_chevron_size"
+        android:layout_marginStart="@dimen/space_s"
+        android:contentDescription="@string/widget_anniversary_picker_selected"
+        android:src="@drawable/ic_check"
+        android:visibility="invisible"
+        app:tint="@color/accent"
+        tools:visibility="visible" />
+</LinearLayout>

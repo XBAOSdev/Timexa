@@ -1,0 +1,518 @@
+<resources>
+    <string name="app_name">时间小包</string>
+
+    <!-- 首页 -->
+    <string name="home_feel_time">感受时间</string>
+    <string name="home_feel_time_desc">呼吸、反应力、时间感知</string>
+    <string name="home_apps">应用集</string>
+    <string name="home_apps_desc">时钟、秒表、日期计算</string>
+    <!--
+      常用应用（首页可编辑的快捷入口）
+      ⚠ 「编辑 / 移除 / 添加应用」这几个词很短，翻译时容易在不同的 key 里被复用；
+        这里每个 key 都是独立的短词，三语各自独立翻译即可。
+    -->
+    <string name="favorite_edit">编辑</string>
+    <string name="favorite_edit_done">完成</string>
+    <string name="favorite_remove">移除</string>
+    <string name="favorite_remove_named">移除 %1$s</string>
+    <string name="favorite_add">添加应用</string>
+    <string name="favorite_picker_title">添加常用应用</string>
+    <string name="favorite_picker_empty">所有应用都已在常用应用中</string>
+    <string name="favorite_cleared_title">常用应用已清空</string>
+    <string name="favorite_cleared_message">常用应用已全部移除。是否一并移除首页的这张卡片？之后可以在「设置 → 首页」中重新打开。</string>
+    <string name="favorite_cleared_remove_card">一并移除</string>
+    <string name="favorite_cleared_keep_card">保留卡片</string>
+    <string name="favorite_page_desc">第 %1$d 页，共 %2$d 页</string>
+    <string name="home_about">关于</string>
+    <string name="home_new_version">发现新版本 %s</string>
+    <string name="home_search">搜索</string>
+    <string name="home_version_failed">获取本地版本失败</string>
+
+    <!-- 搜索 -->
+    <string name="search_title">搜索</string>
+    <string name="search_hint">搜索功能或设置</string>
+    <string name="search_empty">没有找到相关内容</string>
+    <string name="search_empty_tip">试试输入功能名称，或拼音首字母</string>
+    <string name="search_section_feature">功能</string>
+    <string name="search_section_setting">设置</string>
+    <!-- 设置项副标题：带上所属分组名，用于区分跨分组的同名项（如「首页 · 显示秒」与「时钟立台 · 显示秒」） -->
+    <string name="search_setting_desc_format">%1$s · 设置</string>
+
+    <!-- 应用条目 -->
+    <string name="app_clock_name">时钟立台</string>
+    <string name="app_clock_desc">横屏大字时钟</string>
+    <string name="app_stopwatch_name">复合秒表</string>
+    <string name="app_stopwatch_desc">多路独立计时器</string>
+    <string name="app_calc_name">日期计算器</string>
+    <string name="app_calc_desc">帮你算准日期</string>
+    <string name="app_convert_name">时间换算</string>
+    <string name="app_convert_desc">时间单位互转</string>
+    <string name="app_sun_name">太阳情况</string>
+    <string name="app_sun_desc">现在太阳怎么样了</string>
+    <string name="app_breath_name">呼吸放松</string>
+    <string name="app_breath_desc">跟随节奏放松一分钟</string>
+    <string name="app_reaction_name">反应能力测试</string>
+    <string name="app_reaction_desc">测测你的反应速度</string>
+    <string name="app_age_name">趣味年龄计算器</string>
+    <string name="app_age_desc">换个角度看你的年龄</string>
+    <string name="app_progress_name">时间进度条</string>
+    <string name="app_progress_desc">看看时间走到哪儿了</string>
+
+    <!-- 通用弹窗 -->
+    <string name="dialog_ok">我知道了</string>
+    <string name="dialog_cancel">取消</string>
+    <string name="dialog_delete">删除</string>
+
+    <!-- 桌面小组件（复合秒表）：组件名沿用 app_name，这里只有描述与内部文案 -->
+    <string name="widget_sw_desc">在桌面查看有几个秒表正在计时</string>
+    <string name="widget_placeholder_count">0</string>
+    <!--
+      量词「个」。单独一条资源、且不并进下面的单位文案：
+      组件第一行是「数字 + 个」、第二行才是「秒表正在计时」，
+      而英文没有量词这个成分（取空串，Provider 会把这一格整条隐藏）。
+    -->
+    <string name="widget_unit_count_suffix">个</string>
+    <!-- 第二行的单位：与上一行连起来读作「2 个秒表正在计时」 -->
+    <string name="widget_unit_running">秒表正在计时</string>
+    <!-- 中文不分单复数，这条只为了与其它语言对齐 key（英文需要 stopwatch / stopwatches） -->
+    <string name="widget_unit_running_one">秒表正在计时</string>
+    <!-- 无障碍描述：读屏时把「2 个秒表正在计时」读成一句完整的话 -->
+    <string name="widget_sw_a11y_running">%1$d 个秒表正在计时</string>
+    <string name="widget_sw_a11y_running_one">%1$d 个秒表正在计时</string>
+    <string name="widget_sw_a11y_none">暂无秒表正在计时</string>
+
+    <!--
+      ==================== 组件中心 ====================
+      首页顶栏入口与页面标题是同一个词，所以只留一条资源 —— 两处各写一条，
+      日后改中文就会只改一处、另一处静默漂移。
+    -->
+    <string name="widget_center_title">组件</string>
+    <string name="widget_center_group_widget">桌面组件</string>
+    <string name="widget_center_group_apps">应用快捷方式</string>
+    <!-- 行右侧的状态：前者是「还能加」，后者是「已经加过了」 -->
+    <string name="widget_center_add">添加到桌面</string>
+    <string name="widget_center_added">已在桌面</string>
+    <!-- 一键添加不可用时（桌面不支持 / 用户取消了系统弹窗）：行标题仍是用户的意图，
+         点下去给的是「怎么手动加」的说明，而不是把标题改成一句状态话 -->
+    <!-- 用户取消了系统弹窗、或请求没发出去时的兜底指引 -->
+    <string name="widget_center_manual_title">需要手动添加</string>
+    <string name="widget_center_manual_widget">请长按桌面空白处，选择「小部件」，找到本应用后把它拖到桌面上。</string>
+    <string name="widget_center_manual_shortcut">请长按桌面空白处，选择「快捷方式」，找到本应用，再选择要添加的功能。</string>
+    <!-- 桌面组件分组下的常驻提示：定制系统（vivo 等）可能拦截应用内的一键固定 -->
+    <string name="widget_center_pin_hint">受部分厂商系统桌面的限制，从这里添加桌面小组件或应用快捷方式可能没有反应。小组件可以长按桌面空白处，在系统「小部件」列表中手动添加；快捷方式暂时没有替代的添加方式。</string>
+    <!-- 功能被删除后，桌面上残留的快捷方式会被禁用；这条是它在桌面上的提示语 -->
+    <string name="widget_center_shortcut_removed">对应功能已移除</string>
+    <!-- 搜索页的「组件」分组：分组标题 + 两个组件条目的名称。
+         说明文字直接复用各自 widget 描述（widget_sw_desc / widget_anniversary_desc） -->
+    <string name="search_section_widget">组件</string>
+    <string name="widget_center_sw_name">秒表组件</string>
+    <string name="widget_center_anniv_name">纪念日组件</string>
+
+    <!--
+      ==================== 纪念日组件 ====================
+      与秒表组件的差别是「每个实例各绑一条纪念日」，所以文案要能覆盖三态：
+      没选过 / 选的那条已经不在列表里 / 正常显示。
+    -->
+    <string name="widget_anniversary_desc">在桌面看着某一段日子</string>
+    <!-- 预览占位，以及「尚未选择」时名称位上显示的字 -->
+    <string name="widget_anniversary_preview_name">纪念日</string>
+    <!-- 预览占位的倒数文案；正式渲染用的是列表页那一份，保证三处说法完全一致 -->
+    <string name="widget_anniversary_preview_days">还有 12 天</string>
+    <string name="widget_anniversary_unset">点击选择</string>
+    <string name="widget_anniversary_lost">已移除</string>
+    <string name="widget_anniversary_a11y">%1$s，%2$s</string>
+    <string name="widget_anniversary_picker_title">选择纪念日</string>
+    <string name="widget_anniversary_picker_hint">选择这个组件要展示的纪念日</string>
+    <string name="widget_anniversary_picker_selected">已选中</string>
+    <string name="widget_anniversary_picker_empty_action">去添加纪念日</string>
+
+    <!-- 秒表 -->
+    <string name="stopwatch_reset">重置</string>
+    <string name="stopwatch_pause_all">全部暂停</string>
+    <string name="stopwatch_pause">暂停</string>
+    <string name="stopwatch_resume">继续</string>
+    <string name="stopwatch_resume_all">全部继续</string>
+    <string name="stopwatch_add">新建秒表</string>
+    <string name="stopwatch_status_running">计时中</string>
+    <string name="stopwatch_status_paused">已暂停</string>
+    <string name="stopwatch_rename">重命名秒表</string>
+    <string name="stopwatch_delete">删除秒表</string>
+    <string name="stopwatch_empty">还没有秒表，点击下方“新建秒表”开始计时</string>
+    <string name="stopwatch_save">保存</string>
+    <string name="stopwatch_cancel">取消</string>
+    <string name="stopwatch_default_name">秒表%d</string>
+    <string name="stopwatch_fallback_name">秒表</string>
+    <string name="stopwatch_delete_confirm">确定要删除这个秒表吗？</string>
+    <string name="stopwatch_reset_title">重置所有秒表</string>
+    <plurals name="stopwatch_reset_confirm"><item quantity="one">确定要删除全部 %1$d 个秒表吗？此操作不可恢复。</item><item quantity="other">确定要删除全部 %1$d 个秒表吗？此操作不可恢复。</item></plurals>
+    <string name="stopwatch_reset_done">已重置所有秒表</string>
+    <string name="stopwatch_none">当前没有秒表</string>
+    <string name="stopwatch_need_create">请先新建秒表</string>
+    <string name="stopwatch_name_empty">名称不能为空</string>
+    <string name="stopwatch_name_hint">秒表名称</string>
+    <string name="stopwatch_save_failed">保存失败</string>
+    <string name="stopwatch_tips_title">使用说明</string>
+    <string name="stopwatch_tips_body">1. 底部按钮分两行：上行「重置」「全部暂停」「全部继续」，下行「新建秒表」。\n2. 默认新建的秒表自动开始计时；可在设置中关闭，让新秒表停在 0:00 等你手动开始。\n3. 点击卡片标题可重命名。\n4. 点击卡片上的时间可放大显示这一个秒表，标题即秒表名称，点击标题也可重命名；右侧圆形按钮单独暂停/继续。\n5. 计时状态会自动保存，关闭软件不会终止计时，也不会占用后台资源。\n6. 开启「常驻通知」后，计时中会在通知栏显示，点击即可回到本页。</string>
+    <string name="stopwatch_focus_lap">计次</string>
+    <string name="stopwatch_focus_reset">归零</string>
+    <string name="stopwatch_focus_reset_confirm">将时长归零并清空所有计次，秒表名称会保留。</string>
+    <string name="stopwatch_focus_lap_index">第 %1$d 次</string>
+    <string name="stopwatch_focus_lap_empty">还没有计次，点下方「计次」记录分段用时。</string>
+    <string name="stopwatch_focus_lap_section">计次</string>
+    <string name="stopwatch_focus_lap_clear">清空计次</string>
+    <plurals name="stopwatch_focus_lap_clear_confirm"><item quantity="one">确定清空这 %1$d 条计次吗？此操作无法撤销。</item><item quantity="other">确定清空这 %1$d 条计次吗？此操作无法撤销。</item></plurals>
+    <string name="stopwatch_focus_lap_delete">删除这条计次</string>
+    <!-- 列表页上「本表已有 N 条计次」的徽标 -->
+    <plurals name="stopwatch_lap_badge"><item quantity="one">计次 %1$d</item><item quantity="other">计次 %1$d</item></plurals>
+    <string name="stopwatch_restore_failed">秒表数据已失效，请返回列表重新进入</string>
+
+    <!-- 日期计算器：运行期提示与结果文案 -->
+    <!--
+      只剩「结束日期」一个必填项：「从」留空时默认按**今天**算（见 CalculatorDate.calculateDayDifference），
+      推算模式的「从（基准日期）」同理。少一个报错分支，也少一次
+      「明明只有一个日期没填，却报了两处都缺」的困惑。
+    -->
+    <string name="calc_need_end_date">请选择结束日期</string>
+    <string name="calc_need_days">请输入天数</string>
+    <string name="calc_need_days_valid">请输入有效的天数</string>
+
+    <!-- 空态引导：写成动作句（用户该做什么），不写界面行为（「结果将显示在这里」） -->
+    <string name="calc_idle_hint">选好日期后，结果自动显示</string>
+
+    <!-- 差值结果下方那行辅助信息 -->
+    <string name="calc_aux_weeks_days">%1$s %2$s</string>
+    <string name="calc_aux_same_day">两个日期是同一天</string>
+    <string name="calc_aux_end_before">结束日期早于开始日期</string>
+
+    <!--
+      「数字 + 单位」一律走 plurals，而不是用 string 拼出来：
+      英文要区分 day / days、中文只有一种写法，把规则交给系统按语言选，
+      代码里就不会出现 `if (n == 1)` 这种把语法硬编码进逻辑的写法。
+      ⚠ 三份 strings.xml 里的 quantity 数量保持一致（都写 one + other）：
+        中文虽然只有 other 会命中，少写一项会让「多语言条目对齐」的自检报不一致。
+      ⚠ calc_days_unit 是**不带数字**的量词（天数输入框后面那个「天 / day / days」），
+        所以它没有格式化参数，只靠 quantity 选单复数。
+    -->
+    <plurals name="calc_days">
+        <item quantity="one">%1$d 天</item>
+        <item quantity="other">%1$d 天</item>
+    </plurals>
+    <plurals name="calc_weeks">
+        <item quantity="one">%1$d 周</item>
+        <item quantity="other">%1$d 周</item>
+    </plurals>
+    <plurals name="calc_days_unit">
+        <item quantity="one">天</item>
+        <item quantity="other">天</item>
+    </plurals>
+
+    <!-- 呼吸放松 -->
+    <string name="breath_idle_tip">轻触圆形按钮，跟随节奏呼吸</string>
+    <string name="breath_running_tip">放松身心，跟随提示呼吸</string>
+    <string name="breath_inhale">吸气</string>
+    <string name="breath_exhale">呼气</string>
+    <string name="breath_start">开始</string>
+    <string name="breath_restart">重新开始</string>
+    <string name="breath_remaining">剩余 %1$d 秒</string>
+    <string name="breath_done_tip">完成得很好，注意感受此刻的身体</string>
+    <string name="breath_stopped_tip">已结束本次练习</string>
+    <string name="breath_total">共 %1$d 分钟</string>
+
+    <!-- 设置 -->
+    <string name="settings_title">设置</string>
+    <string name="settings_group_appearance">外观</string>
+    <string name="settings_group_home">首页</string>
+    <string name="settings_group_stopwatch">复合秒表</string>
+    <string name="settings_group_clock">时钟立台</string>
+    <string name="settings_group_breath">呼吸放松</string>
+    <string name="settings_group_data">数据</string>
+    <string name="settings_group_about">关于</string>
+
+    <!-- ==================== 时间与时区 ==================== -->
+    <string name="settings_group_timezone">时间与时区</string>
+    <string name="settings_timezone">时区</string>
+    <string name="settings_timezone_mode">时区模式</string>
+    <string name="settings_timezone_mode_desc">「跟随系统」会随系统时区自动变化；「手动指定」则与系统解耦，系统怎么改都不影响本应用</string>
+    <string name="settings_timezone_follow_system">跟随系统</string>
+    <string name="settings_timezone_manual">手动指定</string>
+    <string name="settings_timezone_follow_desc">跟随系统（%1$s）</string>
+    <string name="settings_timezone_manual_desc">手动指定 · %1$s</string>
+    <string name="timezone_title">时区</string>
+    <string name="timezone_search_hint">搜索城市、时区或 UTC 偏移</string>
+    <string name="timezone_empty">没有匹配的时区</string>
+    <string name="timezone_group_common">常用</string>
+    <string name="timezone_notice_dismiss">关闭提示</string>
+    <string name="timezone_notice_mismatch">系统时区已变为 %1$s，本应用当前仍按 %2$s 显示</string>
+    <string name="timezone_notice_invalid">原时区 %1$s 在本机已不存在，已改回「跟随系统」</string>
+
+    <string name="settings_theme">深色模式</string>
+    <string name="settings_theme_desc">选择「跟随系统」时随设备深浅设置自动切换</string>
+    <string name="settings_theme_system">跟随系统</string>
+    <string name="settings_theme_light">浅色</string>
+    <string name="settings_theme_dark">深色</string>
+
+    <string name="settings_language">语言</string>
+    <string name="settings_language_desc">选择「跟随系统」时使用设备的语言设置</string>
+    <string name="settings_lang_system">系统</string>
+    <string name="settings_lang_simplified">简</string>
+    <string name="settings_lang_traditional">繁</string>
+    <string name="settings_lang_english">EN</string>
+
+    <string name="settings_haptic">触感反馈</string>
+    <string name="settings_haptic_desc">点击、切换时发出轻微触感。强度由系统决定，本应用不单独调整</string>
+    <string name="settings_haptic_system_off">系统已关闭触感反馈，本应用无法发出触感。点此前往系统设置</string>
+    <string name="settings_haptic_no_settings">无法打开系统设置</string>
+
+    <string name="settings_home_24h">24 小时制</string>
+    <string name="settings_home_24h_desc">关闭后使用 12 小时制</string>
+    <string name="settings_home_seconds">显示秒</string>
+    <string name="settings_home_date">显示日期</string>
+
+    <string name="settings_sw_tenths">显示十分之一秒</string>
+    <string name="settings_sw_auto_start">新建秒表自动开始计时</string>
+    <string name="settings_sw_auto_start_desc">关闭后，新建的秒表停在 0:00，等你手动开始</string>
+    <string name="settings_sw_tenths_desc">关闭后只显示到秒，画面更稳、也更省电</string>
+
+    <string name="settings_clock_anti_burn">防烧屏微移</string>
+    <string name="settings_clock_anti_burn_desc">定时轻微移动画面位置，避免 OLED 屏幕留下残影</string>
+    <string name="settings_clock_seconds">显示秒</string>
+    <string name="settings_clock_keep_on">保持屏幕常亮</string>
+    <string name="settings_clock_keep_on_desc">当作桌面立钟使用时建议开启</string>
+    <string name="settings_clock_24h">24 小时制</string>
+
+    <string name="settings_breath_vibrate">结束时振动</string>
+    <string name="settings_breath_duration">单次时长</string>
+    <string name="settings_breath_duration_desc">呼吸引导的总时长</string>
+    <string name="settings_breath_duration_value">%1$d 分钟</string>
+
+    <string name="settings_data_export">导出数据</string>
+    <string name="settings_data_export_desc">把全部数据（计时记录、纪念日、设置项）导出为一个 zip 备份文件</string>
+    <string name="settings_data_export_done">已导出到 %1$s</string>
+    <string name="settings_data_export_fail">导出失败</string>
+    <string name="settings_data_import">导入数据</string>
+    <string name="settings_data_import_desc">从 zip 备份文件恢复全部数据</string>
+    <string name="settings_data_import_confirm">导入会覆盖现有的全部数据（计时记录、纪念日、设置项），且不可恢复。确定继续吗？</string>
+    <string name="settings_data_import_invalid">这不是有效的备份文件，原数据已保持不变。</string>
+    <string name="settings_data_import_newer">这个备份来自更高版本的应用，无法导入。请先升级应用后再试。</string>
+    <string name="settings_data_import_done">已恢复全部数据</string>
+
+    <string name="settings_group_reset">重置</string>
+    <string name="settings_reset">恢复默认设置</string>
+    <string name="settings_reset_desc">把所有设置项恢复为初始值，不影响计时记录</string>
+    <string name="settings_reset_confirm">确定要把所有设置恢复为默认值吗？\n\n主题与语言会重新跟随系统，秒表记录与纪念日不受影响。</string>
+    <string name="settings_reset_action">恢复默认</string>
+
+    <string name="settings_licenses">开源许可</string>
+    <string name="settings_licenses_desc">查看本应用使用的第三方开源组件</string>
+    <string name="settings_licenses_body">本应用使用了 Material Design Icons（Google 提供，基于 Apache License 2.0 开源许可）。\n\nApache License 2.0 允许免费用于商业用途，但要求保留版权与许可声明。\n\n完整许可文本：www.apache.org/licenses/LICENSE-2.0</string>
+
+    <!-- ==================== 日期计算器页面 ==================== -->
+
+    <!-- 顶部模式分段（= 整页的两种问法）。旧版把它们做成两张结构雷同的卡片，视线没有落点 -->
+    <string name="calc_mode_diff">相差几天</string>
+    <string name="calc_mode_shift">推算日期</string>
+
+    <!--
+      行首 1 字标签：把表单读成一句句子（「从 X 到 Y」/「从 X 往前 N 天」）。
+      旧版的「开始日期 / 结束日期 / 基准日期 / 相差天数」全是名词，
+      中间却夹着「加上 / 减去」两个动词 —— 语法不同类，读起来不像一句话。
+    -->
+    <string name="calc_label_from">从</string>
+    <string name="calc_label_to">到</string>
+
+    <!--
+      推算方向。旧版写「加上 / 减去」，那是**元语言**（描述操作符号），
+      改成「往前 / 往后」之后描述的是日期往哪边走，读出来才是句子。
+    -->
+    <string name="calc_mode_before">往前</string>
+    <string name="calc_mode_after">往后</string>
+
+    <!-- 主按钮文案：随模式切换（由代码 setText） -->
+    <string name="calc_action_days">算一算</string>
+    <string name="calc_action_date">推算</string>
+
+    <!-- 日历图标的无障碍描述（那个按钮本身不带文字） -->
+    <string name="calc_pick_desc">选择日期</string>
+
+    <!--
+      日期输入框的示例提示。示例值**动态取今天**（见 CalculatorDate.compactToday），
+      刻意给「紧凑数字写法」而不是带分隔符的形式：键盘上连打 8 个数字不必碰任何符号键，
+      这是手输日期最快的路径，而解析侧本就支持 yyyyMMdd（见 CalculatorDate.numericDatePatterns）。
+      提示语要负责把这个便利告诉用户，否则没人会去试。
+    -->
+    <string name="calc_date_hint">如 %1$s</string>
+
+    <!--
+      快捷日期条：贴在当前焦点那一格**旁边**的浮层，一键填入。
+      候选全是「相对这一格当前日期的一个偏移」，只有方向不同 —— 见 CalculatorDate.quickPicksFor。
+
+      ⚠⚠ 措辞必须是**相对**的，所以是「前一天 / 后一天」而不是「昨天 / 明天」：
+        原点跟着输入框里的日期走，点一次之后下一枚就以刚填进去的那天为原点继续加减。
+        填了 10 月 1 日再点「昨天」，给的是 9 月 30 日 —— 可它并不是「昨天」，
+        继续用「昨天」这个词就是在说假话。
+        「今天」是唯一的例外：它是复位键，职责就是「不管现在填的是哪天，拉回今天」。
+    -->
+    <string name="calc_quick_today">今天</string>
+    <string name="calc_quick_prev_day">前一天</string>
+    <string name="calc_quick_next_day">后一天</string>
+    <string name="calc_quick_week_ago">一周前</string>
+    <string name="calc_quick_week_later">一周后</string>
+    <string name="calc_quick_month_ago">一个月前</string>
+    <string name="calc_quick_month_later">一个月后</string>
+
+    <!-- 时钟立台 / 关于 -->
+    <string name="clock_tap_to_exit">轻触屏幕退出</string>
+    <string name="about_intro">简介</string>
+    <string name="about_this_app">关于本应用</string>
+    <!-- 更新日志：标题 / 卡片上的「版本 · 日期」格式 / 长按复制成功的提示 -->
+    <string name="changelog_title">更新日志</string>
+    <string name="changelog_title_desc">查看历代更新内容，最新版本在最上面，长按可复制</string>
+    <string name="changelog_version_format">v%1$s · %2$s</string>
+    <string name="changelog_copied">已复制到剪贴板</string>
+    <!--
+      更新正文。每发一版往最上面加一条（三语同步），版本号与日期写在 Changelog.ENTRIES 里。
+      正文用「·」手写列表 —— 不做任何格式解析，长按复制时用户拿到的就是眼前所见的那段文字。
+    -->
+    <string name="changelog_2_0_13_body">· 日期计算器重做：改成一整句「从哪一天到哪一天」／「从哪一天往前或往后几天」，两种问法在页面顶部切换\n· 日期输入框旁新增快捷日期条：点输入框即弹出，一键填入常用日期，不必再连打 8 个数字\n· 快捷日期条支持连续加减：点一次不会收起，下一枚从刚填进去的那一天继续算，连点即可一天天、一周周地往后推或往前推\n· 快捷日期条与首页元素加入浮现、收起的过渡动画\n· 计算结果改为放大居中显示，并补上「几周几天」的换算\n· 日期一改，上一次的结果会自动作废，不会再留着旧结论误导人\n· 修复残缺年份被当成合法日期的问题（例如「2026年10月6」曾被读成公元 202 年，算出天文数字的天数）\n· 修复英文界面下若干处单复数错误（1 day left / 1 lap / 1 stopwatch running 等）</string>
+    <string name="changelog_2_0_12_body">· 长按常用应用的图标或卡片，可直接进入编辑模式\n· 修复「编辑」入口可能误触发水波纹的问题，已移除该按钮的波纹特效</string>
+    <string name="changelog_2_0_11_body">· 组件中心新增提示：部分厂商的桌面可能限制从应用内添加小组件或快捷方式，小组件可从系统桌面手动添加\n· 复合秒表底部按钮重排为两行，修复文字显示不全的问题\n· 专注计时页的标题改为当前秒表的名称，点击标题即可重命名\n· 首页常用应用的「编辑」入口重做：平时隐藏，点击首页空白处浮现，3 秒无操作自动隐去；「添加应用」改为编辑模式里的「＋」格子\n· 修复秒表计次可能串到其他秒表的问题（数据结构升级，旧数据自动迁移）\n· 修正时间换算中微秒等一系列单位的换算错误\n· 修复清空常用应用后添加入口消失的问题</string>
+    <string name="changelog_2_0_10_body">· 首页新增「常用应用」：把常用功能放到首页一键直达，支持编辑、长按拖拽排序与上下翻页\n· 新增「组件」中心：可把应用快捷方式与桌面小组件添加到系统桌面，添加前可预览样式\n· 新增纪念日桌面小组件：在桌面直接盯着某一段日子倒计时\n· 导出/导入升级：全部数据（计时记录、纪念日、设置项）打包为一个 zip 备份，可完整恢复\n· 秒表「全部暂停」「全部继续」拆为两个独立按钮\n· 新增设置「新建秒表自动开始计时」，可让新秒表停在 0:00 等待手动开始\n· 新增本「更新日志」页面\n· 若干修复与细节优化</string>
+
+    <!-- 关于页面文本 -->
+    <string name="app_icon_desc">应用图标</string>
+    <string name="version_placeholder">版本 %s</string>
+    <!--
+      设置页顶部「发现新版本」临时卡片的副标题。
+      标题直接复用 home_new_version（「发现新版本 %s」），不再造一条同义文案。
+    -->
+    <string name="settings_update_banner_desc">点击前往「关于」查看更新方式</string>
+    <string name="app_description">“时间小包”是一款提供和时间有关的免费应用，帮助您更好地掌握时间，享受时间。</string>
+    <string name="developer_title">应用信息</string>
+    <string name="copyright_info">软著登字第 16993026 号\n© 2025-2026 XBAOS. 保留所有权利</string>
+    <!--
+      只留域名：关于页把官网做成「标签 / 取值」的信息行，标签另由 about_info_site 给出。
+      带上「官方网站：」前缀会让同一句话在行内出现两次。
+    -->
+    <string name="official_site">www.xbaos.com.cn</string>
+    <string name="back_button_desc">返回</string>
+    <string name="about_unknown_version">未知版本</string>
+    <string name="about_no_app">未找到可打开该链接的应用</string>
+
+    <!-- 关于页品牌区 / 信息行 -->
+    <string name="about_tagline">把时间装进口袋</string>
+    <string name="about_info_developer">开发者</string>
+    <string name="about_developer_name">XBAOS</string>
+    <string name="about_info_site">官方网站</string>
+    <string name="about_info_ai">AI 提示</string>
+    <string name="about_license_value">Material Design Icons · Apache-2.0</string>
+    <string name="about_ai_value">部分内容使用 AI 生成，注意识别</string>
+    <string name="about_update_desc">点击选择升级方式</string>
+
+    <!-- 升级方式选择弹窗：点版本名或更新提示时弹出 -->
+    <string name="about_upgrade_title">选择升级方式</string>
+    <string name="about_upgrade_message">官网升级：前往 time.xbaos.com.cn 获取最新版本\n备用升级：打开备用下载通道</string>
+    <string name="about_upgrade_official">官网升级</string>
+    <string name="about_upgrade_backup">备用升级</string>
+
+    <!-- 网页容器 -->
+    <string name="web_missing_param">页面参数缺失</string>
+
+    <!-- ========== 番茄钟 ========== -->
+    <string name="app_pomodoro_name">番茄钟</string>
+    <string name="app_pomodoro_desc">专注与休息交替</string>
+    <string name="pomodoro_phase_focus">专注</string>
+    <string name="pomodoro_phase_short_break">短休息</string>
+    <string name="pomodoro_phase_long_break">长休息</string>
+    <string name="pomodoro_round_info">本轮 %1$d/%2$d · 累计 %3$d</string>
+    <string name="pomodoro_start">开始</string>
+    <string name="pomodoro_pause">暂停</string>
+    <string name="pomodoro_resume">继续</string>
+    <string name="pomodoro_reset">重置</string>
+    <string name="pomodoro_skip">跳过</string>
+    <string name="pomodoro_idle_tip">点击「开始」，进入一个专注时段</string>
+    <string name="pomodoro_focus_tip">保持专注，到点会提醒你</string>
+    <string name="pomodoro_break_tip">起身活动一下，让眼睛也歇一会儿</string>
+    <string name="pomodoro_focus_done">专注结束，休息一下</string>
+    <string name="pomodoro_break_done">休息结束，继续专注</string>
+    <string name="pomodoro_next_waiting">下一阶段是「%1$s」，点击「开始」继续</string>
+    <string name="pomodoro_reset_confirm">重置会清空本次已完成的个数，并从专注阶段重新开始。</string>
+
+    <!-- ========== 纪念日倒数 ========== -->
+    <string name="app_anniversary_name">纪念日倒数</string>
+    <string name="app_anniversary_desc">记录重要日子</string>
+    <string name="anniversary_add">新建纪念日</string>
+    <string name="anniversary_empty">还没有纪念日，点击下方「新建纪念日」添加</string>
+    <string name="anniversary_name_hint">纪念日名称</string>
+    <string name="anniversary_rename">重命名纪念日</string>
+    <string name="anniversary_every_year">每年重复</string>
+    <string name="anniversary_once">仅此一次</string>
+    <string name="anniversary_date_line">%1$s · %2$s</string>
+    <string name="anniversary_repeat_ask">这个日子每年都会重复吗？</string>
+    <string name="anniversary_days_today">就是今天</string>
+    <plurals name="anniversary_days_left"><item quantity="one">还有 %1$d 天</item><item quantity="other">还有 %1$d 天</item></plurals>
+    <plurals name="anniversary_days_passed"><item quantity="one">已过去 %1$d 天</item><item quantity="other">已过去 %1$d 天</item></plurals>
+    <string name="anniversary_delete">删除纪念日</string>
+    <string name="anniversary_delete_confirm">确定要删除「%1$s」吗？</string>
+    <string name="anniversary_created">已添加纪念日</string>
+    <string name="anniversary_sync">同步到系统日历</string>
+    <string name="anniversary_sync_desc">由「时间小包」添加的纪念日</string>
+    <string name="anniversary_sync_no_app">没有找到可用的日历应用</string>
+    <string name="anniversary_home_action">管理纪念日</string>
+
+    <!-- ========== 新增设置项 ========== -->
+    <string name="settings_group_pomodoro">番茄钟</string>
+    <string name="settings_home_anniversary">首页显示纪念日</string>
+    <string name="settings_home_anniversary_desc">在首页时钟下方显示最近的纪念日</string>
+    <string name="settings_home_favorites">常用应用</string>
+    <string name="settings_home_favorites_desc">在首页显示常用应用卡片</string>
+    <string name="settings_pomodoro_focus">专注时长</string>
+    <string name="settings_pomodoro_short">短休息时长</string>
+    <string name="settings_pomodoro_long">长休息时长</string>
+    <string name="settings_pomodoro_rounds">每轮番茄数</string>
+    <string name="settings_pomodoro_minutes_value">%1$d 分钟</string>
+    <string name="settings_pomodoro_rounds_value">%1$d 个</string>
+    <string name="settings_pomodoro_auto_next">自动进入下一阶段</string>
+    <string name="settings_pomodoro_auto_next_desc">一个阶段结束后自动开始下一段</string>
+    <string name="settings_pomodoro_vibrate">阶段切换时振动</string>
+    <string name="settings_pomodoro_notification">常驻通知</string>
+    <string name="settings_pomodoro_notification_desc">离开应用后仍在通知栏显示剩余时间，到点提醒你</string>
+    <string name="settings_sw_notification">常驻通知</string>
+    <string name="settings_sw_notification_desc">计时中在通知栏显示，随时点回秒表页</string>
+
+    <!-- ========== 通知 ========== -->
+    <string name="notification_channel_ongoing">计时中</string>
+    <string name="notification_channel_alert">时间提醒</string>
+    <string name="notification_pomodoro_left">%1$s · 剩余 %2$s</string>
+    <string name="notification_pomodoro_finished">%1$s阶段已结束，点击查看</string>
+    <plurals name="notification_stopwatch_running"><item quantity="one">%1$d 个秒表正在计时</item><item quantity="other">%1$d 个秒表正在计时</item></plurals>
+
+    <!-- ========== 权限：申请前的顶部说明横幅 ========== -->
+    <string name="perm_location_banner">将获取「大致位置」，用于按你所在的城市计算太阳高度角与日出日落时刻。坐标只在手机本地参与计算，不会上传，也不会用于其他用途。</string>
+    <string name="perm_notification_banner">将申请「通知」权限，用于在计时过程中把剩余时间常驻在通知栏，并在阶段结束时提醒你。不开也能正常计时，只是看不到通知。</string>
+
+    <!-- ========== 权限说明页 ========== -->
+    <string name="settings_permissions">权限说明</string>
+    <string name="settings_permissions_desc">查看本应用会用到哪些权限，以及每一项的用途</string>
+    <string name="perm_page_title">权限说明</string>
+    <string name="perm_page_intro">本应用是一款轻量工具，绝大多数功能不需要任何权限。下面列出全部会向系统申请的权限，以及每一项的具体用途。每一条的用途都只服务于对应功能本身，不会用于统计、画像或第三方共享。</string>
+    <string name="perm_page_section_manual">需要你手动授权的权限</string>
+    <string name="perm_page_section_manual_desc">下面这些权限只有在真正用到对应功能时才会申请；不授权时功能会降级，但应用照常可用。</string>
+    <string name="perm_page_section_auto">无需授权、自动获得的权限</string>
+    <string name="perm_page_section_auto_desc">这些权限在安装时自动获得，通常不涉及你的隐私信息，列在这里只为说明完整。</string>
+    <string name="perm_page_footer">所有数据都保存在你的手机本地（应用私有目录），不收集、不上传、不共享。卸载应用即彻底删除。</string>
+
+    <string name="perm_location_name">大致位置（ACCESS_COARSE_LOCATION）</string>
+    <string name="perm_location_use">用于「太阳情况」按你所在的城市计算太阳高度角、日出日落时刻与昼长。\n\n· 只取一次坐标，不会持续定位或后台定位\n· 只申请「大致位置」，精确到城市即可满足计算需要\n· 坐标只在手机本地参与计算，不会上传或分享\n· 拒绝授权时，「太阳情况」会退回手动输入经纬度，功能不受影响</string>
+
+    <string name="perm_notification_name">通知（POST_NOTIFICATIONS）</string>
+    <string name="perm_notification_use">用于在计时过程中把状态常驻在通知栏，并在番茄钟阶段结束时提醒你。\n\n· 只有安卓 13 及以上需要授权，更低版本自动获得\n· 通知内容只有计时状态与剩余时间，不含其他信息\n· 拒绝授权时前台服务仍会运行，只是看不到通知</string>
+
+    <string name="perm_vibrate_name">振动（VIBRATE）</string>
+    <string name="perm_vibrate_use">用于呼吸放松练习结束、番茄钟阶段切换时给出一次轻振动提示。\n\n· 只触发短振动，不会持续振动\n· 可在「设置」中分别关闭，关闭后不再触发</string>
+
+    <string name="perm_internet_name">网络访问（INTERNET）</string>
+    <string name="perm_internet_use">仅用于首页检测是否有新版本（读取一个固定的版本号文件）。\n\n· 不会上传任何个人数据\n· 其余功能全部离线可用，断网不影响使用</string>
+
+    <string name="perm_foreground_name">前台服务（FOREGROUND_SERVICE · SPECIAL_USE）</string>
+    <string name="perm_foreground_use">用于让计时在离开应用后继续走 —— 系统要求常驻通知必须由前台服务承载，因此需要这一项。\n\n· 只在秒表或番茄钟处于计时状态时运行，停止计时即结束\n· 不执行任何后台计算、不唤醒网络、不读取其他应用数据</string>
+</resources>

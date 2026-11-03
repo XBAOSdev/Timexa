@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  颜色着色器：开关的滑块与轨道。
+  checked 用强调色、未选中用中性格，保证深浅两套配色下都有足够对比度。
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/text_on_accent" android:state_checked="true" />
+    <item android:color="@color/text_tertiary" />
+</selector>

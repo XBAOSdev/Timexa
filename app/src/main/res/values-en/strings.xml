@@ -1,0 +1,463 @@
+<resources>
+    <string name="app_name">XBAOS Timexa</string>
+
+    <!-- Home -->
+    <string name="home_feel_time">Feel Time</string>
+    <string name="home_feel_time_desc">Breathing, reaction, time perception</string>
+    <string name="home_apps">Applications</string>
+    <string name="home_apps_desc">Clock, stopwatch, date calculator</string>
+    <string name="favorite_edit">Edit</string>
+    <string name="favorite_edit_done">Done</string>
+    <string name="favorite_remove">Remove</string>
+    <string name="favorite_remove_named">Remove %1$s</string>
+    <string name="favorite_add">Add app</string>
+    <string name="favorite_picker_title">Add favorite</string>
+    <string name="favorite_picker_empty">All apps are already added</string>
+    <string name="favorite_cleared_title">Favorites cleared</string>
+    <string name="favorite_cleared_message">All favorites have been removed. Also remove this card from the home screen? You can turn it back on in Settings → Home.</string>
+    <string name="favorite_cleared_remove_card">Remove card</string>
+    <string name="favorite_cleared_keep_card">Keep card</string>
+    <string name="favorite_page_desc">Page %1$d of %2$d</string>
+    <string name="home_about">About</string>
+    <string name="home_new_version">New version %s</string>
+    <string name="home_search">Search</string>
+    <string name="home_version_failed">Failed to read the local version</string>
+
+    <!-- Search -->
+    <string name="search_title">Search</string>
+    <string name="search_hint">Search features or settings</string>
+    <string name="search_empty">No matching result</string>
+    <string name="search_empty_tip">Try a feature name or a keyword</string>
+    <string name="search_section_feature">Features</string>
+    <string name="search_section_setting">Settings</string>
+    <!-- Setting row subtitle with its group name, to disambiguate same-named items across groups -->
+    <string name="search_setting_desc_format">%1$s · Settings</string>
+
+    <!-- App entries -->
+    <string name="app_clock_name">Desk Clock</string>
+    <string name="app_clock_desc">Landscape clock with big digits</string>
+    <string name="app_stopwatch_name">Stopwatches</string>
+    <string name="app_stopwatch_desc">Multiple independent timers</string>
+    <string name="app_calc_name">Date Calculator</string>
+    <string name="app_calc_desc">Get your dates exactly right</string>
+    <string name="app_convert_name">Time Converter</string>
+    <string name="app_convert_desc">Convert between time units</string>
+    <string name="app_sun_name">Sun Info</string>
+    <string name="app_sun_desc">How is the sun right now?</string>
+    <string name="app_breath_name">Breathing</string>
+    <string name="app_breath_desc">Follow the rhythm, relax for a minute</string>
+    <string name="app_reaction_name">Reaction Test</string>
+    <string name="app_reaction_desc">Measure how fast you react</string>
+    <string name="app_age_name">Fun Age Calculator</string>
+    <string name="app_age_desc">Look at your age from another angle</string>
+    <string name="app_progress_name">Time Progress</string>
+    <string name="app_progress_desc">See how far time has gone</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_ok">Got it</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_delete">Delete</string>
+
+    <!-- Home screen widget (stopwatches): the widget label reuses app_name -->
+    <string name="widget_sw_desc">See how many stopwatches are running on your home screen</string>
+    <string name="widget_placeholder_count">0</string>
+    <!--
+      Measured word after the number: English has no such particle, so this is
+      intentionally EMPTY. The provider hides the whole slot when it is blank,
+      which keeps the number alone on the first line.
+    -->
+    <string name="widget_unit_count_suffix"></string>
+    <string name="widget_unit_running">stopwatches running</string>
+    <!-- 个数为 1 时用这条，避免 “1 stopwatches running” -->
+    <string name="widget_unit_running_one">stopwatch running</string>
+    <string name="widget_sw_a11y_running">%1$d stopwatches running</string>
+    <string name="widget_sw_a11y_running_one">%1$d stopwatch running</string>
+    <string name="widget_sw_a11y_none">No stopwatch running</string>
+
+    <!-- ==================== Widget center ==================== -->
+    <string name="widget_center_title">Widgets</string>
+    <string name="widget_center_group_widget">Home screen widget</string>
+    <string name="widget_center_group_apps">App shortcuts</string>
+    <string name="widget_center_add">Add to home</string>
+    <string name="widget_center_added">On home screen</string>
+    <string name="widget_center_manual_title">Add it manually</string>
+    <string name="widget_center_manual_widget">Long-press an empty spot on your home screen, choose "Widgets", find this app, then drag it onto the screen.</string>
+    <string name="widget_center_manual_shortcut">Long-press an empty spot on your home screen, choose "Shortcuts", find this app, then pick the feature you want.</string>
+    <!-- Persistent hint under the Widgets group: custom launchers (e.g. vivo) may block in-app pinning -->
+    <string name="widget_center_pin_hint">Some vendor launchers restrict what apps can add to the home screen — both widgets and app shortcuts may silently fail here. For widgets, long-press an empty spot on your home screen and add them from the system widget list. Shortcuts currently have no alternative way to be added.</string>
+    <string name="widget_center_shortcut_removed">This feature is no longer available</string>
+    <string name="search_section_widget">Widgets</string>
+    <string name="widget_center_sw_name">Stopwatch widget</string>
+    <string name="widget_center_anniv_name">Anniversary widget</string>
+
+    <!-- ==================== Anniversary widget ==================== -->
+    <string name="widget_anniversary_desc">Keep an eye on a date from your home screen</string>
+    <string name="widget_anniversary_preview_name">Anniversary</string>
+    <string name="widget_anniversary_preview_days">12 days left</string>
+    <string name="widget_anniversary_unset">Tap to choose</string>
+    <string name="widget_anniversary_lost">Removed</string>
+    <string name="widget_anniversary_a11y">%1$s, %2$s</string>
+    <string name="widget_anniversary_picker_title">Choose an anniversary</string>
+    <string name="widget_anniversary_picker_hint">Pick the anniversary this widget should show</string>
+    <string name="widget_anniversary_picker_selected">Selected</string>
+    <string name="widget_anniversary_picker_empty_action">Add an anniversary</string>
+
+    <!-- Stopwatch -->
+    <string name="stopwatch_reset">Reset</string>
+    <string name="stopwatch_pause_all">Pause all</string>
+    <string name="stopwatch_pause">Pause</string>
+    <string name="stopwatch_resume">Resume</string>
+    <string name="stopwatch_resume_all">Resume all</string>
+    <!-- 底部一排三个等宽按钮，每个只有约 1/3 屏宽减去内边距。
+         “New stopwatch” 即使在 13sp 下也放不进一格，会变成省略号，
+         因此这里用最短的 “New”（与中文「新建」同义，且不需要 "stopwatch" 这个上下文词）。 -->
+    <string name="stopwatch_add">New</string>
+    <string name="stopwatch_status_running">Running</string>
+    <string name="stopwatch_status_paused">Paused</string>
+    <string name="stopwatch_rename">Rename stopwatch</string>
+    <string name="stopwatch_delete">Delete stopwatch</string>
+    <string name="stopwatch_empty">No stopwatch yet. Tap “New” below to start.</string>
+    <string name="stopwatch_save">Save</string>
+    <string name="stopwatch_cancel">Cancel</string>
+    <string name="stopwatch_default_name">Stopwatch %d</string>
+    <string name="stopwatch_fallback_name">Stopwatch</string>
+    <string name="stopwatch_delete_confirm">Delete this stopwatch?</string>
+    <string name="stopwatch_reset_title">Reset all stopwatches</string>
+    <plurals name="stopwatch_reset_confirm"><item quantity="one">Delete all %1$d stopwatch? This cannot be undone.</item><item quantity="other">Delete all %1$d stopwatches? This cannot be undone.</item></plurals>
+    <string name="stopwatch_reset_done">All stopwatches were reset</string>
+    <string name="stopwatch_none">No stopwatch right now</string>
+    <string name="stopwatch_need_create">Create a stopwatch first</string>
+    <string name="stopwatch_name_empty">The name cannot be empty</string>
+    <string name="stopwatch_name_hint">Stopwatch name</string>
+    <string name="stopwatch_save_failed">Failed to save</string>
+    <string name="stopwatch_tips_title">How to use</string>
+    <string name="stopwatch_tips_body">1. The bottom buttons are in two rows: Reset, Pause all, and Resume all on top, New stopwatch below.\n2. By default a new stopwatch starts counting immediately; you can turn that off in settings so new ones wait at 0:00 until you start them.\n3. Tap a card title to rename it.\n4. Tap the time on a card to expand that stopwatch with lap timing; the page title is the stopwatch name and you can tap it to rename; the round button on the right pauses or resumes it.\n5. Timing is saved automatically. Closing the app does not stop the timers and uses no background resources.\n6. With the ongoing notification on, running timers show in the notification shade — tap it to come back here.</string>
+    <string name="stopwatch_focus_lap">Lap</string>
+    <string name="stopwatch_focus_reset">Reset</string>
+    <string name="stopwatch_focus_reset_confirm">The elapsed time and all laps will be cleared. The stopwatch name is kept.</string>
+    <string name="stopwatch_focus_lap_index">Lap %1$d</string>
+    <string name="stopwatch_focus_lap_empty">No laps yet. Tap "Lap" below to record a split.</string>
+    <string name="stopwatch_focus_lap_section">Laps</string>
+    <string name="stopwatch_focus_lap_clear">Clear laps</string>
+    <plurals name="stopwatch_focus_lap_clear_confirm"><item quantity="one">Clear all %1$d lap? This cannot be undone.</item><item quantity="other">Clear all %1$d laps? This cannot be undone.</item></plurals>
+    <string name="stopwatch_focus_lap_delete">Delete this lap</string>
+    <plurals name="stopwatch_lap_badge"><item quantity="one">%1$d lap</item><item quantity="other">%1$d laps</item></plurals>
+    <string name="stopwatch_restore_failed">Stopwatch data expired. Go back to the list and open it again.</string>
+
+    <!-- Date calculator: runtime messages and result strings -->
+    <!-- "From" defaults to today when left empty, so an end date is the only required input -->
+    <string name="calc_need_end_date">Select an end date</string>
+    <string name="calc_need_days">Enter the number of days</string>
+    <string name="calc_need_days_valid">Enter a valid number of days</string>
+
+    <string name="calc_idle_hint">Pick your dates and the result shows up here</string>
+
+    <string name="calc_aux_weeks_days">%1$s %2$s</string>
+    <string name="calc_aux_same_day">Both dates are the same day</string>
+    <string name="calc_aux_end_before">The end date is earlier</string>
+
+    <!--
+      Numbers and their unit always go through plurals: English needs day / days while
+      Chinese has a single form. Letting the platform pick the rule keeps the Kotlin free of
+      hardcoded `if (n == 1)` grammar.
+      ⚠ calc_days_unit is the bare unit after the days field, so it takes no format argument.
+    -->
+    <plurals name="calc_days">
+        <item quantity="one">%1$d day</item>
+        <item quantity="other">%1$d days</item>
+    </plurals>
+    <plurals name="calc_weeks">
+        <item quantity="one">%1$d week</item>
+        <item quantity="other">%1$d weeks</item>
+    </plurals>
+    <plurals name="calc_days_unit">
+        <item quantity="one">day</item>
+        <item quantity="other">days</item>
+    </plurals>
+
+    <!-- Breathing -->
+    <string name="breath_idle_tip">Tap the circle and breathe with the rhythm</string>
+    <string name="breath_running_tip">Relax and follow the breathing cue</string>
+    <string name="breath_inhale">Inhale</string>
+    <string name="breath_exhale">Exhale</string>
+    <string name="breath_start">Start</string>
+    <string name="breath_restart">Restart</string>
+    <string name="breath_remaining">%1$d sec left</string>
+    <string name="breath_done_tip">Well done. Notice how your body feels now.</string>
+    <string name="breath_stopped_tip">This session has ended</string>
+    <string name="breath_total">%1$d min in total</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_group_appearance">Appearance</string>
+    <string name="settings_group_home">Home</string>
+    <string name="settings_group_stopwatch">Stopwatches</string>
+    <string name="settings_group_clock">Desk Clock</string>
+    <string name="settings_group_breath">Breathing</string>
+    <string name="settings_group_data">Data</string>
+    <string name="settings_group_about">About</string>
+
+    <!-- ==================== Time and time zone ==================== -->
+    <string name="settings_group_timezone">Time and time zone</string>
+    <string name="settings_timezone">Time zone</string>
+    <string name="settings_timezone_mode">Time zone mode</string>
+    <string name="settings_timezone_mode_desc">Follow system tracks the device automatically. Manual decouples the app from the system, so system changes will not affect the app.</string>
+    <string name="settings_timezone_follow_system">Follow system</string>
+    <string name="settings_timezone_manual">Manual</string>
+    <string name="settings_timezone_follow_desc">Follow system (%1$s)</string>
+    <string name="settings_timezone_manual_desc">Manual · %1$s</string>
+    <string name="timezone_title">Time zone</string>
+    <string name="timezone_search_hint">Search city, time zone or UTC offset</string>
+    <string name="timezone_empty">No matching time zone</string>
+    <string name="timezone_group_common">Common</string>
+    <string name="timezone_notice_dismiss">Dismiss</string>
+    <string name="timezone_notice_mismatch">System time zone is now %1$s, but this app still shows %2$s</string>
+    <string name="timezone_notice_invalid">Time zone %1$s no longer exists on this device. Reverted to Follow system.</string>
+
+    <string name="settings_theme">Dark mode</string>
+    <string name="settings_theme_desc">When set to System, follows your device’s light or dark setting</string>
+    <string name="settings_theme_system">System</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+
+    <string name="settings_language">Language</string>
+    <string name="settings_language_desc">When set to System, uses your device’s language</string>
+    <string name="settings_lang_system">System</string>
+    <string name="settings_lang_simplified">简</string>
+    <string name="settings_lang_traditional">繁</string>
+    <string name="settings_lang_english">EN</string>
+
+    <string name="settings_haptic">Haptic feedback</string>
+    <string name="settings_haptic_desc">A light tap on your finger when you press or switch things. Intensity is controlled by the system</string>
+    <string name="settings_haptic_system_off">Haptic feedback is turned off in system settings, so this app cannot vibrate. Tap to open system settings</string>
+    <string name="settings_haptic_no_settings">Cannot open system settings</string>
+
+    <string name="settings_home_24h">24-hour clock</string>
+    <string name="settings_home_24h_desc">Turn off to use the 12-hour clock</string>
+    <string name="settings_home_seconds">Show seconds</string>
+    <string name="settings_home_date">Show date</string>
+
+    <string name="settings_sw_tenths">Show tenths of a second</string>
+    <string name="settings_sw_auto_start">Start new stopwatches automatically</string>
+    <string name="settings_sw_auto_start_desc">Turn off and new stopwatches wait at 0:00 until you start them</string>
+    <string name="settings_sw_tenths_desc">Turn off to show seconds only; steadier and saves power</string>
+
+    <string name="settings_clock_anti_burn">Anti burn-in shift</string>
+    <string name="settings_clock_anti_burn_desc">Shift the picture slightly at intervals to avoid OLED burn-in</string>
+    <string name="settings_clock_seconds">Show seconds</string>
+    <string name="settings_clock_keep_on">Keep screen on</string>
+    <string name="settings_clock_keep_on_desc">Recommended when used as a desk clock</string>
+    <string name="settings_clock_24h">24-hour clock</string>
+
+    <string name="settings_breath_vibrate">Vibrate when finished</string>
+    <string name="settings_breath_duration">Session length</string>
+    <string name="settings_breath_duration_desc">Total length of a guided breathing session</string>
+    <string name="settings_breath_duration_value">%1$d min</string>
+
+    <string name="settings_data_export">Export data</string>
+    <string name="settings_data_export_desc">Export everything (timing records, anniversaries, settings) as a zip backup file</string>
+    <string name="settings_data_export_done">Exported to %1$s</string>
+    <string name="settings_data_export_fail">Export failed</string>
+    <string name="settings_data_import">Import data</string>
+    <string name="settings_data_import_desc">Restore everything from a zip backup file</string>
+    <string name="settings_data_import_confirm">Importing will overwrite all existing data (timing records, anniversaries, settings). This cannot be undone. Continue?</string>
+    <string name="settings_data_import_invalid">This is not a valid backup file, so your data was left unchanged.</string>
+    <string name="settings_data_import_newer">This backup was made by a newer version of the app and can\'t be imported. Update the app first, then try again.</string>
+    <string name="settings_data_import_done">All data restored</string>
+
+    <string name="settings_group_reset">Reset</string>
+    <string name="settings_reset">Restore default settings</string>
+    <string name="settings_reset_desc">Reset every preference to its initial value. Timing records are not affected.</string>
+    <string name="settings_reset_confirm">Restore all settings to their default values?\n\nTheme and language will follow the system again. Stopwatch records and anniversaries are not affected.</string>
+    <string name="settings_reset_action">Restore</string>
+
+    <string name="settings_licenses">Open source licenses</string>
+    <string name="settings_licenses_desc">Third-party open source components used by this app</string>
+    <string name="settings_licenses_body">This app uses Material Design Icons by Google, licensed under the Apache License 2.0.\n\nApache License 2.0 allows free commercial use, provided that copyright and license notices are kept.\n\nFull license text: www.apache.org/licenses/LICENSE-2.0</string>
+
+    <!-- ==================== Date calculator page ==================== -->
+
+    <!-- Page-level mode segment: the only two questions this page answers -->
+    <string name="calc_mode_diff">Days apart</string>
+    <string name="calc_mode_shift">Find a date</string>
+
+    <!-- One-character lead labels turn the form into a sentence: "From X to Y", "From X, 30 days before" -->
+    <string name="calc_label_from">From</string>
+    <string name="calc_label_to">To</string>
+
+    <!-- Direction of the shift, spelled as the way the date moves rather than as an operator -->
+    <string name="calc_mode_before">Before</string>
+    <string name="calc_mode_after">After</string>
+
+    <!-- Primary action, swapped with the mode -->
+    <string name="calc_action_days">Calculate</string>
+    <string name="calc_action_date">Find date</string>
+
+    <!-- Content description of the calendar icon button (the button itself has no text) -->
+    <string name="calc_pick_desc">Pick a date</string>
+
+    <!--
+      The example date is filled in at runtime with today's date (see CalculatorDate.compactToday).
+      The hint teaches the compact form: eight digits in a row, no separator keys needed.
+    -->
+    <string name="calc_date_hint">e.g. %1$s</string>
+
+    <!--
+      Quick-fill bar floating beside the focused date field.
+      Picks are offsets from **that field's current date**, not from today, so the wording
+      has to stay relative: "1 day ago / In 1 day", never "Yesterday / Tomorrow" —
+      tapping a chip keeps the bar open and the next tap continues from the new date.
+      "Today" is the one exception: it is the reset key.
+    -->
+    <string name="calc_quick_today">Today</string>
+    <string name="calc_quick_prev_day">1 day ago</string>
+    <string name="calc_quick_next_day">In 1 day</string>
+    <string name="calc_quick_week_ago">1 week ago</string>
+    <string name="calc_quick_week_later">In 1 week</string>
+    <string name="calc_quick_month_ago">1 month ago</string>
+    <string name="calc_quick_month_later">In 1 month</string>
+
+    <!-- Desk clock / About -->
+    <string name="clock_tap_to_exit">Tap the screen to exit</string>
+    <string name="about_intro">Introduction</string>
+    <string name="about_this_app">About this app</string>
+    <string name="changelog_title">Changelog</string>
+    <string name="changelog_title_desc">See what changed in each version, newest first. Long-press to copy.</string>
+    <string name="changelog_version_format">v%1$s · %2$s</string>
+    <string name="changelog_copied">Copied to clipboard</string>
+    <string name="changelog_2_0_13_body">· Rebuilt the Date Calculator around one sentence — "from X to Y", or "from X, N days before/after" — with the two modes switched at the top of the page\n· Added a quick-fill date bar beside the date fields: tap a field and it pops up, so you no longer have to type eight digits\n· The quick-fill bar now chains: tapping a chip leaves it open and the next chip counts from the date you just set, so repeated taps walk the date forward or back\n· Added appear and dismiss transitions to the quick-fill bar and to the Home screen elements\n· The result is now large and centred, with a weeks-and-days breakdown underneath\n· Changing a date now clears the previous result instead of leaving a stale answer on screen\n· Fixed incomplete years being accepted as valid dates (e.g. "Oct 6, 202" was read as the year 202 and produced an absurd day count)\n· Fixed several plural forms in the English UI (1 day left / 1 lap / 1 stopwatch running, and more)</string>
+    <string name="changelog_2_0_12_body">· Long-press a favorites icon or tile to enter edit mode directly\n· Fixed the edit entry sometimes triggering an unwanted ripple; its press ripple effect has been removed</string>
+    <string name="changelog_2_0_11_body">· Widgets center now hints that some launchers block in-app pinning of widgets and shortcuts — widgets can still be added manually from the home screen\n· Stopwatch bottom buttons rearranged into two rows, fixing truncated labels\n· The Focus timer page now titles itself with the stopwatch name; tap the title to rename it\n· Redesigned the Favorites edit entry: hidden by default, it fades in when you tap an empty spot on Home and fades away after 3 idle seconds; Add app is now a ＋ tile while editing\n· Fixed stopwatch laps possibly bleeding into other stopwatches (data format upgraded, existing data migrates automatically)\n· Corrected a series of time-conversion units (microseconds and more)\n· Fixed the add entry disappearing after clearing all favorites</string>
+    <string name="changelog_2_0_10_body">· New on Home: Favorites — one-tap access to your most-used features, with editing, drag-to-reorder, and vertical paging\n· New Widgets center: add app shortcuts and home-screen widgets to your launcher, with a live preview before placing\n· New anniversary widget: keep an eye on a countdown right from your home screen\n· Export/Import upgraded: everything (timing records, anniversaries, settings) is packed into one zip backup that can be fully restored\n· The stopwatch "Pause all" and "Resume all" are now two separate buttons\n· New setting "Start new stopwatches automatically" — new stopwatches can wait at 0:00 until you start them\n· New Changelog page (this one)\n· Various fixes and polish</string>
+
+    <!-- About page -->
+    <string name="app_icon_desc">App icon</string>
+    <string name="version_placeholder">Version %s</string>
+    <string name="settings_update_banner_desc">Tap to open About and see how to update</string>
+    <string name="app_description">XBAOS Timexa is a free app about time, helping you master time and enjoy it.</string>
+    <string name="developer_title">App information</string>
+    <string name="copyright_info">Software copyright registration No. 16993026\n© 2025-2026 XBAOS. All rights reserved.</string>
+    <!-- Domain only: the About page renders it as the value of a label/value info row -->
+    <string name="official_site">www.xbaos.com.cn</string>
+    <string name="back_button_desc">Back</string>
+    <string name="about_unknown_version">Unknown version</string>
+    <string name="about_no_app">No app can open this link</string>
+
+    <!-- About page: brand header and info rows -->
+    <string name="about_tagline">Time, in your pocket</string>
+    <string name="about_info_developer">Developer</string>
+    <string name="about_developer_name">XBAOS</string>
+    <string name="about_info_site">Official site</string>
+    <string name="about_info_ai">AI notice</string>
+    <string name="about_license_value">Material Design Icons · Apache-2.0</string>
+    <string name="about_ai_value">Some content is generated with AI; please verify it.</string>
+    <string name="about_update_desc">Tap to choose how to update</string>
+
+    <!-- Upgrade method chooser, shown when tapping the version name or the update banner -->
+    <string name="about_upgrade_title">Choose how to update</string>
+    <string name="about_upgrade_message">Official site: open time.xbaos.com.cn for the latest build\nBackup: open the alternative download channel</string>
+    <string name="about_upgrade_official">Official site</string>
+    <string name="about_upgrade_backup">Backup channel</string>
+
+    <!-- Web container -->
+    <string name="web_missing_param">Missing page parameter</string>
+
+    <!-- ========== Pomodoro ========== -->
+    <string name="app_pomodoro_name">Pomodoro</string>
+    <string name="app_pomodoro_desc">Alternate focus and breaks to keep your pace</string>
+    <string name="pomodoro_phase_focus">Focus</string>
+    <string name="pomodoro_phase_short_break">Short break</string>
+    <string name="pomodoro_phase_long_break">Long break</string>
+    <string name="pomodoro_round_info">Round %1$d/%2$d · Total %3$d</string>
+    <string name="pomodoro_start">Start</string>
+    <string name="pomodoro_pause">Pause</string>
+    <string name="pomodoro_resume">Resume</string>
+    <string name="pomodoro_reset">Reset</string>
+    <string name="pomodoro_skip">Skip</string>
+    <string name="pomodoro_idle_tip">Tap Start to begin a focus session</string>
+    <string name="pomodoro_focus_tip">Stay focused — we will remind you</string>
+    <string name="pomodoro_break_tip">Stand up and let your eyes rest</string>
+    <string name="pomodoro_focus_done">Focus finished, take a break</string>
+    <string name="pomodoro_break_done">Break is over, back to focus</string>
+    <string name="pomodoro_next_waiting">Next up: %1$s — tap Start to continue</string>
+    <string name="pomodoro_reset_confirm">Resetting clears this session\'s completed count and starts over from Focus.</string>
+
+    <!-- ========== Countdown ========== -->
+    <string name="app_anniversary_name">Countdown</string>
+    <string name="app_anniversary_desc">Track important dates and days remaining</string>
+    <string name="anniversary_add">New countdown</string>
+    <string name="anniversary_empty">No countdowns yet. Tap “New countdown” below.</string>
+    <string name="anniversary_name_hint">Name</string>
+    <string name="anniversary_rename">Rename countdown</string>
+    <string name="anniversary_every_year">Every year</string>
+    <string name="anniversary_once">One time only</string>
+    <string name="anniversary_date_line">%1$s · %2$s</string>
+    <string name="anniversary_repeat_ask">Does this date repeat every year?</string>
+    <string name="anniversary_days_today">Today</string>
+    <plurals name="anniversary_days_left"><item quantity="one">%1$d day left</item><item quantity="other">%1$d days left</item></plurals>
+    <plurals name="anniversary_days_passed"><item quantity="one">%1$d day ago</item><item quantity="other">%1$d days ago</item></plurals>
+    <string name="anniversary_delete">Delete countdown</string>
+    <string name="anniversary_delete_confirm">Delete “%1$s”?</string>
+    <string name="anniversary_created">Countdown added</string>
+    <string name="anniversary_sync">Add to calendar</string>
+    <string name="anniversary_sync_desc">Added from XBAOS Timexa</string>
+    <string name="anniversary_sync_no_app">No calendar app found</string>
+    <string name="anniversary_home_action">Manage countdowns</string>
+
+    <!-- ========== New settings ========== -->
+    <string name="settings_group_pomodoro">Pomodoro</string>
+    <string name="settings_home_anniversary">Show countdown on home</string>
+    <string name="settings_home_anniversary_desc">Show the nearest date under the clock</string>
+    <string name="settings_home_favorites">Favorites</string>
+    <string name="settings_home_favorites_desc">Show the favorites card on the home screen</string>
+    <string name="settings_pomodoro_focus">Focus length</string>
+    <string name="settings_pomodoro_short">Short break</string>
+    <string name="settings_pomodoro_long">Long break</string>
+    <string name="settings_pomodoro_rounds">Pomodoros per round</string>
+    <string name="settings_pomodoro_minutes_value">%1$d min</string>
+    <string name="settings_pomodoro_rounds_value">%1$d</string>
+    <string name="settings_pomodoro_auto_next">Auto-continue</string>
+    <string name="settings_pomodoro_auto_next_desc">Start the next phase automatically</string>
+    <string name="settings_pomodoro_vibrate">Vibrate on phase change</string>
+    <string name="settings_pomodoro_notification">Ongoing notification</string>
+    <string name="settings_pomodoro_notification_desc">Keep showing the remaining time and alert you when you are away</string>
+    <string name="settings_sw_notification">Ongoing notification</string>
+    <string name="settings_sw_notification_desc">Show a notification while timing</string>
+
+    <!-- ========== Notifications ========== -->
+    <string name="notification_channel_ongoing">Timing</string>
+    <string name="notification_channel_alert">Time alerts</string>
+    <string name="notification_pomodoro_left">%1$s · %2$s left</string>
+    <string name="notification_pomodoro_finished">%1$s finished — tap to open</string>
+    <plurals name="notification_stopwatch_running"><item quantity="one">%1$d stopwatch running</item><item quantity="other">%1$d stopwatches running</item></plurals>
+
+    <!-- ========== Permissions: banner shown before requesting ========== -->
+    <string name="perm_location_banner">Approximate location is used to compute sun altitude and sunrise/sunset for your city. Coordinates are used only for on-device calculation — never uploaded, never used for anything else.</string>
+    <string name="perm_notification_banner">Notification access is used to keep the remaining time in the shade while timing, and to alert you when a phase ends. Timing works fine without it — you just will not see notifications.</string>
+
+    <!-- ========== Permissions page ========== -->
+    <string name="settings_permissions">Permissions</string>
+    <string name="settings_permissions_desc">See which permissions this app uses and why</string>
+    <string name="perm_page_title">Permissions</string>
+    <string name="perm_page_intro">This is an offline utility. Most features need no permission at all. Below is the complete list of permissions the app may request, each with its exact purpose. Every one serves only the matching feature — never analytics, profiling, or third-party sharing.</string>
+    <string name="perm_page_section_manual">Permissions you grant manually</string>
+    <string name="perm_page_section_manual_desc">These are requested only when you actually use the matching feature. If you decline, the feature degrades gracefully but the app keeps working.</string>
+    <string name="perm_page_section_auto">Permissions granted automatically</string>
+    <string name="perm_page_section_auto_desc">These are granted at install time and normally involve no private information. They are listed here only for completeness.</string>
+    <string name="perm_page_footer">All data stays on your phone, in the app private directory. Nothing is collected, uploaded, or shared. Uninstalling removes everything.</string>
+
+    <string name="perm_location_name">Approximate location (ACCESS_COARSE_LOCATION)</string>
+    <string name="perm_location_use">Lets “Sun Info” compute sun altitude, sunrise/sunset, and day length for your city.\n\n· One fix only — no continuous or background tracking\n· Approximate location only; city-level is enough for the maths\n· Coordinates are used on-device only, never uploaded or shared\n· If declined, Sun Info falls back to manual coordinates</string>
+
+    <string name="perm_notification_name">Notifications (POST_NOTIFICATIONS)</string>
+    <string name="perm_notification_use">Keeps the timing status in the notification shade and alerts you when a pomodoro phase ends.\n\n· Required on Android 13 and above; granted automatically below that\n· Notification content is limited to timing status and remaining time\n· If declined, the foreground service still runs — you just see no notification</string>
+
+    <string name="perm_vibrate_name">Vibration (VIBRATE)</string>
+    <string name="perm_vibrate_use">Provides a light tap when a breathing session ends or a pomodoro phase changes.\n\n· Short pulses only — never continuous vibration\n· Can be disabled per feature in Settings</string>
+
+    <string name="perm_internet_name">Network access (INTERNET)</string>
+    <string name="perm_internet_use">Used only for the home screen to check whether a new version exists (reading a fixed version file).\n\n· No personal data is uploaded\n· Everything else works fully offline</string>
+
+    <string name="perm_foreground_name">Foreground service (FOREGROUND_SERVICE · SPECIAL_USE)</string>
+    <string name="perm_foreground_use">Lets timing continue after you leave the app. The system requires an ongoing notification to be hosted by a foreground service, hence this permission.\n\n· Runs only while a stopwatch or pomodoro is timing; stops when timing stops\n· No background computation, no network wakeups, no reading of other apps’ data</string>
+</resources>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  统一的二级页顶栏：左侧返回圆片 + 居中标题 + 底部一条分割线。
+  各页引入后，再用代码设置 id 为 page_title 的文本（放代码里是为了跟随多语言）。
+
+  统一用法：`<include layout="@layout/item_topbar" />`（光秃引入即可，不需要写任何 layout 属性）。
+
+  ⚠⚠ **分割线要通栏，靠的是「各页根布局不写 paddingHorizontal」——别再用负 margin 去凑。**
+  背景：各页根布局原本写了 paddingHorizontal=screen_padding，顶栏作为子节点被一起内缩，
+  于是顶栏底部那条分割线左右各留 16dp、不通栏（实测 x=42..1037，屏幕宽 1080）。
+  曾尝试给顶栏加 `layout_marginStart/End = -16dp` 把顶栏横向撑回屏宽，**实测两次都无效**：
+    ① 写在本文件根元素上 → 无效；
+    ② 写在各页 `<include>` 标签上（且同时给出 layout_width/height）→ 仍无效。
+  分割线位置一动不动（始终 42..1037）。所以 margin 这条路放弃。
+  现在的做法：各页根布局**去掉** paddingHorizontal，改由**内容区自己**留 paddingStart/End，
+  顶栏与底部那条分割线因此天然通栏，不需要任何负值技巧。
+
+  分割线：顶栏与内容区之间划一条线，滚动时内容与标题不会糊成一片。
+  线画在 item_topbar 内部的最底部，因此所有引用了顶栏的页面自动获得，无需逐页添加；
+  线的两个属性（粗细 stroke_topbar、颜色 stroke_strong）在 item_topbar_divider 里统一维护。
+  ⚠ 首页**刻意没有**这条线，不要给它补。
+
+  ⚠ 线**不额外留间距**：它底下紧挨着的就是各页内容区的第一个元素。
+    内容区自己的留白由 @dimen/topbar_gap 表达（可滚动页面写在 ScrollView 的 paddingTop 上），
+    这样「线到内容」的距离在全 App 只有一处定义，不会再出现逐页不同的情况。
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/topbar_height">
+    <!--
+      注意：这里**没有** android:layout_marginStart/End。
+      分割线要通栏，靠的是「各页根布局不再写 paddingHorizontal，改由内容区自己留边距」，
+      而不是给顶栏加负 margin —— 见本文件顶部注释里的实测记录。
+    -->
+
+    <!--
+      返回键自己补 marginStart：顶栏整体通栏（它所在容器的旁侧边距已下移到内容区），
+      返回键不能再指望父布局替它留边距，否则会贴到屏幕左缘。
+    -->
+    <include
+        layout="@layout/item_back_button"
+        android:layout_width="@dimen/back_button_size"
+        android:layout_height="@dimen/back_button_size"
+        android:layout_marginStart="@dimen/screen_padding"
+        android:layout_gravity="start|center_vertical" />
+
+    <TextView
+        android:id="@+id/page_title"
+        style="@style/Text.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:maxWidth="@dimen/topbar_title_max_width" />
+
+    <!-- 顶栏底部的分割线：与内容区的交界 -->
+    <include
+        layout="@layout/item_topbar_divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/stroke_topbar"
+        android:layout_gravity="bottom" />
+</FrameLayout>

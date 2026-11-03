@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 卡片内部可点击的行：常态透明（不破坏卡片整体感），按下时轻微着色 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/surface_pressed" />
+            <corners android:radius="@dimen/radius_input" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+            <corners android:radius="@dimen/radius_input" />
+        </shape>
+    </item>
+</selector>

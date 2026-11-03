@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      尺寸刻度。只增不改名，避免布局引用失效。
+      间距为 8pt 栅格，圆角收敛在 10~14dp，保证“素”而不是“圆润浮夸”。
+    -->
+
+    <!-- 间距刻度 -->
+    <dimen name="space_xxs">2dp</dimen>
+    <dimen name="space_xs">4dp</dimen>
+    <dimen name="space_s">8dp</dimen>
+    <dimen name="space_m">16dp</dimen>
+    <dimen name="space_l">24dp</dimen>
+    <dimen name="space_xl">32dp</dimen>
+
+    <!-- 圆角 -->
+    <dimen name="radius_card">14dp</dimen>
+    <dimen name="radius_button">12dp</dimen>
+    <dimen name="radius_input">10dp</dimen>
+    <dimen name="radius_chip">12dp</dimen>
+    <dimen name="radius_badge">10dp</dimen>
+    <dimen name="radius_dialog">16dp</dimen>
+    <!--
+      分段控件滑块的圆角 = 轨道圆角 − 轨道内边距，两者才是「同心圆角」。
+      轨道 radius_input = 10dp、内边距 segment_track_padding = 3dp，
+      因此滑块取 7dp。若与轨道同用 10dp，滑块内缩 3dp 却仍是 10dp 圆角，
+      弧心不重合，视觉上滑块会显得鼓出来、与轨道外框对不齐（用户报告的 bug）。
+    -->
+    <dimen name="radius_segment_slider">7dp</dimen>
+
+    <!--
+      分段控件轨道的内边距。它有两个作用，改之前先想清楚：
+        1. 决定分段单元与轨道边缘的间距；
+        2. 决定滑块的内缩量 —— 滑块圆角与它强绑定（见上一条）。
+      取 3dp 而不是 space_xxs(2dp)：4x2 时代滑块几乎填满轨道，显得笨重；
+      多留 1dp 之后滑块明显「小了一圈」，与轨道外框的层次也更清楚。
+    -->
+    <dimen name="segment_track_padding">3dp</dimen>
+
+    <!--
+      结构尺寸。
+      注意：按压缩放的**比例**不在这里，而在 values/fractions.xml ——
+      `0.95` 这种无单位值放进 dimension 会导致 getDimension() 抛
+      Resources$NotFoundException（曾造成启动即崩溃），比例只能由 fraction 表达。
+    -->
+    <dimen name="button_height">48dp</dimen>
+    <dimen name="button_height_small">38dp</dimen>
+    <dimen name="card_padding">16dp</dimen>
+
+    <!--
+      页面左右安全边距。
+      ⚠ **只加在「内容区」上，不要加在根布局上** —— 加在根布局会让顶栏（含其底部分割线）
+        一起被内缩，分割线左右各留 16dp、不通栏（实测 x=42..1037，屏宽 1080）。
+        顶栏要通栏，就必须游离在这个边距之外。见 item_topbar.xml 顶部注释。
+      ⚠ 用 android:paddingStart/End 而不是 android:paddingHorizontal：
+        后者是 API 26+ 的属性，在本项目 minSdk 24 上会被**静默忽略**（内容直接贴屏边）。
+    -->
+    <dimen name="screen_padding">16dp</dimen>
+    <!-- 列表项之间的纵向间隔 -->
+    <dimen name="list_gap">10dp</dimen>
+
+    <dimen name="back_button_size">40dp</dimen>
+    <dimen name="topbar_height">52dp</dimen>
+
+    <!-- 弹窗 -->
+    <dimen name="dialog_padding">20dp</dimen>
+    <dimen name="dialog_actions_top">20dp</dimen>
+    <!-- 竖向选择弹窗的高度上限，超出则内部滚动，避免小屏上弹窗顶到状态栏 -->
+    <dimen name="dialog_options_max_height">340dp</dimen>
+
+    <!-- 列表行：设置行与功能行共用同一套内边距，保证两类列表的行距节奏一致 -->
+    <dimen name="row_padding_h">16dp</dimen>
+    <dimen name="row_padding_v">12dp</dimen>
+    <dimen name="row_min_height">56dp</dimen>
+    <!-- 带 40dp 图标底板的功能行：40 + 12*2 = 64dp -->
+    <dimen name="row_min_height_icon">64dp</dimen>
+
+    <dimen name="setting_group_gap">@dimen/space_l</dimen>
+    <dimen name="setting_group_title_gap">@dimen/space_s</dimen>
+    <dimen name="divider_inset">16dp</dimen>
+    <!-- 1dp 级别的发丝线：分隔线唯一的用途，单独命名避免各处用裸数字 -->
+    <dimen name="stroke_hairline">1dp</dimen>
+    <!--
+      顶栏分割线：1dp。
+      刻意**不复用** stroke_hairline —— 那个值同时管着卡片描边、输入框描边、
+      按钮描边与行内分隔线，「顶栏的分割线」若直接改它会连带把整页的线全部加重。
+      颜色也不走 stroke_soft，改走 stroke_strong：stroke_soft(#EEEEEE) 与页面底色
+      background_light(#F2F2F2) 只差 4 个灰阶，等于一条看不见的线。
+      ⚠ 曾用过 1.5dp：density 420 下是 4px，用户反馈「太粗」，故回到 1dp（3px）。
+    -->
+    <dimen name="stroke_topbar">1dp</dimen>
+
+    <!--
+      顶栏与内容区之间的统一留白。
+      此前各页面各写一个值（8dp / 16dp / 干脆不写），分割线到内容的距离逐页不同，
+      看起来不像同一个应用 —— 所以抽成一个语义化刻度，所有页面必须用同一个。
+
+      写法约定：**可滚动页面把它写在 ScrollView 的 paddingTop 上，而不是 layout_marginTop**。
+      这些 ScrollView 都开了 clipToPadding="false"，写成 paddingTop 之后，
+      静止时留白一模一样，但滚动时内容会一直贴到分割线才被裁切；
+      写成 marginTop 则 ScrollView 的边界整体下移，滚上去的文字会在分割线下面
+      留出一条空白带再被切断 —— 那才是「割裂」的来源。
+    -->
+    <dimen name="topbar_gap">@dimen/space_s</dimen>
+    <!-- 设置页分段型行（无最小高度，靠内边距撑开） -->
+    <dimen name="setting_segment_padding_v">14dp</dimen>
+
+    <!-- 字号 -->
+    <dimen name="text_caption">13sp</dimen>
+    <dimen name="text_body">15sp</dimen>
+    <!-- 分段控件单元自适应字号的下限：只在英文长文案（System/Light/Dark）时才可能触到 -->
+    <dimen name="segment_text_min">12sp</dimen>
+    <dimen name="text_body_large">17sp</dimen>
+    <dimen name="text_title">19sp</dimen>
+    <dimen name="text_large_title">28sp</dimen>
+
+    <!--
+      ========== 展示字号 ==========
+      超出正文刻度的「大数字」，单独成组，避免和正文刻度混在一起看不出层级。
+    -->
+    <dimen name="text_stopwatch_display">36sp</dimen>
+    <!-- 秒表时间自适应字号的下限：再长也不会缩到读不出来 -->
+    <dimen name="text_stopwatch_display_min">20sp</dimen>
+    <dimen name="text_breath_count">22sp</dimen>
+    <dimen name="text_timer_display">44sp</dimen>
+    <!--
+      纪念日倒数的「天数」。
+      比正文大一档、比秒表展示数字小一档：它是一行里唯一带结论性的数字，
+      要给到足够重量才压得住左侧的名称；但它不是主角（用户是来看日子的），
+      再往上加就跟整页的素净气质冲了。取 26sp 还有个好处 —— 中文
+      「还有 128 天」在这个字号下正好一行放得下，不必折行。
+    -->
+    <dimen name="text_counter_display">26sp</dimen>
+    <dimen name="text_display">72sp</dimen>
+    <dimen name="text_display_oled">112sp</dimen>
+
+    <!--
+      首页「常用应用」图标下方的名称。
+      11sp 是一格里能放下的上限（一格约 74dp 宽）；名字长的（「趣味年龄计算器」）
+      由 autoSize 缩到 9sp 收进一行，不折行、不省略 —— 一格里出现省略号很难看。
+    -->
+    <dimen name="text_favorite_label">11sp</dimen>
+    <dimen name="text_favorite_label_min">9sp</dimen>
+
+    <!-- ========== 图标 ========== -->
+    <!-- 列表行左侧的圆角底板 + 内缩，使图形实际约 22dp，视觉上比纯 24dp 图标轻 -->
+    <dimen name="icon_badge_size">40dp</dimen>
+    <dimen name="icon_badge_padding">9dp</dimen>
+    <!-- 行尾指示箭头 -->
+    <dimen name="icon_chevron_size">16dp</dimen>
+    <!-- 行内操作圆钮（秒表暂停 / 删除） -->
+    <dimen name="icon_button_size">44dp</dimen>
+    <dimen name="row_action_padding">12dp</dimen>
+    <!--
+      纪念日行内的两枚圆钮：比 icon_button_size 小一档。
+      44dp 是「一行只有一个主操作」时的尺寸（秒表行就是那样）；纪念日一行要同时
+      放名称、日期、天数、两枚按钮，44dp 会把左侧文字块挤到只剩一半宽，
+      整行于是显得挤。缩到 36dp 之后圆钮仍有 36dp 的可点面积（高于 24dp 无障碍下限），
+      而文字块能多出 16dp —— 这是「不挤」的关键来源。
+    -->
+    <dimen name="icon_button_size_small">36dp</dimen>
+    <dimen name="row_action_padding_small">9dp</dimen>
+    <!-- 顶栏与返回键的圆形图标按钮 -->
+    <dimen name="icon_button_padding">10dp</dimen>
+    <!--
+      关于页顶部的应用图标。
+      从 72dp 提到 96dp：关于页的头部本来就该有一个明确的视觉锚点，
+      72dp 在一整块留白的品牌区里偏小，撑不起「这是主角」的分量。
+    -->
+    <dimen name="icon_avatar_size">96dp</dimen>
+
+    <!-- ========== 行内节奏 ========== -->
+    <!-- 行首图标与文字块之间 -->
+    <dimen name="app_row_gap">14dp</dimen>
+    <!-- 表单里标签与控件之间更紧凑的一档（刻意小于 space_m，不并入 8pt 刻度） -->
+    <dimen name="form_gap">12dp</dimen>
+    <dimen name="drawable_text_gap">6dp</dimen>
+    <dimen name="line_spacing">4dp</dimen>
+    <dimen name="line_spacing_tight">3dp</dimen>
+
+    <!-- ========== 徽标与状态胶囊 ========== -->
+    <dimen name="badge_padding">6dp</dimen>
+    <dimen name="badge_padding_h">12dp</dimen>
+    <dimen name="chip_padding_h">10dp</dimen>
+    <dimen name="chip_padding_v">3dp</dimen>
+
+    <!-- 新版本提示点：独立的小红点，贴着设置按钮的右上角 -->
+    <dimen name="update_dot_size">10dp</dimen>
+    <!-- 红点相对按钮外框的内缩，使点落在圆形边缘上而不是悬在框外 -->
+    <dimen name="update_dot_inset">2dp</dimen>
+
+    <!-- ========== 呼吸放松页圆环 ========== -->
+    <dimen name="breath_ring_outer">260dp</dimen>
+    <dimen name="breath_ring_inner">170dp</dimen>
+
+    <!-- ========== 番茄钟圆环 ========== -->
+    <dimen name="pomodoro_ring_size">240dp</dimen>
+    <dimen name="pomodoro_ring_stroke">10dp</dimen>
+    <dimen name="pomodoro_inner_size">180dp</dimen>
+
+    <!-- ========== 单表专注页（点秒表时间进入） ========== -->
+    <!-- 整页放大展示的数字，比分卡片里的 36sp 大得多，也更接近系统秒表的观感 -->
+    <dimen name="stopwatch_focus_display">64sp</dimen>
+    <dimen name="stopwatch_focus_display_min">28sp</dimen>
+    <!-- 大数字的最小高度：保证 64sp 等宽数字有稳定的行高，不被相邻控件挤压 -->
+    <dimen name="stopwatch_focus_min_height">84dp</dimen>
+    <!-- 顶栏标题的最宽占比：标题可能来自用户数据（如秒表名），超宽就省略，
+         免得长名字顶到返回键或溢出屏幕。其余页面的标题都是短固定文案，不受影响 -->
+    <dimen name="topbar_title_max_width">260dp</dimen>
+
+    <!-- ========== 主导航栏（小白条）留白 ========== -->
+    <!--
+      手势导航条两侧的「额外」留白。
+      系统栏自身的占位由 BaseActivity 按 insets 精确处理，这里只补一点呼吸感，
+      避免按钮或列表最后一行紧贴着小白条。
+    -->
+    <!--
+      页面底部「操作区 ⇒ 系统导航栏」之间的呼吸留白。
+      由**页面自己在底部控件上写 marginBottom**，不由 BaseActivity 全局叠加 ——
+      全局叠加会让所有页面（包括不需要的）底部凭空多一条，正是「小白条背景反而更高」的成因。
+    -->
+    <dimen name="screen_padding_bottom">8dp</dimen>
+
+    <!-- ========== 桌面小组件（毛玻璃） ========== -->
+    <!--
+      参考尺寸。桌面的一格不是固定值，各厂商算法不同：
+        Pixel Launcher 约 74dp 宽 × 55dp 高（含内边距），
+        min* = 70 × 格数 − 30 是各家都认的经验式（4 格宽 → 250dp，2 格高 → 110dp）。
+      曾按 140dp 写高度，结果系统把组件判成 4×3（多占一行），所以这里必须贴合实算值。
+
+      这些只是**给桌面排布用的参考值**，用户拉伸后布局会自适应（字号由代码按实际高度算）。
+    -->
+    <dimen name="widget_min_width">110dp</dimen>
+    <dimen name="widget_min_height">110dp</dimen>
+    <dimen name="widget_radius">20dp</dimen>
+    <!-- 组件内边距：2×2 块头小，留白按 4×2 时代收一档，避免内容被挤在中间一小团 -->
+    <dimen name="widget_padding">14dp</dimen>
+
+    <!-- 秒表小组件：第一行「数字 + 个」，第二行「秒表正在计时」 -->
+    <!-- 下面三个字号只是**布局预览**的默认值，运行期由 Provider 按组件实际尺寸覆盖 -->
+    <dimen name="widget_count_size">44sp</dimen>
+    <dimen name="widget_count_suffix_size">20sp</dimen>
+    <dimen name="widget_unit_size">13sp</dimen>
+    <!-- 「个」与数字之间的间隔。极小：它是一个附在数字后面的量词，不是独立的一列 -->
+    <dimen name="widget_suffix_gap">2dp</dimen>
+    <dimen name="widget_unit_gap">2dp</dimen>
+
+    <!-- 「纪念日」组件三行的初始字号。Provider 会按组件实际尺寸折算后覆盖它们 -->
+    <dimen name="widget_anniversary_name_size">15sp</dimen>
+    <dimen name="widget_anniversary_days_size">30sp</dimen>
+    <dimen name="widget_anniversary_date_size">11sp</dimen>
+
+    <!-- ========== 权限申请原因横幅 ========== -->
+    <dimen name="banner_padding_v">12dp</dimen>
+    <dimen name="banner_icon_size">18dp</dimen>
+    <!-- 图标与首行文字视觉对齐：字号 15sp 的行高约 20dp，图标 18dp 需下移 1dp -->
+    <dimen name="banner_icon_top">1dp</dimen>
+    <!-- 滑入的起始位移：只从上方一点点飘下来，不要「从天而降」 -->
+    <dimen name="banner_slide_in">12dp</dimen>
+
+    <!--
+      ========== 首页「常用应用」卡片 ==========
+      网格的几何全部由代码按实际宽度算（见 ui/FavoritesGridView.kt），
+      这里只提供「一个格子最少要多宽」与各类元素的固定尺寸。
+    -->
+    <!--
+      单格最小宽度。列数 = 卡片内宽 ÷ 这个值，因此它直接决定「一行几个」：
+      360dp 屏、左右各留 12dp 之后内宽 304dp → 304 ÷ 72 = 4.22 → **4 列**（与需求吻合）。
+      ⚠ 调到 76dp 就会掉成 3 列，别再往上加。
+    -->
+    <dimen name="favorite_cell_min_width">72dp</dimen>
+    <!-- 单格高度 = 图标 48 + 间距 6 + 名称一行 ≈ 16，再留 6dp 呼吸 -->
+    <dimen name="favorite_cell_height">76dp</dimen>
+    <dimen name="favorite_grid_padding_h">12dp</dimen>
+    <!--
+      上下内边距。去掉卡片后它只负责把图标与「表头按钮 / 下方卡片」拉开一点呼吸 ——
+      上一版在卡片里时是 16dp，那时它同时兼任「卡片内边距」，现在不需要那么多了。
+    -->
+    <dimen name="favorite_grid_padding_v">6dp</dimen>
+    <!-- 圆角方形图标底板 -->
+    <dimen name="favorite_tile_size">48dp</dimen>
+    <dimen name="favorite_tile_radius">14dp</dimen>
+    <!-- 底板内缩，让 24dp 矢量图形实际约 26dp，视觉上不至于把底板塞满 -->
+    <dimen name="favorite_tile_padding">11dp</dimen>
+    <dimen name="favorite_label_gap">6dp</dimen>
+    <!-- 编辑态下图标右上角的减号徽标 -->
+    <dimen name="favorite_badge_size">20dp</dimen>
+    <dimen name="favorite_badge_padding">5dp</dimen>
+    <!-- 徽标相对图标底板右上角的外扩量：负值即「压出底板一点点」，更像系统桌面的角标 -->
+    <dimen name="favorite_badge_inset">2dp</dimen>
+    <!--
+      分页指示点。**竖排**放在网格右侧，与上下翻页的方向一致。
+      这里给的是到屏幕右缘的距离 —— 圆点叠在网格 paddingEnd(12dp) 区里，
+      不参与列宽计算，所以它显示与否都不会让图标行左右跳动。
+    -->
+    <dimen name="favorite_indicator_size">6dp</dimen>
+    <dimen name="favorite_indicator_gap">6dp</dimen>
+    <dimen name="favorite_indicator_end">2dp</dimen>
+    <!-- 编辑态「＋」空格的虚线框圆角 -->
+    <dimen name="favorite_add_radius">14dp</dimen>
+    <dimen name="favorite_add_stroke">1dp</dimen>
+    <!--
+      长按拎起时抬起的高度。它在这里的**唯一**作用是把该格子的绘制顺序提到最上层
+      （View 的 Z 决定兄弟节点谁盖谁），阴影本身由图标底板自己画，与此无关。
+      取 6dp：足够压过同层的其它格子，又不至于让它在滚出卡片时显得「飘在外面」。
+    -->
+    <dimen name="favorite_drag_elevation">6dp</dimen>
+
+    <!-- ==================== 日期计算器 ==================== -->
+
+    <!--
+      行首 1 字标签（「从 / 到」）的最小宽度。
+      中文「从」≈17dp、英文 From ≈34dp：定死宽度会在英文下把日期框挤窄，
+      完全不定宽则两行日期框的左边缘对不齐（一行的标签宽、一行窄）。
+      wrap_content + 这个 minWidth 两头都照顾到：多数语言下两行对齐，
+      遇到更长的语言也能自己撑开，而不是把日期框压变形。
+    -->
+    <dimen name="calc_label_min_width">38dp</dimen>
+
+    <!--
+      推算模式「往前 / 往后」那枚分段的固定宽度。
+      Segment 单元是 0dp + weight=1，所以轨道宽度必须是一个确定值；
+      若改用 wrap_content，两格会按各自文字的自然宽度去分权重余量、宽度不相等，滑块会斜着跑。
+      112dp 让两格各 56dp：英文 Before / After（6 字符）配合 Segment 自带的自适应字号也放得下。
+    -->
+    <dimen name="calc_dir_width">112dp</dimen>
+
+    <!--
+      差值答案里单位的字号。数字用 text_large_title(28sp)、单位缩到 18sp ——
+      同一串文字两种字号，靠 RelativeSizeSpan 完成（见 CalculatorDate.sizedQuantity）。
+      为什么要分开：数字是答案、单位只是量词；一样大时读起来是「91 天」四个字，
+      而不是「91 —— 单位是天」。
+    -->
+    <dimen name="text_answer_unit">18sp</dimen>
+
+    <!--
+      推算出来的日期用 22sp，比差值天数低一档。
+      不是随手取的值：中文日期「2026年10月30日」有 12 个全角字符，
+      而卡片内宽只有 296dp（360dp 屏 − 两侧 16dp 页边距 − 卡片两侧 16dp 内边距），
+      28sp 下要 336dp 会折行，22sp 下 264dp 正好一行 —— 答案折行是最不能接受的一种难看。
+    -->
+    <dimen name="text_answer_date">22sp</dimen>
+</resources>

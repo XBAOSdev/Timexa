@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 深色底必须配浅色系统栏图标，否则图标在深色背景上不可见 -->
+    <bool name="window_light_status_bar">false</bool>
+</resources>

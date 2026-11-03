@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  权限说明页：静态内容，全部行由代码按「权限清单」数组组装。
+  之所以不在 XML 里写死：权限条目要带上「名称 + 用途」两段长文本，
+  在 XML 里重复四遍卡片结构既冗长又容易漏；代码里用一个数组驱动更清楚。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_light"
+    android:orientation="vertical"
+    tools:context=".appsys.Permissions">
+
+    <include layout="@layout/item_topbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingTop="@dimen/topbar_gap"
+        android:scrollbars="none"
+        android:layout_marginStart="@dimen/screen_padding"
+        android:layout_marginEnd="@dimen/screen_padding">
+
+        <LinearLayout
+            android:id="@+id/permissions_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/space_l" />
+    </ScrollView>
+</LinearLayout>

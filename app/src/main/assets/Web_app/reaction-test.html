@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>反应能力测试</title>
+
+    <style>
+        /* 基础样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 自定义颜色变量 - 莫兰迪色系 */
+        :root {
+            --bg-color: #F2F2F2;
+            --morandi-blue: #7D8CA3;      /* 牛仔蓝 - 用于开始按钮 */
+            --morandi-green: #8FB996;     /* 青绿色 - 方块初始颜色 */
+            --morandi-red: #C9A9A6;       /* 玫瑰色 - 方块变色后 */
+            --morandi-gray: #B9B4C7;      /* 灰紫色 - 轻拟态背景 */
+            --morandi-sand: #F8F0E9;      /* 沙色 - 文本背景 */
+            --morandi-slate: #8CA3AF;     /* 青石板色 - 文本 */
+            --white: #FFFFFF;
+            --shadow-light: rgba(255, 255, 255, 0.7);
+            --shadow-dark: rgba(150, 150, 150, 0.15);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 1rem;
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            color: var(--morandi-slate);
+            padding-top: 4rem;
+        }
+
+        .container {
+            max-width: 28rem;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: clamp(1.5rem, 5vw, 2rem);
+            font-weight: bold;
+            margin-bottom: 3rem;
+            color: var(--morandi-slate);
+            text-align: center;
+        }
+
+        .content-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            margin: 2rem 0;
+        }
+
+        /* 按钮样式 */
+        #startBtn {
+            background-color: var(--morandi-blue);
+            color: var(--white);
+            font-size: 1.1rem;
+            padding: 1rem 2rem;
+            border-radius: 0.75rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #startBtn span {
+            margin-right: 0.5rem;
+        }
+
+        #startBtn:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+
+        #startBtn:active {
+            box-shadow: inset 2px 2px 5px var(--shadow-dark),
+                       inset -2px -2px 5px var(--shadow-light);
+        }
+
+        /* 说明文本样式 */
+        #instructions {
+            text-align: center;
+            padding: 0.75rem 1rem;
+            background-color: var(--morandi-sand);
+            opacity: 0.7;
+            border-radius: 0.5rem;
+            max-width: 20rem;
+            margin-bottom: 2rem;
+        }
+
+        /* 方块样式 */
+        #square {
+            width: 10rem;
+            height: 10rem;
+            border-radius: 0.75rem;
+            background-color: var(--morandi-green);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            margin: 2rem 0;
+            transform: scale(0.95);
+        }
+
+        #square:hover {
+            transform: scale(1.0);
+        }
+
+        #square:active {
+            transform: scale(0.9);
+        }
+
+        /* 结果区域样式 */
+        #results {
+            width: 100%;
+            max-width: 20rem;
+            margin-top: 1.5rem;
+            margin-bottom: 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            text-align: center;
+        }
+
+        #results div {
+            background-color: var(--morandi-sand);
+            opacity: 0.7;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            transform: translateY(1rem);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        #results div:last-child {
+            background-color: var(--morandi-blue);
+            opacity: 0.8;
+            color: var(--white);
+            padding: 0.75rem;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+
+        /* 下一次测试提示 */
+        #nextTestPrompt {
+            margin-top: 1rem;
+            font-size: 0.875rem;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        /* 轻拟态效果 */
+        .neumorphic {
+            box-shadow: 3px 3px 6px var(--shadow-dark),
+                       -3px -3px 6px var(--shadow-light);
+        }
+
+        .neumorphic-pressed {
+            box-shadow: inset 2px 2px 5px var(--shadow-dark),
+                       inset -2px -2px 5px var(--shadow-light);
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 480px) {
+            #square {
+                width: 8rem;
+                height: 8rem;
+            }
+        }
+    </style>
+    <!-- 玻璃皮肤：统一覆盖层，须位于本页样式之后以便生效 -->
+    <link rel="stylesheet" href="morandi.css">
+    <script src="i18n.js"></script>
+</head>
+<body>
+<div class="container">
+    <!-- 标题 -->
+<!--    <h1>反应能力测试</h1>-->
+
+    <!-- 中间内容区域 - 包含按钮、方块 -->
+    <div class="content-area">
+        <!-- 开始按钮 -->
+        <button id="startBtn" class="neumorphic">
+            <span>▶</span> 开始测试
+        </button>
+
+        <!-- 使用说明 -->
+        <div id="instructions" class="neumorphic">
+            <p>当绿色方块变成红色时，请尽快点击它。共测试3次，结束后将显示平均反应时间。</p>
+        </div>
+
+        <!-- 测试方块 -->
+        <div id="square" class="neumorphic"></div>
+
+        <!-- 下一次测试提示 -->
+        <div id="nextTestPrompt"></div>
+    </div>
+
+    <!-- 结果显示区域 -->
+    <div id="results"></div>
+</div>
+
+<script>
+    /**
+     * 动态文案翻译：i18n.js 在 <head> 里同步加载并暴露 window.AppI18n.t()。
+     * 本页的「准备下一次测试…」是 JS 运行时才写进 DOM 的，静态字典扫描扫不到，
+     * 所以在这里显式调用。简体 / 无 i18n.js 环境下 t() 原样返回 key。
+     */
+    function t(key) {
+        return (window.AppI18n && window.AppI18n.t) ? window.AppI18n.t(key) : key;
+    }
+
+    // 获取DOM元素
+    const startBtn = document.getElementById('startBtn');
+    const square = document.getElementById('square');
+    const results = document.getElementById('results');
+    const instructions = document.getElementById('instructions');
+    const nextTestPrompt = document.getElementById('nextTestPrompt');
+
+    // 测试状态变量
+    let testCount = 0;
+    let maxTests = 3;
+    let reactionTimes = [];
+    let squareTurnedRedTime = 0;
+    let isWaiting = false;
+    // 新增变量：标记当前测试是否已被点击过
+    let hasBeenClicked = false;
+
+    // 开始按钮点击事件
+    startBtn.addEventListener('click', startTest);
+
+    // 方块点击事件
+    square.addEventListener('click', handleSquareClick);
+
+    // 开始测试函数
+    function startTest() {
+        // 隐藏开始按钮和说明
+        startBtn.style.opacity = '0';
+        instructions.style.opacity = '0';
+
+        // 清空之前的结果
+        results.innerHTML = '';
+        // 重置测试计数
+        testCount = 0;
+        reactionTimes = [];
+
+        // 延迟后显示方块
+        setTimeout(() => {
+            startBtn.style.display = 'none';
+            instructions.style.display = 'none';
+            square.style.opacity = '1';
+            // 开始第一轮测试
+            startNewTestRound();
+        }, 500);
+    }
+
+    // 开始新一轮测试
+    function startNewTestRound() {
+        // 重置状态变量
+        isWaiting = true;
+        hasBeenClicked = false;
+        // 确保方块是绿色的
+        square.style.backgroundColor = '#8FB996';
+
+        // 生成2-6秒的随机时间（毫秒）
+        const randomDelay = 2000 + Math.random() * 4000;
+
+        setTimeout(() => {
+            // 改变方块颜色为红色（莫兰迪玫瑰色）
+            square.style.backgroundColor = '#C9A9A6';
+            squareTurnedRedTime = new Date().getTime();
+            isWaiting = false;
+        }, randomDelay);
+    }
+
+    // 处理方块点击
+    function handleSquareClick() {
+        // 如果还在等待变色，或者已经点击过了，不做处理
+        if (isWaiting || hasBeenClicked) return;
+
+        // 标记为已点击，确保后续点击无效
+        hasBeenClicked = true;
+
+        // 计算反应时间
+        const clickTime = new Date().getTime();
+        const reactionTime = clickTime - squareTurnedRedTime;
+
+        // 记录反应时间
+        reactionTimes.push(reactionTime);
+        testCount++;
+
+        // 显示当前测试结果
+        const resultElement = document.createElement('div');
+        resultElement.className = 'neumorphic';
+        resultElement.innerHTML = `测试 ${testCount}: <strong>${reactionTime} 毫秒</strong>`;
+        results.appendChild(resultElement);
+
+        // 添加显示动画
+        setTimeout(() => {
+            resultElement.style.transform = 'translateY(0)';
+            resultElement.style.opacity = '1';
+        }, 10);
+
+        // 检查是否完成所有测试
+        if (testCount < maxTests) {
+            // 准备下一次测试
+            nextTestPrompt.textContent = t('准备下一次测试...');
+            nextTestPrompt.style.opacity = '1';
+
+            setTimeout(() => {
+                nextTestPrompt.style.opacity = '0';
+                square.style.opacity = '0';
+
+                setTimeout(() => {
+                    square.style.opacity = '1';
+                    startNewTestRound();
+                }, 500);
+            }, 1500);
+        } else {
+            // 所有测试完成，计算平均值
+            square.style.opacity = '0';
+
+            setTimeout(() => {
+                const averageTime = Math.round(reactionTimes.reduce((sum, time) => sum + time, 0) / reactionTimes.length);
+
+                const averageElement = document.createElement('div');
+                averageElement.className = 'neumorphic';
+                averageElement.innerHTML = `三次平均反应时间: <strong>${averageTime} 毫秒</strong>`;
+                results.appendChild(averageElement);
+
+                // 添加显示动画
+                setTimeout(() => {
+                    averageElement.style.transform = 'translateY(0)';
+                    averageElement.style.opacity = '1';
+                }, 10);
+            }, 1000);
+        }
+    }
+
+    // 适配不同屏幕尺寸的方块大小
+    function adjustSquareSize() {
+        const size = Math.min(window.innerWidth * 0.4, 200);
+        square.style.width = `${size}px`;
+        square.style.height = `${size}px`;
+    }
+
+    // 初始化和窗口大小改变时调整方块尺寸
+    window.addEventListener('resize', adjustSquareSize);
+    adjustSquareSize();
+</script>
+</body>
+</html>

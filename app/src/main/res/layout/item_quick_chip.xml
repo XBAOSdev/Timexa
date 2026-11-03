@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  快捷日期条里的一枚胶囊。
+
+  ⚠ 文字由代码设置（候选随模式与焦点变化，见 CalculatorDate.quickPicksFor），
+    所以这里没有 android:text。
+  ⚠ 宽度在代码里定：整条自然宽度放得下就 wrap_content，放不下才改成 0dp + weight=1
+    （配合 QuickChip 里的自适应字号）。见 CalculatorDate.showQuickBar。
+-->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/QuickChip"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" />

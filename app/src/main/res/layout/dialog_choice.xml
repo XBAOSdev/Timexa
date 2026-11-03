@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  自绘弹窗底板：竖向选项列表。
+  用于「时长 / 轮数」这类候选值较多、塞不进分段控件的设置项。
+  选项本身是整行按钮，选中项用主按钮样式标出，一眼能看出当前选的是哪个。
+  底部的「取消」用危险配色（红字红描边）：用户拍板过 —— 取消就该和选项拉开视觉层级。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_dialog"
+    android:orientation="vertical"
+    android:padding="@dimen/dialog_padding">
+
+    <TextView
+        android:id="@+id/dialog_title"
+        style="@style/Text.Section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/dialog_message"
+        style="@style/Text.Caption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_xxs"
+        android:visibility="gone" />
+
+    <ScrollView
+        android:id="@+id/dialog_options_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_m"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/dialog_options"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/dialog_negative"
+        style="@style/Btn.Danger"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="@dimen/space_s" />
+</LinearLayout>

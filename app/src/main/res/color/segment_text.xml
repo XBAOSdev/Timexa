@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 分段控件文字色：选中强调色，未选中次级灰 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/accent" android:state_selected="true" />
+    <item android:color="@color/text_secondary" />
+</selector>

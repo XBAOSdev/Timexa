@@ -1,0 +1,57 @@
+# ============================================================
+# 时间小包 (com.xbaos.shijianapp) - Git 忽略规则
+#
+# 原则：仓库里只放「从零编译出 App 所必需的东西」。
+# 构建产物、本机配置、签名材料、工作台（对话记忆 / 验收取证 /
+# 代码备份 / 临时截图）一律不进版本库。
+# ============================================================
+
+# ---------- 构建产物 ----------
+build/
+.gradle/
+.kotlin/
+/captures
+.externalNativeBuild
+.cxx
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+
+# ---------- 本机配置（含 sdk.dir 绝对路径，绝不能提交）----------
+local.properties
+
+# ---------- IDE ----------
+*.iml
+.idea/caches/
+.idea/libraries/
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+.idea/deploymentTargetSelector.xml
+.idea/deviceManager.xml
+.idea/shelf/
+
+# ---------- 签名材料（发布密钥，绝不进仓库）----------
+*.jks
+*.keystore
+*.p12
+*.pfx
+keystore.properties
+signing.properties
+
+# ---------- 工作台：对话记录 / 记忆 / 验收截图 / 代码备份 / 临时产物 ----------
+.workbuddy/
+
+# ---------- 临时产物与日志 ----------
+_tmp_ui/
+_tmp*/
+*.log
+tmp_*.png
+
+# ---------- 系统 ----------
+.DS_Store
+Thumbs.db
+desktop.ini

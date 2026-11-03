@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  编辑态下贴在图标右上角的减号角标：实心圆 + 白色减号。
+  用 accent_deep（#6B7A90）而不是 danger：这个操作**不弹确认、可随手加回来**，
+  不是破坏性操作；而且它要压在同样偏淡的 accent_tint 底板上，
+  红点在这个素净的配色里会跳出来抢视线。
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="@color/accent_deep" />
+</shape>

@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  日期计算器。
+
+  这一版是「可读性」重做，功能未变。四条设计决定：
+
+  1. 整页只有两种问法 ——「相差几天」与「推算日期」，提到页面顶部的分段里选，
+     不再用两张结构雷同的卡片。旧版两张卡的标题都是**功能名**（日期差值计算 / 日期加减计算），
+     卡片高度还不一样（303dp / 359dp），视线没有落点。
+
+  2. 表单读成一句句子：「从 [日期] 到 [日期]」/「从 [日期] 往前 [30] 天」。
+     行首只用 1 个字，且**两行同宽**（minWidth，见 dimens）；旧版是
+     「开始日期 / 结束日期 / 基准日期 / 相差天数」一串名词，中间却夹着「加上 / 减去」两个动词，
+     语法不同类。右列的「选择 / 加上 / 天」宽度还各不相同，右边缘参差。
+
+  3. 结果**没有框**：删掉描边与灰底，改成居中的大字答案。
+     旧版结果框与输入框在圆角、高度、内边距、字号上完全相同、底色只差 5 个灰阶，
+     页面上根本没有「答案」这个角色。
+
+  4. ⚠⚠ 「相差天数」这个词在旧版**同页出现过两次**：上面刚输出「两个日期相差 91 天」，
+     下面那张卡的输入标签就叫「相差天数」—— 很容易被读成「把 91 填进去」。
+     这一版把它彻底拆开：只在差值模式出现，且只作为结果，不再是任何一格的输入标签。
+
+  日期字段是 EditText：既能点右侧的日历图标走日期选择器（选大跨度年份比手输方便），
+  也能直接手输（选择器滚到几十年前很慢）。显示格式跟随当前语言，
+  解析时同时接受本地格式与 2026-09-20 这类纯数字写法，见 CalculatorDate.parseDate。
+  ⚠ 两个日期框的 hint 不在布局里写死 —— 示例日期要动态取「今天」，由代码 setHint（见 DateField.bind）。
+
+  ⚠ 第 2 行有**两套视图**（差值 / 推算），切换时只切显隐，不用两份 include（id 会重复）。
+    好处是切换模式时已经输入的日期不会丢 —— 两套共用同一个「从」日期框。
+  ⚠ screen_padding 只加在内容区（下面的 ScrollView），根布局不能加，否则顶栏分割线不通栏。
+  ⚠ 新写的布局一律用 paddingStart/End/Top/Bottom，不用 API 26 才有的 paddingHorizontal/Vertical。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_light"
+    android:orientation="vertical"
+    tools:context=".appyy.CalculatorDate">
+
+    <include layout="@layout/item_topbar" />
+
+    <ScrollView
+        android:id="@+id/calcScroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingTop="@dimen/topbar_gap"
+        android:scrollbars="none"
+        android:layout_marginStart="@dimen/screen_padding"
+        android:layout_marginEnd="@dimen/screen_padding">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/space_l">
+
+            <!-- ============ 唯一的卡片：模式 + 一句句子 + 答案 ============ -->
+            <LinearLayout
+                style="@style/Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!--
+                  模式分段。与设置页同一套控件（SegmentAnim 驱动的滑动块）。
+                  第一个子节点必须是「选中滑块」，排在分段单元之前 —— 这样单元会画在它上面，
+                  文字不会被滑块盖住；位置与宽度由 SegmentAnim 在切换时动画过去。
+                  内边距用 segment_track_padding，它同时是滑块的内缩量，
+                  滑块圆角 = 轨道圆角 − 该内边距（同心圆角，见 values/dimens.xml）。
+                  ⚠ 轨道底色 stroke_soft(#EEEEEE) 与页面底 background_light(#F2F2F2) 只差 4 个灰阶，
+                    贴在灰底上几乎看不见 —— 所以它必须留在白色卡片内部，不能挪到卡片外。
+                -->
+                <LinearLayout
+                    android:id="@+id/calcModeSegment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_segment_track"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/segment_track_padding">
+
+                    <View
+                        android:id="@+id/calcModeSlider"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_segment_slider"
+                        android:visibility="invisible" />
+
+                    <TextView
+                        android:id="@+id/modeDiff"
+                        style="@style/Segment"
+                        android:text="@string/calc_mode_diff" />
+
+                    <TextView
+                        android:id="@+id/modeShift"
+                        style="@style/Segment"
+                        android:text="@string/calc_mode_shift" />
+                </LinearLayout>
+
+                <!-- 句子第 1 行：从（差值＝开始日期，推算＝基准日期，两模式共用这一格） -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_m"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/Text.Label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="@dimen/calc_label_min_width"
+                        android:text="@string/calc_label_from" />
+
+                    <EditText
+                        android:id="@+id/etStartDate"
+                        style="@style/Field"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/button_height"
+                        android:layout_marginStart="@dimen/form_gap"
+                        android:layout_weight="1"
+                        android:imeOptions="actionDone"
+                        android:importantForAutofill="no"
+                        android:inputType="text"
+                        android:maxLength="16"
+                        tools:hint="@string/calc_date_hint" />
+
+                    <!--
+                      日历图标按钮：旧版这里写「选择」两个字、出现 3 次，
+                      既占宽度又看不出是日历（右列宽度还各不相同）。
+                      图标取现成的 ic_calendar（自带 accent 描色），零新增资源。
+                    -->
+                    <TextView
+                        android:id="@+id/btnSelectStartDate"
+                        style="@style/Btn.Secondary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/button_height"
+                        android:layout_marginStart="@dimen/space_s"
+                        android:contentDescription="@string/calc_pick_desc"
+                        android:drawableStart="@drawable/ic_calendar"
+                        android:paddingStart="@dimen/row_action_padding"
+                        android:paddingEnd="@dimen/row_action_padding" />
+                </LinearLayout>
+
+                <!-- ============ 句子第 2 行：两种模式各一套，切换时只切显隐 ============ -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- 差值：到 -->
+                    <LinearLayout
+                        android:id="@+id/rowDiff"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/form_gap"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/Text.Label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:minWidth="@dimen/calc_label_min_width"
+                            android:text="@string/calc_label_to" />
+
+                        <EditText
+                            android:id="@+id/etEndDate"
+                            style="@style/Field"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/button_height"
+                            android:layout_marginStart="@dimen/form_gap"
+                            android:layout_weight="1"
+                            android:imeOptions="actionDone"
+                            android:importantForAutofill="no"
+                            android:inputType="text"
+                            android:maxLength="16"
+                            tools:hint="@string/calc_date_hint" />
+
+                        <TextView
+                            android:id="@+id/btnSelectEndDate"
+                            style="@style/Btn.Secondary"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/button_height"
+                            android:layout_marginStart="@dimen/space_s"
+                            android:contentDescription="@string/calc_pick_desc"
+                            android:drawableStart="@drawable/ic_calendar"
+                            android:paddingStart="@dimen/row_action_padding"
+                            android:paddingEnd="@dimen/row_action_padding" />
+                    </LinearLayout>
+
+                    <!--
+                      推算：往前 / 往后 + 天数。
+                      ⚠ 这段初始是 GONE，而 SegmentAnim.moveTo 在目标格宽度为 0 时会 post 重试 ——
+                        所以在它变可见之前**不能**调 moveTo，否则会一直空转（见 CalculatorDate.setDiffMode）。
+                    -->
+                    <LinearLayout
+                        android:id="@+id/rowShift"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/form_gap"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <LinearLayout
+                            android:id="@+id/calcDirSegment"
+                            android:layout_width="@dimen/calc_dir_width"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_segment_track"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/segment_track_padding">
+
+                            <View
+                                android:id="@+id/calcDirSlider"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/bg_segment_slider"
+                                android:visibility="invisible" />
+
+                            <TextView
+                                android:id="@+id/dirBefore"
+                                style="@style/Segment"
+                                android:text="@string/calc_mode_before" />
+
+                            <TextView
+                                android:id="@+id/dirAfter"
+                                style="@style/Segment"
+                                android:text="@string/calc_mode_after" />
+                        </LinearLayout>
+
+                        <EditText
+                            android:id="@+id/etDays"
+                            style="@style/Field"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/button_height"
+                            android:layout_marginStart="@dimen/form_gap"
+                            android:layout_weight="1"
+                            android:hint="@string/calc_need_days"
+                            android:importantForAutofill="no"
+                            android:inputType="number"
+                            android:maxLength="6" />
+
+                        <!-- 量词跟着输入的数字变（「1 天」的英文该是 day 而不是 days），文字由代码按 plurals 给 -->
+                        <TextView
+                            android:id="@+id/tvDaysUnit"
+                            style="@style/Text.Label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/space_s" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- 主操作：文案随模式切换（算一算 / 推算），由代码 setText -->
+                <TextView
+                    android:id="@+id/btnCalculate"
+                    style="@style/Btn.Primary"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/button_height"
+                    android:layout_marginTop="@dimen/space_m"
+                    android:text="@string/calc_action_days" />
+
+                <!--
+                  结果区：**刻意没有背景、没有描边**。
+                  答案本身就是视觉重心（28sp 加粗 + 居中），再套一层框只会和输入框撞脸。
+                  三种状态共用这两个控件，字号与颜色由代码切（见 CalculatorDate.render*）：
+                    空态 → 15sp 三级灰 ／ 错误 → 15sp 警示色 ／ 正常 → 28sp（天数）或 22sp（日期）。
+                -->
+                <TextView
+                    android:id="@+id/tvResult"
+                    style="@style/Text.Answer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_m"
+                    android:text="@string/calc_idle_hint"
+                    android:textColor="@color/text_tertiary" />
+
+                <TextView
+                    android:id="@+id/tvResultAux"
+                    style="@style/Text.Answer.Aux"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_xs"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

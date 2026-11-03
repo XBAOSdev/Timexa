@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- 仅用于首页的版本检测；其余功能全部为本地离线能力 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 呼吸放松的节奏提示、番茄钟阶段切换提示 -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <!--
+      计时中的常驻通知（前台服务）。
+      Android 8 起常驻通知必须由前台服务承载；Android 14 起还要求声明具体的服务类型，
+      计时器不属于官方列举的任何一类，因此用 specialUse（官方给出的兜底类型）。
+    -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <!-- Android 13 起发通知需要运行时授权；未授权时前台服务仍能运行，只是看不到通知 -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!--
+      「太阳情况」用系统定位拿经纬度，代替让用户手输坐标。
+      只申请 COARSE（粗略）不申请 FINE（精确）：
+        太阳高度角 / 日出日落时刻对经纬度的敏感度在**城市尺度**（约 0.1°）就足够了，
+        市内几公里的偏差对结果影响远小于大气折射带来的固有误差。
+      少要一档精度，用户看到的授权弹窗从「精确位置」变成「大致位置」，
+      同意率更高、也更容易通过商店的权限最小化审查。
+      ACCESS_COARSE_LOCATION 在 Android 12+ 仍会附带给用户「精确/大致」两个选项，
+      用户若选精确我们也能拿到（同一次授权），无需额外声明 FINE。
+    -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- 定位是可选的：拒绝授权时「太阳情况」会退回手动输入经纬度，功能不缺失 -->
+    <uses-feature
+        android:name="android.hardware.location"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="false" />
+
+    <application
+        android:name=".ShijianApp"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Shijianapp"
+        android:usesCleartextTraffic="true">
+
+        <!-- 首页 / 两个入口页 -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <!-- 桌面长按图标弹出的快捷方式（时钟立台 / 复合秒表 / 番茄钟 / 日历计算器） -->
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+        </activity>
+        <activity
+            android:name=".Application_Main"
+            android:exported="false" />
+        <activity
+            android:name=".FeelTheTime"
+            android:exported="false" />
+
+        <!-- 设置与搜索：搜索页含输入框，需要软键盘把内容顶起来 -->
+        <activity
+            android:name=".appsys.Settings"
+            android:exported="false" />
+        <activity
+            android:name=".appsys.SearchActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <!-- 时区选择页：同搜索页，含搜索框需要软键盘把内容顶起来 -->
+        <activity
+            android:name=".appsys.TimeZonePicker"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!--
+          组件中心：把应用图标快捷方式与桌面小组件添加到系统桌面。
+          页面本身不再申请任何权限，也不需要 exported —— 入口只有首页顶栏那一个按钮。
+        -->
+        <activity
+            android:name=".appsys.WidgetCenter"
+            android:exported="false" />
+
+        <!-- 番茄钟 / 纪念日倒数 -->
+        <activity
+            android:name=".appyy.Pomodoro"
+            android:exported="false" />
+        <!-- 单表专注页：点秒表卡片上的时间进入，与列表页共享同一个记录对象 -->
+        <activity
+            android:name=".appyy.StopwatchFocus"
+            android:exported="false" />
+        <activity
+            android:name=".appsys.Anniversaries"
+            android:exported="false" />
+
+        <!-- 含输入控件的页面：让软键盘把内容顶起来 -->
+        <activity
+            android:name=".appyy.miaobiao"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".appyy.CalculatorDate"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- 全屏时钟：纯黑 OLED 主题；自己处理旋转，避免重建导致闪屏 -->
+        <activity
+            android:name=".appyy.clocklitai"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="false"
+            android:theme="@style/Theme.Shijianapp.Oled" />
+
+        <activity
+            android:name=".appyy.WebPages"
+            android:exported="false" />
+        <activity
+            android:name=".ftt.huxifangsong"
+            android:exported="false" />
+        <activity
+            android:name=".appsys.About_App"
+            android:exported="false" />
+        <!-- 权限说明页：列出全部会申请的权限及其用途 -->
+        <activity
+            android:name=".appsys.Permissions"
+            android:exported="false" />
+
+        <!-- 更新日志页：历代更新内容，最新在最上，正文支持长按复制 -->
+        <activity
+            android:name=".appsys.Changelog"
+            android:exported="false" />
+
+        <!--
+          「纪念日」组件的选择页。
+          只有桌面上的组件被点击时会进入（Intent 里带 appWidgetId），所以不导出。
+        -->
+        <activity
+            android:name=".appsys.AnniversaryWidgetPicker"
+            android:exported="false" />
+
+        <!--
+          计时前台服务。
+          只负责「常驻通知 + 倒计时到点提醒」，不持有业务状态，因此不需要在崩溃后自动重启。
+          specialUse 需要额外用 property 说明用途，这是 Android 14 起的要求。
+        -->
+        <service
+            android:name=".appyy.TimingService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="countdown_timer" />
+        </service>
+
+        <!--
+          桌面「复合秒表」小组件。
+          exported 必须为 true —— 宿主（桌面）是另一个进程，需要跨应用接收
+          APPWIDGET_UPDATE 广播，这是 AppWidget 的硬性要求。
+          不申请任何权限：本组件只在本应用自己的私有目录里读秒表记录，不接触外部数据。
+        -->
+        <receiver
+            android:name=".appsys.WidgetStopwatchProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_stopwatch_info" />
+        </receiver>
+
+        <!--
+          桌面「纪念日」小组件。
+          与秒表组件同一套约束：exported 必须为 true（宿主是另一个进程），
+          不申请任何权限 —— 它只读应用自己私有目录里的纪念日 CSV。
+        -->
+        <receiver
+            android:name=".appsys.WidgetAnniversaryProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_anniversary_info" />
+        </receiver>
+    </application>
+
+</manifest>

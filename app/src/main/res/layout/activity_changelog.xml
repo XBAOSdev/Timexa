@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  更新日志页：最新版本在最上面，每个版本一张卡片。
+  卡片正文支持长按复制整段日志 —— 逻辑在代码里逐卡绑定。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_light"
+    android:orientation="vertical">
+
+    <include layout="@layout/item_topbar" />
+
+    <ScrollView
+        android:id="@+id/changelog_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingStart="@dimen/screen_padding"
+        android:paddingEnd="@dimen/screen_padding"
+        android:paddingTop="@dimen/topbar_gap"
+        android:paddingBottom="@dimen/screen_padding_bottom"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/changelog_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
+</LinearLayout>

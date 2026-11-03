@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  「纪念日」桌面组件（2×2）：展示用户选定的那一条纪念日。
+
+  三行竖排居中：名称 / 倒数 / 目标日期。
+    · 名称在上、倒数在中、日期在下 —— 视线从上往下先认出「是哪件事」，
+      再读到「还有多少天」，最后才是「具体哪天」；
+    · 倒数那一行是主角，字号由 Provider 按组件实际尺寸折算（见 WidgetAnniversaryProvider）；
+    · 日期行用 ISO 顺序（2026-12-31），与列表页、首页卡片保持一致，不随地区把日月写反。
+
+  配色沿用秒表组件那一套：莫兰迪淡黄底 + 深蓝字（同 bg_widget_solid 用的那组 widget 颜色），
+  在任何壁纸上观感一致 —— 具体取舍见 bg_widget_solid.xml 与 WidgetStopwatchProvider 顶部注释。
+
+  ⚠ RemoteViews 限制同秒表组件：不支持 ConstraintLayout / 自定义 View / 自适应字号。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/anniversary_widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_widget_solid"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/widget_padding">
+
+    <!-- 纪念日名称。最多两行：长名字（「我们的第 1000 天」）宁可折行也要给全 -->
+    <TextView
+        android:id="@+id/anniversary_widget_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:maxLines="2"
+        android:text="@string/widget_anniversary_preview_name"
+        android:textColor="@color/widget_text_secondary"
+        android:textSize="@dimen/widget_anniversary_name_size" />
+
+    <!-- 主角：还有多少天。文案直接复用列表页 / 首页那一份，保证三处说法完全一致 -->
+    <TextView
+        android:id="@+id/anniversary_widget_days"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/widget_unit_gap"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:text="@string/widget_anniversary_preview_days"
+        android:textColor="@color/widget_text_primary"
+        android:textSize="@dimen/widget_anniversary_days_size"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/anniversary_widget_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/widget_unit_gap"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:textColor="@color/widget_text_secondary"
+        android:textSize="@dimen/widget_anniversary_date_size" />
+</LinearLayout>

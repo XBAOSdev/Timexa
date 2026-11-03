@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  单条秒表卡片。
+  可交互元素只有三处，且都给了明确的视觉线索：
+    标题（带铅笔图标 → 重命名）、时间（点 → 打开单表专注页看大图 + 计次）、
+    右侧两枚圆形按钮（暂停/继续、删除）。
+  时间使用等宽字体，避免数字跳动时整行宽度抖动。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/list_gap"
+    android:orientation="vertical">
+
+    <!-- 第一行：名称 + 状态 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/numTextView"
+            style="@style/Text.Section"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_row_tappable"
+            android:clickable="true"
+            android:drawableEnd="@drawable/ic_rename"
+            android:drawablePadding="@dimen/drawable_text_gap"
+            android:drawableTint="@color/text_tertiary"
+            android:ellipsize="end"
+            android:focusable="true"
+            android:maxLines="1"
+            android:paddingVertical="@dimen/space_xs"
+            android:text="00:00:00.0" />
+
+        <TextView
+            android:id="@+id/statusChip"
+            style="@style/Text.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_s"
+            android:background="@drawable/bg_chip_running"
+            android:paddingHorizontal="@dimen/chip_padding_h"
+            android:paddingVertical="@dimen/chip_padding_v"
+            android:text="@string/stopwatch_status_running"
+            android:textColor="@color/accent" />
+
+        <!--
+          「计次 N」徽标：仅当本表已有计次时显示（代码控制），没有计次时不占位置。
+          它解决的是「计次在二级页面里、一级列表看不到有没有」的可见性问题 ——
+          否则用户只能逐个点进去找哪块表记过分段。
+        -->
+        <TextView
+            android:id="@+id/lapBadge"
+            style="@style/Text.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_xs"
+            android:background="@drawable/bg_chip_lap"
+            android:paddingHorizontal="@dimen/chip_padding_h"
+            android:paddingVertical="@dimen/chip_padding_v"
+            android:textColor="@color/text_secondary"
+            android:visibility="gone"
+            tools:text="计次 5"
+            tools:visibility="visible" />
+    </LinearLayout>
+
+    <!--
+      第二行：时间 + 控制按钮。
+      时间与两枚按钮在**同一条水平中心线**上，但不共用行高：时间自己带
+      minHeight = icon_button_size，于是这一行至少和两个圆钮一样高，文字永远不会
+      被比自己还高的相邻控件压在中间；includeFontPadding 也保持开启（Text.Display
+      默认关了它，导致等宽字体的数字上下被吃掉一点，正是旧版「数字被裁」的来源），
+      这里显式打开，让字身上下的行距空间归位。
+    -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_s"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <!--
+          时间文本：可点 → 打开单表专注页（放大展示 + 计次）。
+          自适应字号 + 强制单行：时长会一直变宽（`0:00:00.0` → `100:00:00.0`），
+          36sp 等宽字体下 10 个字符就已经超过这一行留给它的宽度，旧版会直接把整串
+          折成两行。宽度方向是「0dp + weight」的确定约束（autosize 的标准用法），
+          数字变长时字号自动降档，绝不换行。
+        -->
+        <TextView
+            android:id="@+id/timeTextView"
+            style="@style/Text.Display"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="monospace"
+            android:gravity="start|center_vertical"
+            android:includeFontPadding="true"
+            android:maxLines="1"
+            android:minHeight="@dimen/icon_button_size"
+            android:text="0:00:00.0"
+            app:autoSizeMaxTextSize="@dimen/text_stopwatch_display"
+            app:autoSizeMinTextSize="@dimen/text_stopwatch_display_min"
+            app:autoSizeTextType="uniform" />
+
+        <ImageButton
+            android:id="@+id/toggleButton"
+            android:layout_width="@dimen/icon_button_size"
+            android:layout_height="@dimen/icon_button_size"
+            android:background="@drawable/bg_circle"
+            android:contentDescription="@string/stopwatch_pause_all"
+            android:padding="@dimen/row_action_padding"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_pause"
+            app:tint="@color/accent" />
+
+        <ImageButton
+            android:id="@+id/deleteButton"
+            android:layout_width="@dimen/icon_button_size"
+            android:layout_height="@dimen/icon_button_size"
+            android:layout_marginStart="@dimen/space_s"
+            android:background="@drawable/bg_circle"
+            android:contentDescription="@string/stopwatch_delete"
+            android:padding="@dimen/row_action_padding"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_delete"
+            app:tint="@color/danger" />
+    </LinearLayout>
+</LinearLayout>

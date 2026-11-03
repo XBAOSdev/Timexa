@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  桌面长按应用图标弹出的快捷方式菜单。
+  只放最常用的四个原生功能 —— 快捷方式的价值是「少点两下」，
+  条目过多反而要在小弹窗里找，与快捷的初衷相悖。
+
+  图标复用功能目录里已有的矢量图标（ic_clock_face 等），
+  不新画一套，保证「快捷方式里的图标」与「应用内那一行」长得一样。
+
+  注意：这里刻意不声明 <categories>。那是聊天类应用（快捷方式要参与分享/会话）
+  才需要的分类，本应用是工具集合，声明它反而可能被系统按陌生类别处理。
+-->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_clock_face"
+        android:shortcutId="shortcut_clock"
+        android:shortcutLongLabel="@string/app_clock_name"
+        android:shortcutShortLabel="@string/app_clock_name">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="com.xbaos.shijianapp.appyy.clocklitai"
+            android:targetPackage="com.xbaos.shijianapp" />
+    </shortcut>
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_timer"
+        android:shortcutId="shortcut_stopwatch"
+        android:shortcutLongLabel="@string/app_stopwatch_name"
+        android:shortcutShortLabel="@string/app_stopwatch_name">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="com.xbaos.shijianapp.appyy.miaobiao"
+            android:targetPackage="com.xbaos.shijianapp" />
+    </shortcut>
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_hourglass"
+        android:shortcutId="shortcut_pomodoro"
+        android:shortcutLongLabel="@string/app_pomodoro_name"
+        android:shortcutShortLabel="@string/app_pomodoro_name">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="com.xbaos.shijianapp.appyy.Pomodoro"
+            android:targetPackage="com.xbaos.shijianapp" />
+    </shortcut>
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_calendar"
+        android:shortcutId="shortcut_calc"
+        android:shortcutLongLabel="@string/app_calc_name"
+        android:shortcutShortLabel="@string/app_calc_name">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="com.xbaos.shijianapp.appyy.CalculatorDate"
+            android:targetPackage="com.xbaos.shijianapp" />
+    </shortcut>
+</shortcuts>

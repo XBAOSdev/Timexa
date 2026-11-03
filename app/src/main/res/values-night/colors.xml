@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      深色模式调色板。
+      要点：
+        · 页面底色用「中性深灰」而不是纯黑 —— 纯黑只留给时钟立台（OLED 省电场景）；
+        · 强调色整体提亮，低饱和灰蓝在深底上才有足够对比度；
+        · 危险色同样降饱和，保持莫兰迪气质，不用高饱和红。
+      只覆盖需要在夜间变化的颜色，其余（morandi_* 预留色板、oled_* 纯黑）沿用默认值。
+    -->
+
+    <!-- ========== 背景与容器 ========== -->
+    <color name="background_light">#FF1A1A1D</color>
+    <color name="surface">#FF232327</color>
+    <color name="surface_sunken">#FF1E1E22</color>
+    <color name="surface_pressed">#FF2D2D32</color>
+    <color name="stroke">#FF34343A</color>
+    <color name="stroke_soft">#FF2B2B31</color>
+    <color name="stroke_strong">#FF41414A</color>
+
+    <!-- ========== 文字 ========== -->
+    <color name="text_primary">#FFE8E8EC</color>
+    <color name="text_secondary">#FFA6A6AE</color>
+    <color name="text_tertiary">#FF73737C</color>
+    <color name="text_on_accent">#FF14161A</color>
+
+    <!-- ========== 强调色 ========== -->
+    <color name="accent">#FF9CAFC6</color>
+    <color name="accent_deep">#FF8AA0BA</color>
+    <color name="accent_tint">#FF262C33</color>
+    <!-- 夜间同样「再沉一点」的方向：深底上加深而不是加亮，避免按下时反而更跳 -->
+    <color name="accent_tint_pressed">#FF2F3740</color>
+
+    <!-- ========== 语义色 ========== -->
+    <color name="danger">#FFCC9B95</color>
+    <color name="danger_tint">#FF312827</color>
+    <color name="warning">#FFD3AC89</color>
+
+    <!-- 新版本提示点：深底上略微提亮，保证 8dp 的小圆点依然一眼可见 -->
+    <color name="update_dot">#FFF26057</color>
+
+    <!-- ========== 时钟立台：恒为纯黑，不受深色模式影响 ========== -->
+    <color name="oled_black">#FF000000</color>
+    <color name="oled_text_bright">#FFE8E8E8</color>
+    <color name="oled_text_dim">#FF6E6E6E</color>
+
+    <color name="status_bar">#00000000</color>
+
+    <!--
+      ==================== 桌面小组件 ====================
+      这里**刻意不覆盖** widget_solid_fill / widget_text_primary / widget_text_secondary。
+
+      组件改成莫兰迪淡黄纯色底之后，它是一张自给自足的卡片：
+      底色不来自壁纸，文字也不必再跟随系统昼夜。
+      若在这里换成深色版，就会出现「深色底 + 深色字」或「淡黄底 + 浅色字」，
+      两种都是读不清的组合。深色模式下保持同一副面孔才是正确行为。
+    -->
+</resources>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 首页的纪念日行：只读展示「名称 + 倒数」，点击进入纪念日页 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Card.Row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/row_min_height"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingHorizontal="@dimen/row_padding_h"
+    android:paddingVertical="@dimen/row_padding_v">
+
+    <TextView
+        android:id="@+id/home_anniversary_name"
+        style="@style/Text.Row"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:maxLines="1" />
+
+    <TextView
+        android:id="@+id/home_anniversary_days"
+        style="@style/Text.Value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_s" />
+
+    <ImageView
+        android:layout_width="@dimen/icon_chevron_size"
+        android:layout_height="@dimen/icon_chevron_size"
+        android:layout_marginStart="@dimen/space_s"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_chevron_right"
+        app:tint="@color/text_tertiary" />
+</LinearLayout>

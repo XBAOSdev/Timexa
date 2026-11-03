@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  「发现新版本」临时卡片底（设置页顶部，存在更新时出现）。
+
+  为什么按键按下态另做一个色而不是复用 surface_pressed：
+  这张卡片的常态底色是淡蓝强调色（accent_tint），按下时若换成中性灰（surface_pressed），
+  看起来像「按下去以后卡片变成另一张卡」，而不是「同一张卡被按了一下」。
+  所以按下态取同色相再沉一档的 accent_tint_pressed。
+
+  圆角与卡片一致（radius_card）：它与下面的分组卡片是同级的东西，不能是另一种圆角。
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/accent_tint_pressed" />
+            <corners android:radius="@dimen/radius_card" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/accent_tint" />
+            <corners android:radius="@dimen/radius_card" />
+        </shape>
+    </item>
+</selector>

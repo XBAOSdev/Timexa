@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  分段控件的单个单元。
+  文字颜色由 @color/segment_text 的 selector 按选中态驱动，代码只需切换 isSelected。
+  选中时的白底滑块**不在这里画** —— 它由轨道里的独立 View 承担（见 item_setting_segment.xml），
+  切换选项时滑块能滑过去，而不是硬切。设置页与日期计算器共用，保证外观一致。
+-->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Segment"
+    android:layout_width="0dp"
+    android:layout_height="@dimen/button_height_small"
+    android:layout_weight="1" />

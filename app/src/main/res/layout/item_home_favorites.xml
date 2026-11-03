@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  首页「常用应用」区块（**无卡片**）。
+
+  ========== 为什么不再是卡片 ==========
+  早先它是一张满宽白卡，与「纪念日」「功能入口」同款。问题出在内容少的时候：
+  用户只放了 1~2 个图标，卡片仍是满宽 —— 右侧留下一大片白，比不放卡还难看。
+  而且那颗悬在卡外的编辑按钮会在视觉上把「卡片的上边距」撑大，
+  三张卡片排在一起，间距一眼看去就不齐了。
+
+  改成无卡片之后：
+    · 图标行少的时候不再有多余的白；
+    · 图标行本身成了一条「快捷启动带」，与下方的卡片是两种层次，不再要求它们同款；
+    · 编辑按钮与图标行同属这一个区块，上下没有卡片边界可比，间距的割裂感自然消失。
+
+  ========== 结构 ==========
+    · 「编辑 / 完成」在网格**正下方右侧**（用户 2026-09-26 方案 C 改版）：
+      小一号的灰字（caption + tertiary），平时 alpha 0 且不可点，但**占位保留** ——
+      浮现 / 隐去时下方内容纹丝不动。显隐交互见 MainActivity：
+      点首页空白处淡入，3 秒无操作自动淡出，编辑态常驻。
+      ⚠ 可点性必须跟 alpha 联动（淡入/淡出期间不可点），否则半透明时按下
+      会误触发 background 里的水波纹（用户 2026-09-26 反馈）。
+      ⚠⚠ 这颗按钮**刻意不带水波纹背景**：即便可点性已联动，按压态仍可能
+      在「刚唤起/将淡出」的临界被触发，用户实测仍误触（2026-09-26 第二次反馈）——
+      直接去掉波纹特效，按压反馈交给下方的位置与文字变化即可。
+      进入编辑还有第二条路：非编辑态长按应用图标/卡片（FavoritesGridView.onEditRequested）。
+      「添加应用」表头按钮已删除：添加入口统一是编辑态网格里的「＋」格子
+      （不受翻页影响的问题用户明确接受 —— 拍板原文「图标按钮也占用一个位置」）。
+    · 页码点与网格共用一个 FrameLayout：圆点叠在网格**右侧的 padding 区**里，
+      不参与「一行几个」的宽度计算 —— 所以它显示与否都不会让图标行跳动。
+    · 页码点是**竖排**的：翻页方向是上下，横排圆点配上下滑动是反直觉的。
+    · 网格的高度档位、列数、翻页全在 FavoritesGridView 里算，XML 只管挂上去。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_favorites_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/list_gap"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.xbaos.shijianapp.ui.FavoritesGridView
+            android:id="@+id/fav_grid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/favorite_grid_padding_h"
+            android:paddingTop="@dimen/favorite_grid_padding_v"
+            android:paddingEnd="@dimen/favorite_grid_padding_h"
+            android:paddingBottom="@dimen/favorite_grid_padding_v" />
+
+        <!-- 页码点：只有总行数超过两行（真有第二页）时才由代码显示 -->
+        <LinearLayout
+            android:id="@+id/fav_indicators"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="@dimen/favorite_indicator_end"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </FrameLayout>
+
+    <!--
+      「编辑 / 完成」入口（2026-09-26 方案 C 改版定稿）：
+      图标行**正下方**右侧、缩成灰色小字，把存在感压到最低。
+      平时 alpha=0 且不可点（isClickable 由代码控制）——但**不用 GONE**：
+      占位一直留着，浮现 / 隐去时下方卡片不会上下跳动。
+      显隐交互在 MainActivity：点首页空白处淡入，3 秒无操作自动淡出，编辑态常驻。
+    -->
+    <TextView
+        android:id="@+id/fav_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:alpha="0"
+        android:gravity="center"
+        android:paddingStart="@dimen/space_s"
+        android:paddingTop="@dimen/space_xxs"
+        android:paddingEnd="@dimen/space_s"
+        android:paddingBottom="@dimen/space_xxs"
+        android:text="@string/favorite_edit"
+        android:textColor="@color/text_tertiary"
+        android:textSize="@dimen/text_caption" />
+</LinearLayout>

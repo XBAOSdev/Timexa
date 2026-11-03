@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  复合秒表小组件的元数据。
+
+  尺寸：2x2 可调整大小。
+    组件只要呈现「几个秒表正在计时」这一件事，2 格宽已经足够，
+    4×2 反而在桌面上白占两格 —— 桌面空间是最稀缺的资源，能省则省。
+
+  ⚠ 尺寸数值踩过的坑：
+    minWidth/minHeight 不是「随便给个大概」，系统（尤其 Pixel Launcher）**用它反推占几格**。
+    经验式 min* = 70 × 格数 − 30：2 格 → 110dp。给小了会被判成 1 格、内容被裁，
+    给大了会被判成 3 格、白占一行。targetCell* 只在 API 31+ 生效且不保证优先于 min*，
+    两处必须互相吻合。
+
+  ⚠ 关于 previewImage：**刻意不设置**。
+    指向 @mipmap/ic_launcher 会让微件选择器显示一个大号应用图标，
+    用户看不出组件长什么样。留空时系统按 initialLayout 渲染真实预览，
+    配合 previewLayout（API 31+）效果最准确。
+
+  ⚠ updatePeriodMillis=0：不依赖系统定时刷新（最小 30 分钟，对本组件意义不大），
+    改由 WidgetStopwatchProvider 用 AlarmManager 每分钟兜底刷新 + 进入应用时主动刷新。
+-->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/widget_sw_desc"
+    android:initialLayout="@layout/widget_stopwatch"
+    android:minHeight="@dimen/widget_min_height"
+    android:minWidth="@dimen/widget_min_width"
+    android:previewLayout="@layout/widget_stopwatch"
+    android:resizeMode="horizontal|vertical"
+    android:targetCellHeight="2"
+    android:targetCellWidth="2"
+    android:updatePeriodMillis="0"
+    android:widgetCategory="home_screen" />

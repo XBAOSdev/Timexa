@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  时区选择页：顶栏 + 搜索框 + 按 UTC 偏移分组的列表。
+  与搜索页同构（顶栏 / 输入框 / 可滚动结果区），保证两处的手感一致。
+
+  底部不设操作条：本页是「选一个就返回」的形态，选中即刻生效并 finish()，
+  多一个「确定」按钮反而多一次点击。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_light"
+    android:orientation="vertical"
+    tools:context=".appsys.TimeZonePicker">
+
+    <include layout="@layout/item_topbar" />
+
+    <EditText
+        android:id="@+id/tz_search"
+        style="@style/Field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/topbar_gap"
+        android:drawableStart="@drawable/ic_search"
+        android:drawablePadding="@dimen/space_s"
+        android:drawableTint="@color/text_tertiary"
+        android:hint="@string/timezone_search_hint"
+        android:imeOptions="actionSearch"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        app:drawableTint="@color/text_tertiary" 
+        android:layout_marginStart="@dimen/screen_padding"
+        android:layout_marginEnd="@dimen/screen_padding"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/space_m"
+        android:layout_weight="1"
+        android:layout_marginStart="@dimen/screen_padding"
+        android:layout_marginEnd="@dimen/screen_padding">
+
+        <ScrollView
+            android:id="@+id/tz_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/tz_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/space_xl" />
+        </ScrollView>
+
+        <TextView
+            android:id="@+id/tz_empty"
+            style="@style/Text.Label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/space_xl"
+            android:gravity="center"
+            android:text="@string/timezone_empty"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </FrameLayout>
+</LinearLayout>

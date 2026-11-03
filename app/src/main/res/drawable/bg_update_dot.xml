@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  「有新版本」提示点：一颗纯粹的红色圆点，不加描边。
+  它刻意跨在圆钮的右上角边缘上（一半在按钮内、一半在外），这是角标最常见的形态，
+  描边反而会在圆钮描边外留出一小截异色弧线。
+  引用：activity_main.xml 的 T_settings_dot，可见性由 MainActivity 控制。
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="@color/update_dot" />
+</shape>

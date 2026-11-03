@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  设置页顶部的「发现新版本」临时卡片。**只在真的存在更新时**才被组装进去
+  （判据与首页那颗小红点完全一致：缓存里的在线版本号非空且与本地版本号不同）。
+
+  为什么需要它：
+    首页设置按钮右上角的小红点只能告诉用户「有事」，点进设置页之后
+    「关于本页」在整页最靠下的分组里，用户得一路滚到底才知道该干什么。
+    这张卡片把「有新版本」这件事直接摆在设置页第一屏，并且点一下直达关于页。
+
+  为什么叫「临时」：
+    它不是设置项，是与当前版本状态绑定的提示 —— 用户升级到新版本后判据自然不成立，
+    卡片自己就消失了，因此**刻意不给关闭按钮**（关掉还得记住「关过」，多一份状态，
+    而这份状态本来就会随升级自动失效）。真要临时清掉，点进去更新即可。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/update_banner"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_update_banner"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center_vertical"
+    android:minHeight="@dimen/row_min_height_icon"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/row_padding_h"
+    android:paddingTop="@dimen/row_padding_v"
+    android:paddingEnd="@dimen/row_padding_h"
+    android:paddingBottom="@dimen/row_padding_v">
+
+    <ImageView
+        android:layout_width="@dimen/icon_badge_size"
+        android:layout_height="@dimen/icon_badge_size"
+        android:background="@drawable/bg_icon_badge"
+        android:contentDescription="@null"
+        android:padding="@dimen/icon_badge_padding"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_info"
+        app:tint="@color/accent" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/app_row_gap"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/update_banner_title"
+            style="@style/Text.Row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/accent_deep" />
+
+        <TextView
+            android:id="@+id/update_banner_desc"
+            style="@style/Text.Caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_xxs" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="@dimen/icon_chevron_size"
+        android:layout_height="@dimen/icon_chevron_size"
+        android:layout_marginStart="@dimen/space_s"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_chevron_right"
+        app:tint="@color/accent_deep" />
+</LinearLayout>

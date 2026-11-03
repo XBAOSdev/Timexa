@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  自绘弹窗底板：居中卡片。
+  窗口背景是透明的，圆角与描边全部由 @drawable/bg_dialog 画出，
+  因此不会出现「系统方底 + 自绘圆角」叠在一起的问题。
+  按钮一律成排等高，与页面按钮共用同一批样式。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_dialog"
+    android:orientation="vertical"
+    android:padding="@dimen/dialog_padding">
+
+    <TextView
+        android:id="@+id/dialog_title"
+        style="@style/Text.Section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/dialog_message"
+        style="@style/Text.Label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_s"
+        android:lineSpacingExtra="@dimen/line_spacing_tight"
+        android:visibility="gone" />
+
+    <EditText
+        android:id="@+id/dialog_input"
+        style="@style/Field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_m"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dialog_actions_top"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/dialog_negative"
+            style="@style/Btn.Secondary.Flex"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/button_height"
+            android:layout_weight="1"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/dialog_positive"
+            style="@style/Btn.Primary.Flex"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginStart="@dimen/space_s"
+            android:layout_weight="1" />
+    </LinearLayout>
+</LinearLayout>

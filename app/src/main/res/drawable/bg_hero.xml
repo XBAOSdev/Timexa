@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  关于页顶部品牌区的底板：淡强调色纯色 + 卡片圆角。
+
+  为什么用 accent_tint 而不是白卡：
+    关于页原本是一摞一模一样的白卡，从上到下没有任何重量差，整页读起来「平」。
+    头部换成淡强调色之后，页面立刻有了「头 / 身 / 尾」的层次 ——
+    这也是应用商店介绍页的通行做法（头部有色块承载品牌，下面才是信息）。
+
+  为什么**不描边**：
+    它下面紧挨着的是白卡 + 1dp 淡描边。若 Hero 也描边，两块之间会出现「两条线」
+    叠在一起的双边框感（`.input-group` 那个 bug 是同一个成因）。
+    淡蓝底本身与页面灰底、下方白卡都区分得开，不需要线来帮忙。
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/accent_tint" />
+    <corners android:radius="@dimen/radius_card" />
+</shape>

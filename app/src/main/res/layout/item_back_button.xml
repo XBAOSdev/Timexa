@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  统一的返回按钮：白底圆片 + 返回箭头。
+  通过 <include> 复用，全 App 返回控件的位置与样式保持一致。
+  注意：使用方若需要指定位置，请同时给出 layout_width/height 与 layout_gravity。
+-->
+<ImageButton xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/back_button"
+    android:layout_width="@dimen/back_button_size"
+    android:layout_height="@dimen/back_button_size"
+    android:background="@drawable/bg_circle"
+    android:contentDescription="@string/back_button_desc"
+    android:padding="@dimen/icon_button_padding"
+    android:scaleType="fitCenter"
+    android:src="@drawable/fanhui" />

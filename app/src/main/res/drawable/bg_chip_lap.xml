@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  「计次 N」徽标底：中性灰底。
+  刻意不用强调色（run 状态胶囊用的 accent_tint）—— 状态胶囊已经占用了强调色的语义，
+  徽标若同色，第一行会出现两个抢眼的色块、反而分不清哪个是「状态」哪个是「附加信息」。
+  中性底 + 次级文字色，正好落在「有这回事、但不需要你盯着看」的层级。
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/stroke_soft" />
+    <corners android:radius="@dimen/radius_chip" />
+</shape>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  首页「常用应用」图标行的圆角方形底板。
+
+  ⚠ 底色是**白色（surface）**，不是列表行那个 accent_tint。
+    原因：这块图标行**没有卡片背景**（用户 2026-09-26 要求去掉），
+    直接落在页面背景 background_light(#F2F2F2) 上。
+    而 accent_tint 是 #E9EDF1 —— 与 #F2F2F2 的明度差只有十来级，
+    在灰底上几乎看不出有一块底板，图标会像「浮在空中」。
+    换成 surface 之后比背景亮一档，方块边界清楚，也不必加描边或阴影。
+
+  圆角比列表行的 bg_icon_badge（10dp）大一档：
+  桌面图标式的方块要「方中带圆」才像应用图标，10dp 配 48dp 偏方。
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/surface" />
+    <corners android:radius="@dimen/favorite_tile_radius" />
+</shape>

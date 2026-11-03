@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  「纪念日」桌面组件的选择页：让用户决定这一个组件盒子盯哪一条纪念日。
+
+  页面骨架与全 App 二级页一致：顶栏 ／ 可滚动内容区 ／ 无底部操作条。
+  ⚠ 根布局不写 paddingHorizontal —— 顶栏分割线要靠它通栏（详见 item_topbar.xml 顶部注释），
+    横向留白由 ScrollView 的 layout_marginStart/End 承担。
+
+  列表行由代码按真实的纪念日数据装配（含分隔线），XML 里只留一个空卡片容器。
+  空态（一条纪念日都没有）时整张卡片收起来，换成一行「去添加纪念日」—— 
+  没有内容时留一个空卡片是最让人困惑的做法。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_light"
+    android:orientation="vertical"
+    tools:context=".appsys.AnniversaryWidgetPicker">
+
+    <include layout="@layout/item_topbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginStart="@dimen/screen_padding"
+        android:layout_marginEnd="@dimen/screen_padding"
+        android:clipToPadding="false"
+        android:paddingTop="@dimen/topbar_gap"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/space_m">
+
+            <TextView
+                android:id="@+id/picker_hint"
+                style="@style/Text.Caption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/setting_group_title_gap"
+                android:text="@string/widget_anniversary_picker_hint" />
+
+            <include
+                android:id="@+id/picker_list"
+                layout="@layout/item_card_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <!--
+              空态：没有纪念日可挑。复用设置页的动作行，点击直接去纪念日页添加。
+              它自带 Card.Row 的 clickable，按压反馈由 BaseActivity 统一挂载。
+            -->
+            <include
+                android:id="@+id/picker_empty_row"
+                layout="@layout/item_setting_action"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

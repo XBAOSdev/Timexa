@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  「组件」中心 · 应用快捷方式分组里的一行：图标 + 名称 + 说明 + 右侧状态。
+
+  为什么另起一个文件、而不是复用 item_app_row.xml：
+    item_app_row 右边的箭头表达的是「点进去（导航）」，而这里的行是**一个动作** ——
+    点了会往桌面放东西。语义不同，右侧该显示的东西也不同：
+    这里要显示「添加到桌面 / 已在桌面」这行字，用户才知道点了会发生什么、以及是不是已经加过。
+    硬把两种语义塞进同一个布局，就得给它加一个「箭头 or 状态字」的开关，
+    反而让两边都变难懂。
+
+  内边距写 paddingStart/End/Top/Bottom 而不是 paddingHorizontal/Vertical：
+  后者是 API 26 才有的属性，minSdk 24 上会被静默忽略（内边距整个丢失）。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Card.Row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/row_min_height_icon"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/row_padding_h"
+    android:paddingTop="@dimen/row_padding_v"
+    android:paddingEnd="@dimen/row_padding_h"
+    android:paddingBottom="@dimen/row_padding_v">
+
+    <ImageView
+        android:id="@+id/shortcut_icon"
+        android:layout_width="@dimen/icon_badge_size"
+        android:layout_height="@dimen/icon_badge_size"
+        android:background="@drawable/bg_icon_badge"
+        android:contentDescription="@null"
+        android:padding="@dimen/icon_badge_padding"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_timer"
+        app:tint="@color/accent" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/app_row_gap"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/shortcut_name"
+            style="@style/Text.Row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/shortcut_desc"
+            style="@style/Text.Caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_xxs" />
+    </LinearLayout>
+
+    <!--
+      右侧状态：未添加时是强调色的「添加到桌面」，已添加时是次级的「已在桌面」。
+      两种情况都用同一个 TextView，是因为它们的**位置**必须一致 ——
+      分成两个视图各自显隐，一旦字号/行高不同就会差半个像素，列表看上去会抖。
+    -->
+    <TextView
+        android:id="@+id/shortcut_state"
+        style="@style/Text.Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_s"
+        android:maxLines="1" />
+</LinearLayout>

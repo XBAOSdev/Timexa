@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  比例资源。
+
+  为什么单独建一个 fractions.xml：
+    Android 的资源类型里，**只有 fraction 能表达「0~1 的比例」**。
+    把 `0.95` 写进 dimens.xml 是错的 —— 没有单位的值不会被编成 dimension，
+    运行期 `getDimension()` 会抛 Resources$NotFoundException 直接崩。
+    而 `getFraction()` 不做密度换算，拿到的就是纯比例，正好用于 View 的 scaleX/scaleY。
+
+  用法：`resources.getFraction(R.fraction.press_scale_down, 1, 1)`
+  后两个参数是 base / pbase，传 1、1 表示「不做任何基准换算」，即原样返回 0.95f。
+-->
+<resources>
+    <!-- 按下时缩到的比例：0.95 是「看得出来，但不夸张」的档位 -->
+    <fraction name="press_scale_down">95%</fraction>
+    <!-- 常态比例。保留成资源是为了让「按下 / 回弹」两个终值成对出现，改的时候不会漏掉一个 -->
+    <fraction name="press_scale_normal">100%</fraction>
+
+    <!--
+      定位高亮（Highlight）闪动的峰值不透明度。
+      12% 是「余光一定能注意到、但不会把行文字盖住」的档位；
+      再高就会压住标题文字的可读性，再低在浅色底上几乎看不见。
+    -->
+    <fraction name="highlight_peak_alpha">12%</fraction>
+
+    <!--
+      不可点击的设置行（例如时区选了「跟随系统」时，下面那行手选时区）整体降到的不透明度。
+      45% 是「一眼看出不能用、但仍读得清它是什么」的档位：
+      再高会被当成正常行而反复去点，再低则连它是什么都看不出来。
+    -->
+    <fraction name="alpha_disabled">45%</fraction>
+
+    <!--
+      首页「常用应用」长按拎起时图标放大到的比例。
+      108% 是「明显离地、但不至于顶到相邻格子」的档位：
+      一格 76dp，放大 8% 约多出 6dp，还在格子自身的 padding 里，不会与邻格视觉重叠。
+    -->
+    <fraction name="favorite_drag_scale">108%</fraction>
+
+    <!--
+      新加入的常用应用图标从多小长到正常。
+      88% 配合透明度 0→1，读起来是「从卡片里长出来」而不是「啪地贴上」。
+    -->
+    <fraction name="favorite_enter_scale">88%</fraction>
+
+    <!--
+      被移除的常用应用缩到多小后消失（同时透明度归零）。
+      60% 已经小到「明显是在消失」，再小会让人看清它缩成了一个点，反而拖沓。
+    -->
+    <fraction name="favorite_exit_scale">60%</fraction>
+</resources>

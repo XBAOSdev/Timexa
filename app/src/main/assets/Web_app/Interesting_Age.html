@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>年龄趣味换算器</title>
+
+    <style>
+        /* 基础样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 自定义颜色变量 - 莫兰迪色系 */
+        :root {
+            --bg-color: #F2F2F2;
+            --morandi-blue: #7D8CA3;      /* 牛仔蓝 - 用于按钮 */
+            --morandi-green: #8FB996;     /* 青绿色 */
+            --morandi-red: #C9A9A6;       /* 玫瑰色 */
+            --morandi-gray: #B9B4C7;      /* 灰紫色 - 轻拟态背景 */
+            --morandi-sand: #F8F0E9;      /* 沙色 - 文本背景 */
+            --morandi-slate: #8CA3AF;     /* 青石板色 - 文本 */
+            --white: #FFFFFF;
+            --shadow-light: rgba(255, 255, 255, 0.7);
+            --shadow-dark: rgba(150, 150, 150, 0.15);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            padding: 1rem;
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            color: var(--morandi-slate);
+            padding-top: 2rem;
+        }
+
+        .container {
+            max-width: 28rem;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 auto;
+            padding-top: 6rem;
+        }
+
+        /* 返回按钮样式 - 匹配APP原生界面 */
+        .back-btn {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 0.75rem;
+            background-color: var(--white);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--morandi-slate);
+            position: absolute;
+            top: 2rem;
+            left: 1rem;
+        }
+
+        .back-btn.neumorphic {
+            box-shadow: 3px 3px 6px var(--shadow-dark),
+                       -3px -3px 6px var(--shadow-light);
+        }
+
+        .content-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            margin: 2rem 0;
+            gap: 1.5rem;
+        }
+
+        /* 日期输入框容器 - 解决提示文字显示问题 */
+        .date-input-wrap {
+            width: 100%;
+            max-width: 20rem;
+            position: relative;
+        }
+
+        /* 日期输入框样式 - 重写兼容移动端 */
+        .date-input {
+            width: 100%;
+            padding: 1.2rem 1.5rem;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 1rem;
+            background-color: var(--morandi-sand);
+            color: var(--morandi-slate);
+            outline: none;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 自定义下拉箭头 - 匹配截图样式 */
+        .date-input-wrap::after {
+            content: "∨";
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--morandi-slate);
+            font-size: 1rem;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0.7;
+        }
+
+        /* 核心：解决移动端date输入框提示文字不显示问题 */
+        .date-input:invalid {
+            color: transparent;
+        }
+
+        .date-input:invalid::before {
+            content: "请选择你的出生日期";
+            color: var(--morandi-slate);
+            opacity: 0.7;
+            position: absolute;
+            left: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        /* 隐藏webkit内核原生的日期选择器箭头 */
+        .date-input::-webkit-calendar-picker-indicator {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 3;
+        }
+
+        .date-input:focus {
+            box-shadow: inset 2px 2px 5px var(--shadow-dark),
+                       inset -2px -2px 5px var(--shadow-light);
+        }
+
+        /* 按钮样式 */
+        #calculateBtn {
+            background-color: var(--morandi-blue);
+            color: var(--white);
+            font-size: 1.3rem;
+            padding: 1.2rem 3rem;
+            border-radius: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #calculateBtn:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+
+        #calculateBtn:active {
+            box-shadow: inset 2px 2px 5px var(--shadow-dark),
+                       inset -2px -2px 5px var(--shadow-light);
+        }
+
+        /* ========== 修复核心：卡片容器定位 ========== */
+        .card-wrapper {
+            width: 100%;
+            max-width: 20rem;
+            height: 80px; /* 固定高度，防止跳动 */
+            position: relative;
+        }
+
+        /* 说明文本样式 */
+        #instructions {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            padding: 1.5rem 1rem;
+            background-color: var(--morandi-sand);
+            opacity: 0.7;
+            border-radius: 1rem;
+            font-size: 1.2rem;
+            line-height: 1.5;
+            transition: opacity 0.5s ease;
+        }
+
+        /* 年龄显示卡片 */
+        #ageDisplay {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            padding: 1.5rem 1rem;
+            background-color: var(--morandi-sand);
+            border-radius: 1rem;
+            font-size: 1.4rem;
+            line-height: 1.5;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        /* ========================================== */
+
+        /* 结果区域样式 */
+        #results {
+            width: 100%;
+            max-width: 20rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            text-align: center;
+        }
+
+        #results div {
+            background-color: var(--morandi-sand);
+            opacity: 0.7;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            transform: translateY(1rem);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        #results div:last-child {
+            background-color: var(--morandi-blue);
+            opacity: 0.8;
+            color: var(--white);
+            padding: 1rem;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+
+        /* 娱乐提示样式 */
+        .disclaimer {
+            font-size: 0.75rem;
+            opacity: 0.5;
+            text-align: center;
+            margin-top: 0.5rem;
+            margin-bottom: 2rem;
+            max-width: 20rem;
+        }
+
+        /* 轻拟态效果 */
+        .neumorphic {
+            box-shadow: 3px 3px 6px var(--shadow-dark),
+                       -3px -3px 6px var(--shadow-light);
+        }
+
+        .neumorphic-pressed {
+            box-shadow: inset 2px 2px 5px var(--shadow-dark),
+                       inset -2px -2px 5px var(--shadow-light);
+        }
+    </style>
+    <!-- 玻璃皮肤：统一覆盖层，须位于本页样式之后以便生效 -->
+    <link rel="stylesheet" href="morandi.css">
+    <script src="i18n.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <!-- 中间内容区域 -->
+    <div class="content-area">
+        <!-- 日期选择器容器 - 解决提示文字问题 -->
+        <div class="date-input-wrap">
+            <input type="date" id="birthDate" class="date-input neumorphic" required>
+        </div>
+
+        <!-- 计算按钮 -->
+        <button id="calculateBtn" class="neumorphic">
+            开始换算
+        </button>
+
+        <!-- 卡片容器：两张卡片叠在一起，不会跳动 -->
+        <div class="card-wrapper">
+            <!-- 使用说明 -->
+            <div id="instructions" class="neumorphic">
+                <p>选择你的出生日期，每次都会生成不同的趣味换算结果～</p>
+            </div>
+            <!-- 年龄显示卡片（默认隐藏） -->
+            <div id="ageDisplay" class="neumorphic"></div>
+        </div>
+    </div>
+
+    <!-- 结果显示区域 -->
+    <div id="results"></div>
+    <!-- 娱乐提示 -->
+    <div class="disclaimer" id="disclaimer" style="opacity: 0;">数据基于科学常识 + 趣味换算，仅供参考</div>
+</div>
+
+<script>
+    // 获取DOM元素
+    const calculateBtn = document.getElementById('calculateBtn');
+    const birthDateInput = document.getElementById('birthDate');
+    const results = document.getElementById('results');
+    const instructions = document.getElementById('instructions');
+    const ageDisplay = document.getElementById('ageDisplay');
+    const disclaimer = document.getElementById('disclaimer');
+
+    // 计算按钮点击事件
+    calculateBtn.addEventListener('click', calculateFunAge);
+
+    // ---------- 辅助函数: 精确计算距离下一次生日的天数 ----------
+    function getDaysUntilNextBirthday(birthDate, today) {
+        const birthMonth = birthDate.getMonth();
+        const birthDay = birthDate.getDate();
+        let nextBirthday = new Date(today.getFullYear(), birthMonth, birthDay);
+        if (nextBirthday <= today) {
+            nextBirthday = new Date(today.getFullYear() + 1, birthMonth, birthDay);
+        }
+        const diffTime = nextBirthday - today;
+        return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    }
+
+    // 核心换算函数 (科学化修正版本)
+    function calculateFunAge() {
+        const birthDateValue = birthDateInput.value;
+        if (!birthDateValue) {
+            alert('请先选择你的出生日期哦～');
+            return;
+        }
+
+        // 清空之前的结果
+        results.innerHTML = '';
+        disclaimer.style.opacity = '0';
+
+        // ========== 基础时间数据 ==========
+        const birthDate = new Date(birthDateValue);
+        const today = new Date();
+        const diffTime = today - birthDate;
+        const ageYears = (diffTime / (1000 * 60 * 60 * 24 * 365.25)).toFixed(1);
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        const ageMonths = Math.floor(diffDays / 30.44);
+        const weeks = Math.floor(diffDays / 7);
+        const hours = Math.floor(diffTime / (1000 * 60 * 60));
+        const minutes = Math.floor(diffTime / (1000 * 60));
+        const seconds = Math.floor(diffTime / 1000);
+        const ageYearsNum = parseFloat(ageYears);
+
+        // 卡片切换 (无跳动)
+        instructions.style.opacity = '0';
+        ageDisplay.style.opacity = '0.8';
+        ageDisplay.textContent = `你的当前年龄：${ageYears} 岁`;
+
+        // ---------- 科学化动物年龄换算 (基于平均寿命比例) ----------
+        // 人类平均寿命参考值 80岁 (现代常用基准)
+        const HUMAN_LIFE_BASE = 80;
+
+        // 猫: 平均寿命约15年, 年龄映射: 猫龄 ≈ (人岁/80)*15
+        const catAge = (ageYearsNum / HUMAN_LIFE_BASE * 15).toFixed(1);
+        // 狗: 中小型犬平均约13年 (取13年作为温和估算)
+        const dogAge = (ageYearsNum / HUMAN_LIFE_BASE * 13).toFixed(1);
+        // 马: 平均寿命约30年
+        const horseAge = (ageYearsNum / HUMAN_LIFE_BASE * 30).toFixed(1);
+        // 乌龟(加拉帕戈斯象龟): 寿命可达150+, 仍按150年基准
+        const turtlePercent = Math.min(100, Math.round(ageYearsNum / 150 * 100));
+        // 金鱼: 良好饲养平均寿命约8年
+        const goldfishAge = (ageYearsNum / HUMAN_LIFE_BASE * 8).toFixed(1);
+        // 大型鹦鹉(金刚鹦鹉): 平均寿命约50年
+        const parrotAge = (ageYearsNum / HUMAN_LIFE_BASE * 50).toFixed(1);
+        // 兔子: 家兔平均寿命约8年
+        const rabbitAge = (ageYearsNum / HUMAN_LIFE_BASE * 8).toFixed(1);
+        // 大熊猫: 圈养平均寿命约25年
+        const pandaAge = (ageYearsNum / HUMAN_LIFE_BASE * 25).toFixed(1);
+        // 非洲象: 平均寿命约65年
+        const elephantAge = (ageYearsNum / HUMAN_LIFE_BASE * 65).toFixed(1);
+        // 红杉树: 寿命超2000年, 显示已度过百分比
+        const redwoodPercent = Math.min(100, Math.round(ageYearsNum / 2000 * 100));
+
+        // ---------- 科学化身体生理数据 (基于权威平均值) ----------
+        const avgHeartRate = 75;        // 静息心率 75次/分钟 (合理区间)
+        const heartBeats = (minutes * avgHeartRate).toLocaleString();
+        const avgBreathRate = 16;       // 每分钟呼吸16次
+        const breathCount = (minutes * avgBreathRate).toLocaleString();
+        const hairGrowthYearCm = 12;    // 头发年均生长12cm (科学范围)
+        const hairLength = (ageYearsNum * hairGrowthYearCm).toFixed(1);
+        const nailGrowthYearCm = 3.5;   // 指甲年均生长3.5cm
+        const nailLength = (ageYearsNum * nailGrowthYearCm).toFixed(1);
+        const blinkPerMin = 18;         // 每分钟眨眼约18次
+        const blinkCount = (minutes * blinkPerMin).toLocaleString();
+        const yawnPerDay = 6;            // 每日平均打哈欠6次
+        const yawnTotal = Math.floor(diffDays * yawnPerDay).toLocaleString();
+        const swallowPerDay = 580;       // 每日吞咽约580次
+        const swallowTotal = Math.floor(diffDays * swallowPerDay).toLocaleString();
+        const sneezePerDay = 0.4;        // 每日平均打喷嚏0.4次 (约2.8次/周)
+        const sneezeTotal = Math.floor(diffDays * sneezePerDay).toLocaleString();
+        const skinCycleDays = 28;        // 皮肤代谢周期28天
+        const skinRenewals = Math.floor(diffDays / skinCycleDays).toLocaleString();
+
+        // ---------- 天文/宇宙数据校准 ----------
+        const earthOrbits = Math.floor(ageYearsNum);                 // 公转圈数
+        const moonOrbits = Math.floor(diffDays / 27.3);              // 月球周期约27.3天
+        const sunspotCycles = (ageYearsNum / 11).toFixed(1);         // 太阳活动周期11年
+        // 步行绕赤道: 赤道周长40075km, 日均步行6000步≈4.8km
+        const walkStepsPerDay = 6000;
+        const totalSteps = (diffDays * walkStepsPerDay).toLocaleString();
+        const equatorRounds = (diffDays * 4.8 / 40075).toFixed(2);
+        const moonPhases = Math.floor(diffDays / 29.53);             // 月相周期
+        const solarTerms = Math.floor(ageYearsNum * 24);             // 一年24节气
+        const meteorShowers = Math.floor(ageYearsNum * 4.5);         // 每年约4~5场主要流星雨
+        // 金星公转周期约225天，绕日圈数
+        const venusOrbits = Math.floor(diffDays / 225);
+        // 木星冲日周期约399天，发生次数
+        const jupiterOppositions = Math.floor(diffDays / 399);
+        // 日食/月食每年平均约4次 (日食+月食)
+        const eclipseEvents = Math.floor(ageYearsNum * 4);
+
+        // ---------- 生活日常数据优化 ----------
+        const mealsTotal = (diffDays * 3).toLocaleString();
+        const sleepHours = Math.floor(hours * 0.33).toLocaleString();   // 睡眠占比约1/3
+        const waterGlasses = (diffDays * 6).toLocaleString();
+        const eggsEaten = (diffDays * 1.2).toLocaleString();           // 日均1.2个鸡蛋 (合理)
+        const fruitsEaten = (diffDays * 1.5).toLocaleString();          // 日均1.5份水果
+        const teethBrush = (diffDays * 2).toLocaleString();
+        const showers = (diffDays * 0.9).toLocaleString();              // 约0.9次/天
+
+        // ---------- 文化娱乐与成长数据修正 ----------
+        const worldCupCount = Math.floor(ageYearsNum / 4);              // 世界杯4年一届
+        const euroCupCount = Math.floor(ageYearsNum / 4);              // 欧洲杯4年一届
+        const olympicCount = Math.floor(ageYearsNum / 4);              // 夏季奥运会4年一届
+        const leapYears = Math.floor(ageYearsNum / 4);                 // 粗略闰年次数
+        const zodiacCycles = Math.floor(ageYearsNum / 12);             // 生肖轮回 (12年一轮)
+        const sixtyCycles = Math.floor(ageYearsNum / 60);              // 甲子轮回
+
+        // 距离下一次生日天数（精确计算）
+        const daysToNextBirthday = getDaysUntilNextBirthday(birthDate, today);
+
+        // ---------- 构建全新的科学趣味换算库 (修正所有事实错误) ----------
+        const allConversions = [
+            // 动物年龄 (科学比例)
+            `如果按猫龄换算，你的年龄大约相当于猫咪的 ${catAge} 岁 (猫咪平均寿命约15年)`,
+            `如果按狗龄换算，你的年龄大约相当于狗狗的 ${dogAge} 岁 (狗狗平均寿命约13年)`,
+            `如果按马的年龄换算，你大约相当于马龄 ${horseAge} 岁 (骏马平均寿命约30年)`,
+            `如果是长寿乌龟 (象龟)，你大约走完了它预期寿命的 ${turtlePercent}% (象龟寿命可达150年以上)`,
+            `如果是金鱼，按平均寿命换算，你大约相当于金鱼龄 ${goldfishAge} 岁 (精心饲养可达8年)`,
+            `如果是大型鹦鹉，你的年龄相当于鹦鹉的 ${parrotAge} 岁 (鹦鹉寿命长达50年)`,
+            `如果是家兔，你的年龄相当于兔子龄 ${rabbitAge} 岁 (兔兔平均寿命约8年)`,
+            `如果是大熊猫，你的年龄相当于熊猫龄 ${pandaAge} 岁 (圈养大熊猫约25年)`,
+            `如果是非洲象，你的年龄相当于大象龄 ${elephantAge} 岁 (非洲象平均寿命约65年)`,
+            `如果是一棵红杉树，你已经度过了它漫长生命的 ${redwoodPercent}% (红杉寿命可达2000年)`,
+
+            // 历史文化 (更严谨)
+            `按古代称谓，你这个岁数大约可称为「${getAncientTitle(ageYearsNum)}」`,
+            `按农历生肖周期，你大约已经历 ${zodiacCycles} 轮完整生肖轮回 (12年一轮)`,
+            `按干支纪年，你大约度过 ${sixtyCycles} 个甲子轮回 (六十年一甲子)`,
+            `按现代奥运举办规律 (4年一届)，你大约经历过 ${olympicCount} 届夏季奥运会`,
+            `按公历闰年规则 (粗略)，你大约经历过 ${leapYears} 个闰年 (每4年一闰)`,
+            `按世界杯举办周期 (4年一届)，你大约经历过 ${worldCupCount} 届世界杯`,
+            `按欧洲杯举办周期 (4年一届)，你大约经历过 ${euroCupCount} 届欧洲杯`,
+            `按地球公转，从你出生至今已完成 ${earthOrbits} 次四季轮回`,
+
+            // 身体生理 (科学数据)
+            `按平均心率 (75次/分) 计算，你的心脏大约已跳动 ${heartBeats} 次`,
+            `按平均呼吸频率 (16次/分)，你大约已呼吸 ${breathCount} 次`,
+            `按头发生长速度 (约12cm/年)，不剪的话大约可长至 ${hairLength} 厘米`,
+            `按指甲生长速度 (约3.5cm/年)，不剪的话大约可长至 ${nailLength} 厘米`,
+            `按平均眨眼频率 (18次/分)，你大约眨眼 ${blinkCount} 次`,
+            `按日常习惯估算，你大约打哈欠 ${yawnTotal} 次`,
+            `按每日吞咽约580次估算，你大约完成 ${swallowTotal} 次吞咽`,
+            `按每日平均打喷嚏0.4次，你大约打喷嚏 ${sneezeTotal} 次`,
+            `按皮肤代谢周期 (28天)，你大约完成 ${skinRenewals} 次表层更新`,
+
+            // 宇宙自然 (严谨)
+            `按天文公转，地球已绕太阳旋转 ${earthOrbits} 圈`,
+            `按月球公转 (周期27.3天)，月球已绕地球旋转 ${moonOrbits} 圈`,
+            `按太阳活动周期 (约11年)，你大约见证 ${sunspotCycles} 个活动周期`,
+            `按日均步行6000步估算，总步数约 ${totalSteps} 步，可绕赤道 ${equatorRounds} 圈`,
+            `按月相周期 (29.53天)，你大约经历 ${moonPhases} 次月圆月缺`,
+            `按二十四节气，你大约经历 ${solarTerms} 个节气时刻 (一年24节气)`,
+            `按主要流星雨 (年均4~5场)，你大约经历 ${meteorShowers} 次流星雨高峰`,
+            `按金星公转周期 (225天)，你在金星上已度过 ${venusOrbits} 个“金星年”`,
+            `按木星冲日周期 (约399天)，你大约经历 ${jupiterOppositions} 次木星冲日`,
+            `按日食+月食频率 (年均约4次)，你大约见证 ${eclipseEvents} 次日月食`,
+
+            // 生活日常 (数据合理化)
+            `按一日三餐估算，你大约吃了 ${mealsTotal} 顿饭`,
+            `按日均睡眠8小时，你大约睡了 ${sleepHours} 小时`,
+            `按日均饮水6杯 (约1.5L)，你大约喝了 ${waterGlasses} 杯水`,
+            `按饮食习惯估算，你大约吃了 ${eggsEaten} 个鸡蛋`,
+            `按日均1.5份水果，你大约吃了 ${fruitsEaten} 个/份水果`,
+            `按日均刷牙2次，你大约刷了 ${teethBrush} 次牙`,
+            `按日常卫生习惯 (约0.9次/天)，你大约洗了 ${showers} 次澡`,
+            `你大约度过 ${Math.floor(diffDays / 7).toLocaleString()} 个周末`,
+
+            // ---------- 娱乐休闲 (温和保守估计 + 合理起始年龄) ----------
+            // 看电影：从4岁开始有记忆地观影
+            `按每年看12部电影估算，你大约看过 ${Math.floor(Math.max(0, ageYearsNum - 4) * 12).toLocaleString()} 部`,
+            // 听新歌：从10岁开始有意识地接触流行音乐
+            `按每年听80首新歌估算，你大约听过 ${Math.floor(Math.max(0, ageYearsNum - 10) * 80).toLocaleString()} 首`,
+            // 追剧：从12岁开始追完整剧集
+            `按每年追3部剧估算，你大约追完 ${Math.floor(Math.max(0, ageYearsNum - 12) * 3).toLocaleString()} 部剧集`,
+            // 玩游戏：从6岁开始接触电子游戏
+            `按每年玩2款游戏估算，你大约体验 ${Math.floor(Math.max(0, ageYearsNum - 6) * 2).toLocaleString()} 款游戏`,
+            // 读书：从5岁开始自主阅读
+            `按每年读4本书估算，你大约读完 ${Math.floor(Math.max(0, ageYearsNum - 5) * 4).toLocaleString()} 本书`,
+            // 旅行：从3岁开始有记忆的出行
+            `按每年旅行1.5次估算，你大约出行 ${Math.floor(Math.max(0, ageYearsNum - 3) * 1.5).toLocaleString()} 次`,
+            // 拍照：从2岁开始成为拍照对象
+            `按每年拍照600张估算，你大约拍 ${Math.floor(Math.max(0, ageYearsNum - 2) * 600).toLocaleString()} 张照片`,
+
+            // ---------- 成长与社会 (合理起始年龄) ----------
+            // 换手机：从12岁开始拥有第一部手机
+            `按12岁开始拥有手机，每3年一换估算，你大约换过 ${Math.floor(Math.max(0, ageYearsNum - 12) / 3)} 部手机`,
+            // 换电脑：从10岁开始接触使用电脑
+            `按10岁开始使用电脑，每5年一换估算，你大约换过 ${Math.floor(Math.max(0, ageYearsNum - 10) / 5)} 台电脑`,
+
+            // 纯时间换算 (严谨)
+            `按公历计算，你已经来到世界 ${diffDays.toLocaleString()} 天`,
+            `把年龄换算成小时，大约是 ${hours.toLocaleString()} 小时`,
+            `把年龄换算成分钟，大约是 ${minutes.toLocaleString()} 分钟`,
+            `把年龄换算成秒数，大约是 ${seconds.toLocaleString()} 秒`,
+            `把年龄换算成周数，大约是 ${weeks.toLocaleString()} 周`,
+            `按农历月份估算，大约是 ${ageMonths.toLocaleString()} 个月`,
+            `按预期寿命80岁估算，你大约走完人生的 ${Math.min(100, Math.round(ageYearsNum / 80 * 100))}%`,
+            `按预期寿命90岁估算，你大约走完人生的 ${Math.min(100, Math.round(ageYearsNum / 90 * 100))}%`,
+            `距离你下一次生日大约还有 ${daysToNextBirthday} 天`,
+            `按天数统计，你大约度过 ${Math.floor(diffDays / 100).toLocaleString()} 个“百天纪念日”`
+        ];
+
+        // 随机抽取6个不重复的趣味结果 (增强丰富性)
+        const selectedConversions = getRandomItems(allConversions, 6);
+
+        // 动态显示结果，增加渐显效果
+        selectedConversions.forEach((text, index) => {
+            setTimeout(() => {
+                const resultElement = document.createElement('div');
+                resultElement.className = 'neumorphic';
+                resultElement.innerHTML = text;
+                results.appendChild(resultElement);
+
+                setTimeout(() => {
+                    resultElement.style.transform = 'translateY(0)';
+                    resultElement.style.opacity = '1';
+                }, 10);
+
+                if (index === selectedConversions.length - 1) {
+                    setTimeout(() => {
+                        disclaimer.style.opacity = '0.6';
+                        disclaimer.style.transition = 'opacity 0.5s ease';
+                    }, 300);
+                }
+            }, index * 180);
+        });
+    }
+
+    // 辅助函数：从数组中随机抽取n个不重复元素
+    function getRandomItems(arr, count) {
+        const shuffled = [...arr];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled.slice(0, count);
+    }
+
+    // 猫年龄 (保留原有的趣味风格，但与科学化并不冲突，仍保留但未使用，为了代码整洁移除原猫狗函数，但页面内无依赖，改用上方科学比例。但原函数不用了，但保留无影响，不过为了整洁，仍保留备用但不会被调用。
+    // 实际调用已全部使用新的科学比例，旧函数废弃但不影响。
+    function calculateCatAge(humanYears) { return (humanYears / 80 * 15).toFixed(1); }
+    function calculateDogAge(humanYears) { return (humanYears / 80 * 13).toFixed(1); }
+
+    // 古代年龄称谓逻辑 (严谨修正)
+    function getAncientTitle(age) {
+        const a = Math.floor(age);
+        if (a < 1) return '襁褓';
+        if (a < 3) return '孩提';
+        if (a < 7) return '垂髫';
+        if (a < 10) return '总角';
+        if (a < 13) return '豆蔻年华';
+        if (a < 15) return '及笄之年';
+        if (a < 20) return '舞象之年';
+        if (a < 30) return '弱冠之年';
+        if (a < 40) return '而立之年';
+        if (a < 50) return '不惑之年';
+        if (a < 60) return '知命之年';
+        if (a < 70) return '花甲之年';
+        if (a < 80) return '古稀之年';
+        if (a < 90) return '耄耋之年';
+        return '期颐之年';
+    }
+</script>
+</body>
+</html>

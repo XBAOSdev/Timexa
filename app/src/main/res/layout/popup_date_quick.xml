@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  快捷日期条：焦点落在日期输入框上时，浮在**那一格正上方**的一排「一键填入」建议。
+
+  为什么做成浮层而不是常驻一行：
+    这一页有两个日期输入框（差值的「从 / 到」、推算的「从（基准日期）」）。
+    常驻的快捷条无法表达「点它到底填到哪一格」，用户得先猜再点；
+    贴在当前获得焦点的那一格上方，作用对象就不言自明。
+
+  ⚠ 内容由 CalculatorDate 在代码里填（候选随模式与焦点变化，见 quickPicksFor）。
+  ⚠ 这一层是 PopupWindow 的 contentView，**不在 Activity 的视图树下** ——
+    BaseActivity 那趟 PressFeedback.attachTree 扫不到它，胶囊必须自己挂按压反馈。
+  ⚠ 宽高都写死为 wrap_content，真正的尺寸由代码按「自然宽度 / 屏宽」算好后
+    覆盖 layoutParams（见 showQuickBar 里的两个分支）。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/quickBar"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_quick_bar"
+    android:orientation="horizontal"
+    android:padding="@dimen/space_xs" />

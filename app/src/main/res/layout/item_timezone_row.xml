@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  时区选择页的一行：城市名 + 完整 Olson ID + 该时区的当前时间 + 选中勾。
+
+  右侧显示「该时区的当前时间」而不是偏移量：偏移量已经在分组标题上，
+  而实时时间是最有辨识度的一列 —— 用户能立刻认出「我要找的就是慢 8 小时的那个」。
+
+  勾选标记用 invisible 而不是 gone：保留占位，各行右侧的时间才会对齐成一条竖线。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Card.Row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:minHeight="@dimen/row_min_height"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/row_padding_h"
+    android:paddingTop="@dimen/row_padding_v"
+    android:paddingEnd="@dimen/row_padding_h"
+    android:paddingBottom="@dimen/row_padding_v">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tz_name"
+            style="@style/Text.Row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tz_id"
+            style="@style/Text.Caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_xxs" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tz_time"
+        style="@style/Text.Value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_s"
+        android:fontFeatureSettings="tnum" />
+
+    <ImageView
+        android:id="@+id/tz_check"
+        android:layout_width="@dimen/icon_chevron_size"
+        android:layout_height="@dimen/icon_chevron_size"
+        android:layout_marginStart="@dimen/space_s"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_check"
+        android:visibility="invisible" />
+</LinearLayout>

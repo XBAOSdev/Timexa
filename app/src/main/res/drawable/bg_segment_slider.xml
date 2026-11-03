@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  分段控件的选中滑块：浮在轨道上的一小块白底。
+  位置与宽度不写死 —— 由 SegmentAnim 在切换时按目标格的实际宽度重新布局并动画过去。
+
+  两处刻意的取舍：
+   1. 圆角用 @dimen/radius_segment_slider（7dp）而不是轨道的 radius_input（10dp）：
+      滑块内缩在轨道 padding（segment_track_padding = 3dp）之内，
+      必须用「轨道圆角 − 内边距」才是同心圆角，否则弧心不重合、边缘与轨道外框对不齐。
+   2. **不画描边**。轨道本身没有描边，滑块若自带 1dp 描边，
+      会在浅色底上多出一圈灰边、看起来像浮起来的小方块。
+      白底 + 轻微 elevation 的层次感已足够表达「选中」。
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/surface" />
+    <corners android:radius="@dimen/radius_segment_slider" />
+</shape>

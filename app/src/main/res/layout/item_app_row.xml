@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 分组卡片内的功能行：图标 + 名称 + 说明 + 箭头，整行可点 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Card.Row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/row_min_height_icon"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingHorizontal="@dimen/row_padding_h"
+    android:paddingVertical="@dimen/row_padding_v">
+
+    <ImageView
+        android:id="@+id/app_icon"
+        android:layout_width="@dimen/icon_badge_size"
+        android:layout_height="@dimen/icon_badge_size"
+        android:background="@drawable/bg_icon_badge"
+        android:contentDescription="@null"
+        android:padding="@dimen/icon_badge_padding"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_timer"
+        app:tint="@color/accent" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/app_row_gap"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/app_name"
+            style="@style/Text.Row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/app_desc"
+            style="@style/Text.Caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_xxs" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="@dimen/icon_chevron_size"
+        android:layout_height="@dimen/icon_chevron_size"
+        android:layout_marginStart="@dimen/space_s"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_chevron_right"
+        app:tint="@color/text_tertiary" />
+</LinearLayout>

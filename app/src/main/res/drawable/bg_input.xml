@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 输入框：白底 + 加深一档的描边，保证在浅灰页面上边界清晰 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/surface" />
+    <corners android:radius="@dimen/radius_input" />
+    <stroke
+        android:width="@dimen/stroke_hairline"
+        android:color="@color/stroke_strong" />
+</shape>

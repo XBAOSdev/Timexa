@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  品牌区（accent_tint 底色块）上的胶囊底板。
+
+  为什么不能直接用 bg_chip_running：
+    那个胶囊的底色**也是** accent_tint —— 放到同为 accent_tint 的 Hero 上等于没有底色，
+    整枚胶囊只剩一行强调色文字浮在色块上（实测如此，看起来像是没画完）。
+    这里改用 surface（白 / 夜间深灰）+ 卡片圆角，让胶囊从色块上浮出来。
+
+  为什么加按下态：
+    它是整块 Hero 里唯一的可点元素，而整块 Hero 又是页面的视觉中心，
+    没有按下反馈的话用户点完不知道有没有点到（点击会弹窗，但弹窗有 ~100ms 的延迟）。
+    按下取 surface_pressed，与全 App 的按压语言一致。
+
+  为什么不描边：
+    Hero 是纯色块，白底本身反差就够；再描一条 1dp 的线会让这块干净的头部变脏。
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/surface_pressed" />
+            <corners android:radius="@dimen/radius_chip" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/surface" />
+            <corners android:radius="@dimen/radius_chip" />
+        </shape>
+    </item>
+</selector>

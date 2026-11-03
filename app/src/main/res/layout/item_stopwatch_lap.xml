@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  单表专注页的一条计次记录：左侧序号，右侧用时，最右一个删除按钮。
+
+  删除按钮用 ImageButton + scaleType（与全 App 其它圆形图标按钮同一套做法）——
+  TextView + drawableEnd 的图标定位由 padding 决定、不受 gravity 控制，居中不了。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/row_min_height"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/row_padding_h"
+    android:paddingEnd="@dimen/space_s"
+    android:paddingVertical="@dimen/row_padding_v">
+
+    <TextView
+        android:id="@+id/lap_index"
+        style="@style/Text.Label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:maxLines="1" />
+
+    <TextView
+        android:id="@+id/lap_time"
+        style="@style/Text.Value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_s"
+        android:fontFamily="monospace" />
+
+    <ImageButton
+        android:id="@+id/lap_delete"
+        android:layout_width="@dimen/back_button_size"
+        android:layout_height="@dimen/back_button_size"
+        android:layout_marginStart="@dimen/space_xs"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/stopwatch_focus_lap_delete"
+        android:padding="@dimen/icon_button_padding"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_delete"
+        android:tint="@color/text_tertiary" />
+</LinearLayout>

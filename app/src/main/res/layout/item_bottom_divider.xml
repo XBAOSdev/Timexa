@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  内容区与底部操作条之间的 1dp 分割线。
+
+  为什么单独做一个 include 而不是在每个布局里各写一个 <View>：
+  这条线的四个属性（1dp 高、stroke_soft 颜色、左右不内缩、随页面宽度满铺）必须完全一致，
+  任何一处写偏都会让某个页面看起来「不是同一个应用」。集中一处、需要处引用。
+
+  用法：放在内容区之后、底部操作条之前，与操作条的 marginTop 一起构成间距。
+  （顶栏那条线不在此处，它已经包含在 item_topbar 内部。）
+-->
+<View xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/stroke_hairline"
+    android:background="@color/stroke_soft" />

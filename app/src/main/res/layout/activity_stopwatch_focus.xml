@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  单表专注页：点秒表卡片上的时间进入，整页只展示一个秒表。
+
+  为什么做成独立 Activity 而不是「卡片内放大」：
+  卡片宽度有限，36sp 已经是上限；而「专注看一个表」是这套 UI 里唯一需要
+  一眼看清百分位的场景（对表、测时长），做成整页才能把字号拉到 64sp 级别。
+  这也与系统时钟的秒表页同构：列表 → 点进某个表 → 大数字 + 播放/暂停 + 计次。
+
+  结构：顶栏（返回 + **当前秒表名**）／可滚动的计次列表 ／ 大数字 + 播放暂停 + 计次 + 重置。
+  顶栏中间的标题不再是固定的「专注计时」，而是这个秒表的名字 ——
+  一眼看到「我在看哪一个表」比看到页面名有用（用户 2.0.11 反馈）；
+  点击标题即弹出重命名输入框（列表页点卡片标题重命名是同一条交互路径），
+  因此原先右上角那行小字名称也一并去掉，顶栏不再重复展示。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_light"
+    android:orientation="vertical"
+    tools:context=".appyy.StopwatchFocus">
+
+    <!-- 顶栏：返回 + 居中的秒表名（可点击重命名）。名称由代码在 onCreate 里填 -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/item_topbar" />
+    </FrameLayout>
+
+    <!--
+      计次区的表头：左侧「计次」小标题，右侧「清空」动作。
+      没有计次时整行隐藏（由代码控制），空列表时不占位置、也不出现一个点不动的按钮。
+      它放在 ScrollView **之外**：随列表滚动的话，清空按钮会随着计次增多被滚出视野。
+    -->
+    <LinearLayout
+        android:id="@+id/focus_lap_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/topbar_gap"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginStart="@dimen/screen_padding"
+        android:layout_marginEnd="@dimen/screen_padding">
+
+        <TextView
+            style="@style/Text.Caption"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/stopwatch_focus_lap_section" />
+
+        <TextView
+            android:id="@+id/focus_lap_clear"
+            style="@style/Text.Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingHorizontal="@dimen/space_s"
+            android:paddingVertical="@dimen/space_xs"
+            android:text="@string/stopwatch_focus_lap_clear"
+            android:textColor="@color/danger" />
+    </LinearLayout>
+
+    <!-- 计次列表：占满中间剩余空间，没有计次时显示引导 -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/space_xs"
+        android:layout_weight="1"
+        android:layout_marginStart="@dimen/screen_padding"
+        android:layout_marginEnd="@dimen/screen_padding">
+
+        <ScrollView
+            android:id="@+id/focus_lap_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/focus_lap_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/space_m" />
+        </ScrollView>
+
+        <TextView
+            android:id="@+id/focus_lap_empty"
+            style="@style/Text.Caption"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/space_xl"
+            android:text="@string/stopwatch_focus_lap_empty"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </FrameLayout>
+
+    <!--
+      大数字：自适应字号 + 单行。
+      高度给足 —— 64sp 等宽数字实际行高约 76dp，若这里仍是 wrap_content，
+      关闭 font padding 后极易在行内被压扁。固定 minHeight 让它有稳定的呼吸空间，
+      且与整页的「中间大数字、上下留白」结构一致。
+    -->
+    <TextView
+        android:id="@+id/focus_time"
+        style="@style/Text.Display"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space_m"
+        android:fontFamily="monospace"
+        android:gravity="center"
+        android:includeFontPadding="true"
+        android:maxLines="1"
+        android:minHeight="@dimen/stopwatch_focus_min_height"
+        android:text="0:00:00.0"
+        app:autoSizeMaxTextSize="@dimen/stopwatch_focus_display"
+        app:autoSizeMinTextSize="@dimen/stopwatch_focus_display_min"
+        app:autoSizeTextType="uniform" 
+        android:layout_marginStart="@dimen/screen_padding"
+        android:layout_marginEnd="@dimen/screen_padding"/>
+
+    <!--
+      内容区与底部操作条的交界：1dp hairline（与列表页、顶栏同一套分割规则）
+    -->
+    <include layout="@layout/item_bottom_divider" />
+
+    <!-- 主控按钮：暂停/继续。整行大按钮，与列表页的底部操作条同一形态 -->
+    <TextView
+        android:id="@+id/focus_toggle"
+        style="@style/Btn.Primary"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="@dimen/space_m"
+        android:text="@string/stopwatch_pause" 
+        android:layout_marginStart="@dimen/screen_padding"
+        android:layout_marginEnd="@dimen/screen_padding"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_s"
+        android:layout_marginBottom="@dimen/screen_padding_bottom"
+        android:orientation="horizontal"
+        android:layout_marginStart="@dimen/screen_padding"
+        android:layout_marginEnd="@dimen/screen_padding">
+
+        <TextView
+            android:id="@+id/focus_lap"
+            style="@style/Btn.Secondary.Flex"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/button_height"
+            android:layout_weight="1"
+            android:text="@string/stopwatch_focus_lap" />
+
+        <TextView
+            android:id="@+id/focus_reset"
+            style="@style/Btn.Danger.Flex"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginStart="@dimen/space_s"
+            android:layout_weight="1"
+            android:text="@string/stopwatch_focus_reset" />
+    </LinearLayout>
+</LinearLayout>

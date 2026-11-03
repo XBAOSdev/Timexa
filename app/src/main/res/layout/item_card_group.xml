@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  通用分组卡片容器。
+  刻意把 Card 样式自带的 padding 覆盖为 0：每一行自己负责内边距，
+  这样行与行之间的分隔线才能贴着卡片左右边缘、只做单侧内缩。
+  行由代码添加（见 AppCardBuilder / Settings），行之间插入 1dp 分隔线。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="0dp" />

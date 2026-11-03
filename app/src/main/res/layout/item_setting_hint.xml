@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  设置卡片里的「状态说明 + 去系统设置」行（目前只用于「系统触感反馈已关闭」）。
+
+  与 item_setting_notice.xml 的区别，是刻意分开的两个控件：
+    · notice 是**可关闭的一次性提示**，只有右侧圆钮可点 ——
+      整行可点的话，用户凑近看内容时会误点把它关掉，而它存在的意义正是防止用户搞错；
+    · 本行陈述的是**客观状态**，不该被关闭（系统开关一恢复它自己就消失了），
+      所以没有关闭按钮，改成**整行可点**：点它是去解决问题，误点也没有破坏性
+      （最坏只是跳进系统设置，返回即可）。
+
+  内边距写 paddingStart/End/Top/Bottom 而不是 paddingHorizontal/Vertical：
+  后者是 API 26 才有，minSdk 24 上会被静默忽略（内边距整个丢失）。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:minHeight="@dimen/row_min_height"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/row_padding_h"
+    android:paddingTop="@dimen/row_padding_v"
+    android:paddingEnd="@dimen/row_padding_h"
+    android:paddingBottom="@dimen/row_padding_v">
+
+    <ImageView
+        android:layout_width="@dimen/icon_chevron_size"
+        android:layout_height="@dimen/icon_chevron_size"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_info"
+        app:tint="@color/warning" />
+
+    <TextView
+        android:id="@+id/setting_hint_text"
+        style="@style/Text.Caption"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_s"
+        android:layout_weight="1"
+        android:lineSpacingExtra="@dimen/line_spacing_tight" />
+
+    <ImageView
+        android:layout_width="@dimen/icon_chevron_size"
+        android:layout_height="@dimen/icon_chevron_size"
+        android:layout_marginStart="@dimen/space_s"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_chevron_right"
+        app:tint="@color/text_tertiary" />
+</LinearLayout>

@@ -1,0 +1,400 @@
+/*
+ * morandi.css —— 内置网页的统一皮肤（层叠覆盖层）
+ *
+ * 设计原则
+ *  1. 不改各页面的 HTML 结构与 JS 逻辑，只做样式覆盖；
+ *  2. 五个页面的配色全部（或绝大部分）由 CSS 变量驱动，
+ *     重新定义 :root 变量即可整体换肤，无需逐条改写原有规则；
+ *  3. 本文件在各页 <style> 之后加载：同优先级时后者胜出，
+ *     仅个别复合选择器（如 .btn:not(.btn-active)）需要单独兜底；
+ *  4. 视觉规范与原生界面完全一致：
+ *       纯色底 #F2F2F2 / 白色面板 + 1px 淡描边 / 莫兰迪低饱和强调色 / 无阴影。
+ *     之所以不用半透明与阴影：半透明要站在有层次的背景上才好看，
+ *     而这里刻意保持纯色背景，半透明只会退化成一块脏灰板。
+ *
+ * 修改此文件即等于同时修改全部内置网页的观感。
+ */
+
+/* ===================== 1. 变量重定义（核心换肤） ===================== */
+:root {
+    /* 页面底色：纯色，与原生页面同一个值 */
+    --bg-color: #F2F2F2;
+
+    /* 面板与文本底：纯白。原为半透明，这里回到不透明以保证干净 */
+    --morandi-sand-light: #FFFFFF;
+    --morandi-sand: #FFFFFF;
+    --morandi-gray: #FFFFFF;
+    --morandi-greige: #FFFFFF;
+    --white: #FFFFFF;
+
+    /* 文字三级：主 / 次 / 弱 */
+    --morandi-slate: #333333;
+    --morandi-ash: #666666;
+    --morandi-stone: #999999;
+    --morandi-smoke: #999999;
+
+    /* 强调色：莫兰迪灰蓝系 */
+    --morandi-blue: #7D8CA3;
+    --morandi-denim: #7D8CA3;
+    --morandi-water: #E9EDF1;
+    --morandi-azure: #8CA3AF;
+
+    /* 语义色：全部低饱和，与莫兰迪同调，避免出现跳脱的高饱和色 */
+    --morandi-green: #8FB996;
+    --morandi-teal: #8FB996;
+    --morandi-sage: #A9B388;
+    --morandi-moss: #94A684;
+    --morandi-olive: #A4A786;
+
+    --morandi-red: #C9A9A6;
+    --morandi-rose: #C9A9A6;
+    --morandi-rust: #D7BEA8;
+    --morandi-coral: #E0BFB8;
+    --morandi-brick: #C19A6B;
+
+    --morandi-cream: #E8DCCA;
+    --morandi-honey: #D4C2AD;
+    --morandi-straw: #E6D2AA;
+
+    --morandi-lavender: #B8A9C9;
+    --morandi-plum: #9E7C9F;
+    --morandi-violet: #A18F9E;
+    --morandi-iris: #9B82A7;
+
+    /* 取消拟态阴影：本皮肤走纯色 + 描边，不把元素"鼓"起来 */
+    --shadow-light: rgba(255, 255, 255, 0);
+    --shadow-dark: rgba(0, 0, 0, 0);
+
+    /* 本皮肤自用令牌 */
+    --mf-page-bg: #F2F2F2;
+    --mf-surface: #FFFFFF;
+    --mf-stroke: #E8E8E8;
+    --mf-stroke-strong: #DDDDDD;
+    --mf-text: #333333;
+    --mf-text-2: #666666;
+    --mf-text-3: #999999;
+    --mf-accent: #7D8CA3;
+    --mf-accent-deep: #6B7A90;
+    --mf-radius: 12px;
+    --mf-radius-sm: 8px;
+    --mf-gap: 16px;
+
+    /*
+     * 个别页面（目前只有太阳页）在自己的 :root 里自带一套 --stroke / --text-*，
+     * 并直接在页面样式里使用。这些名字不在 --mf-* 家族里，必须在深色块中一并接管，
+     * 否则深色下会继续用浅色的值 —— 表现为「#666 的文字压在 #232327 的卡片上」，
+     * 对比度约 2.6:1，远低于 WCAG AA 的 4.5:1；描边也会亮得刺眼。
+     */
+    --stroke: #E8E8E8;
+    --text-2: #666666;
+    --text-3: #999999;
+}
+
+/* ===================== 1b. 深色模式 =====================
+ * 由 i18n.js 在 <head> 里同步把 data-theme 写到 <html> 上，
+ * 因此这里只需按属性覆盖变量，不存在"先浅后深"的闪变。
+ * 取值与原生 values-night/colors.xml 一一对应。
+ */
+html[data-theme="dark"] {
+    --bg-color: #1A1A1D;
+
+    --morandi-sand-light: #232327;
+    --morandi-sand: #232327;
+    --morandi-gray: #232327;
+    --morandi-greige: #232327;
+    /* 原页面把 --white 当作面板底色在用，深色下必须跟着变深，不能保留白色 */
+    --white: #232327;
+
+    --morandi-slate: #E8E8EC;
+    --morandi-ash: #A6A6AE;
+    --morandi-stone: #73737C;
+    --morandi-smoke: #73737C;
+
+    --morandi-blue: #9CAFC6;
+    --morandi-denim: #9CAFC6;
+    --morandi-water: #262C33;
+    --morandi-azure: #8CA3AF;
+
+    /* 语义色整体提亮一档，低饱和在深底上才有对比度 */
+    --morandi-green: #9DB698;
+    --morandi-teal: #9DB698;
+    --morandi-sage: #B4BE96;
+    --morandi-moss: #A3B392;
+    --morandi-olive: #B2B596;
+
+    --morandi-red: #CC9B95;
+    --morandi-rose: #CC9B95;
+    --morandi-rust: #D9C2A8;
+    --morandi-coral: #D9BDB6;
+    --morandi-brick: #C7A377;
+
+    --morandi-cream: #3A362F;
+    --morandi-honey: #3A362F;
+    --morandi-straw: #3D3830;
+
+    --morandi-lavender: #B8A9C9;
+    --morandi-plum: #B08FB1;
+    --morandi-violet: #B3A1B0;
+    --morandi-iris: #B6A0C0;
+
+    --shadow-light: rgba(0, 0, 0, 0);
+    --shadow-dark: rgba(0, 0, 0, 0);
+
+    --mf-page-bg: #1A1A1D;
+    --mf-surface: #232327;
+    --mf-stroke: #34343A;
+    --mf-stroke-strong: #41414A;
+    --mf-text: #E8E8EC;
+    --mf-text-2: #A6A6AE;
+    --mf-text-3: #73737C;
+    --mf-accent: #9CAFC6;
+    --mf-accent-deep: #8AA0BA;
+
+    /* 页面自带的那套名字（理由见上方浅色块注释），深色下必须跟着换 */
+    --stroke: #34343A;
+    --text-2: #A6A6AE;
+    --text-3: #73737C;
+}
+
+/* 强调色按钮在深色下要换成深色文字，否则浅蓝底 + 白字几乎没有对比 */
+html[data-theme="dark"] .btn-active,
+html[data-theme="dark"] .btn.primary,
+html[data-theme="dark"] .modal-btn.confirm {
+    color: #14161A;
+}
+
+/* 按下态原本是硬编码的浅灰，深色下需要单独兜底 */
+html[data-theme="dark"] .btn:active,
+html[data-theme="dark"] .modal-btn:active,
+html[data-theme="dark"] .fab:active {
+    background-color: #2D2D32;
+}
+
+html[data-theme="dark"] .modal-overlay {
+    background-color: rgba(0, 0, 0, 0.55);
+}
+
+/* ===================== 2. 页面与排版 ===================== */
+html {
+    background-color: var(--mf-page-bg);
+}
+
+/* 统一安全边距：任何页面内容都不再贴着屏幕边缘绘制 */
+body {
+    margin: 0;
+    padding: var(--mf-gap) !important;
+    box-sizing: border-box;
+    background: var(--mf-page-bg) !important;
+    background-image: none !important;
+    color: var(--mf-text);
+    -webkit-font-smoothing: antialiased;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+h1,
+h2,
+h3 {
+    color: var(--mf-text);
+    font-weight: 600;
+    letter-spacing: 0;
+}
+
+h1 {
+    color: var(--mf-accent);
+}
+
+/* ===================== 3. 面板 ===================== */
+.neumorphic,
+.data-card,
+.progress-card,
+.location-info,
+.local-time-card,
+.direction-card,
+.card-wrapper,
+.modal,
+.time-units-list {
+    background-color: var(--mf-surface);
+    border: 1px solid var(--mf-stroke);
+    border-radius: var(--mf-radius);
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+}
+
+/*
+  .input-group 刻意**不在**上面那一组里。
+  它是「一行 label + 一个 input」的纵向容器（太阳页手输经纬度的弹窗里用到），
+  而内层 input 自己就带了描边 —— 容器再套一层边框就是**双层框**，看着像画歪了。
+  这里显式声明成透明、无边框：既说清意图，也免得以后有人「顺手」把它挪回上面那组。
+*/
+.input-group {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+/* 卡片内部的行不重复加边框，避免"盒子里套盒子"的噪音 */
+.direction-item,
+.list-item {
+    border: none;
+    box-shadow: none;
+    background: transparent;
+}
+
+/* 文字层级 */
+.data-label,
+.progress-label,
+.direction-label,
+.unit-name,
+.disclaimer {
+    color: var(--mf-text-2);
+}
+
+.data-value,
+.direction-value,
+.local-time-main {
+    color: var(--mf-text);
+    font-weight: 600;
+}
+
+.local-time-date,
+.local-time-diff {
+    color: var(--mf-text-3);
+}
+
+/* ===================== 4. 进度条 ===================== */
+.progress-bar-container {
+    background-color: var(--mf-stroke);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    border-radius: 999px;
+    box-shadow: none;
+}
+
+.progress-percent {
+    font-variant-numeric: tabular-nums;
+}
+
+/* ===================== 5. 输入控件 ===================== */
+input,
+select,
+textarea,
+.value-input,
+.date-input,
+.neumorphic-inset {
+    background-color: var(--mf-surface);
+    border: 1px solid var(--mf-stroke-strong);
+    border-radius: var(--mf-radius-sm);
+    color: var(--mf-text);
+    box-shadow: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+.value-input:focus,
+.date-input:focus,
+.neumorphic-inset:focus {
+    outline: none;
+    border-color: var(--mf-accent);
+    box-shadow: none;
+}
+
+/* ===================== 6. 按钮 ===================== */
+.btn,
+.modal-btn,
+.fab {
+    border: 1px solid var(--mf-stroke);
+    border-radius: var(--mf-radius-sm);
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn {
+    background-color: var(--mf-surface);
+    color: var(--mf-text);
+}
+
+/* 原页面用复合选择器指定了未激活按钮的文字色，这里同优先级覆盖 */
+.btn:not(.btn-active) {
+    color: var(--mf-text);
+}
+
+.btn-active,
+.btn.primary,
+.modal-btn.confirm {
+    background-color: var(--mf-accent);
+    border-color: var(--mf-accent);
+    color: #FFFFFF;
+}
+
+.modal-btn.cancel {
+    background-color: var(--mf-surface);
+    color: var(--mf-text-2);
+}
+
+.btn:active,
+.modal-btn:active,
+.fab:active {
+    background-color: #F0F0F0;
+}
+
+.btn-active:active,
+.btn.primary:active,
+.modal-btn.confirm:active {
+    background-color: var(--mf-accent-deep);
+}
+
+/* ===================== 7. 弹层 ===================== */
+.modal-overlay {
+    background-color: rgba(0, 0, 0, 0.25);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+}
+
+.modal {
+    background-color: var(--mf-surface);
+    border-radius: 14px;
+}
+
+/* ===================== 8. 时间换算页（结构与其他页不同，单独兜底） ===================== */
+.time-units-list {
+    background-color: var(--mf-surface);
+    padding: 0 var(--mf-gap);
+}
+
+.list-item {
+    border-bottom: 1px solid var(--mf-stroke);
+}
+
+.list-item:last-child {
+    border-bottom: none;
+}
+
+.value-input,
+.neumorphic-inset {
+    color: var(--mf-accent);
+    font-weight: 600;
+}
+
+/* ===================== 9. 无障碍：尊重系统"减少动态效果" ===================== */
+@media (prefers-reduced-motion: reduce) {
+    .btn,
+    .modal-btn,
+    .fab {
+        transition: none;
+    }
+}

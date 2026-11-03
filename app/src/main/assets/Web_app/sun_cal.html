@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>太阳情况</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-color: #F2F2F2;
+            --morandi-denim: #7D8CA3;
+            --morandi-teal: #8FB996;
+            --morandi-rose: #C9A9A6;
+            --morandi-sand-light: #FFFFFF;
+            --morandi-slate: #333333;
+            --white: #FFFFFF;
+            --stroke: #E8E8E8;
+            --text-2: #666666;
+            --text-3: #999999;
+            --radius: 12px;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+            font-family: 'Helvetica','Arial',sans-serif;
+            color: var(--morandi-slate);
+        }
+
+        .container {
+            max-width: 28rem;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* ===== 顶部坐标条 ===== */
+        .location-bar {
+            width: 100%;
+            max-width: 20rem;
+            background-color: var(--morandi-sand-light);
+            border: 1px solid var(--stroke);
+            border-radius: var(--radius);
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+        }
+
+        .location-text {
+            font-size: 0.85rem;
+            color: var(--text-2);
+            line-height: 1.5;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .location-text b {
+            color: var(--morandi-denim);
+            font-weight: 600;
+        }
+
+        .location-source {
+            font-size: 0.75rem;
+            color: var(--text-3);
+            margin-top: 0.15rem;
+        }
+
+        .loc-btn {
+            flex-shrink: 0;
+            padding: 0.45rem 0.8rem;
+            border: 1px solid var(--stroke);
+            border-radius: 8px;
+            background-color: transparent;
+            color: var(--morandi-denim);
+            font-size: 0.85rem;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .loc-btn:active {
+            background-color: #F0F0F0;
+        }
+
+        /* ===== 太阳高度环 ===== */
+        .sun-card {
+            width: 100%;
+            max-width: 20rem;
+            background-color: var(--morandi-sand-light);
+            border: 1px solid var(--stroke);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .sun-arc-wrap {
+            position: relative;
+            width: 100%;
+            max-width: 17rem;
+            aspect-ratio: 2 / 1;
+            overflow: visible;
+        }
+
+        .sun-arc-wrap svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+            overflow: visible;
+        }
+
+        /*
+         * 弧线 / 地平线 / 刻度 / 太阳的颜色一律走 CSS 变量，不写死在 SVG 属性里。
+         * 原来写死成 #DDDDDD / #E8E8E8，深色下仍是最亮的浅灰，和卡片底色反差过大。
+         */
+        .sun-arc-wrap .arc-horizon {
+            stroke: var(--stroke);
+        }
+
+        .sun-arc-wrap .arc-path {
+            stroke: var(--stroke);
+        }
+
+        .sun-arc-wrap .arc-noon-tick {
+            stroke: var(--text-3);
+        }
+
+        /*
+         * 太阳圆点：注意**不要**在这里之外用 setAttribute('fill') 改色 ——
+         * CSS 的优先级高于 SVG 呈现属性，一旦这里写了 fill，脚本设的就会被无声压掉。
+         * 所以「地平线下」这个状态由 JS 切换 class 表达，配色统一留在这里。
+         */
+        .sun-arc-wrap #sunDot {
+            fill: var(--morandi-denim);
+        }
+
+        .sun-arc-wrap #sunDot.is-below {
+            fill: var(--morandi-rose);
+            opacity: 0.65;
+        }
+
+        /*
+         * 两个读数并排：「当前太阳高度」「当前方位角」。
+         * 刻意各自带标签、不加「·」之类的分隔符 —— 两段数字贴在一行里会分不清谁是谁。
+         */
+        .sun-readings {
+            margin-top: 0.85rem;
+            display: flex;
+            justify-content: center;
+            gap: 1.75rem;
+        }
+
+        .sun-reading-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.15rem;
+        }
+
+        .sun-reading-label {
+            font-size: 0.8rem;
+            color: var(--text-2);
+        }
+
+        .sun-reading-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--morandi-denim);
+            font-variant-numeric: tabular-nums;
+            line-height: 1.15;
+        }
+
+        .sun-state {
+            margin-top: 0.4rem;
+            font-size: 0.9rem;
+            color: var(--text-2);
+        }
+
+        /* ===== 关键数据网格 ===== */
+        .grid {
+            width: 100%;
+            max-width: 20rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .cell {
+            background-color: var(--morandi-sand-light);
+            border: 1px solid var(--stroke);
+            border-radius: var(--radius);
+            padding: 0.9rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .cell-label {
+            font-size: 0.8rem;
+            color: var(--text-2);
+        }
+
+        .cell-value {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--morandi-slate);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .cell.accent .cell-value {
+            color: var(--morandi-denim);
+        }
+
+        .cell.teal .cell-value {
+            color: var(--morandi-teal);
+        }
+
+        .cell.rose .cell-value {
+            color: var(--morandi-rose);
+        }
+
+        .cell-sub {
+            font-size: 0.72rem;
+            color: var(--text-3);
+        }
+
+        /* ===== 方位卡片 ===== */
+        .direction-card {
+            width: 100%;
+            max-width: 20rem;
+            background-color: var(--morandi-sand-light);
+            border: 1px solid var(--stroke);
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .direction-title {
+            font-size: 0.8rem;
+            color: var(--text-3);
+            margin-bottom: 0.1rem;
+        }
+
+        .direction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            font-size: 0.92rem;
+        }
+
+        .direction-label {
+            color: var(--text-2);
+        }
+
+        .direction-value {
+            font-weight: 600;
+            color: var(--morandi-denim);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* ===== 地方时卡片 ===== */
+        .local-time-card {
+            width: 100%;
+            max-width: 20rem;
+            background-color: var(--morandi-sand-light);
+            border: 1px solid var(--stroke);
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 0.75rem;
+        }
+
+        .lt-label {
+            font-size: 0.8rem;
+            color: var(--text-2);
+        }
+
+        .lt-main {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--morandi-denim);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .lt-diff {
+            font-size: 0.72rem;
+            color: var(--text-3);
+            margin-top: 0.15rem;
+        }
+
+        .disclaimer {
+            font-size: 0.72rem;
+            color: var(--text-3);
+            text-align: center;
+            margin: 0.25rem 0 3rem;
+            max-width: 20rem;
+            line-height: 1.6;
+        }
+
+        /* ===== 手动输入弹窗 ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0,0,0,0.25);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 300;
+            padding: 1rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background-color: var(--white);
+            border: 1px solid var(--stroke);
+            border-radius: 14px;
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 20rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.1rem;
+        }
+
+        .modal h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--morandi-slate);
+            text-align: center;
+        }
+
+        .modal p {
+            font-size: 0.85rem;
+            color: var(--text-2);
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .input-group label {
+            font-size: 0.82rem;
+            color: var(--text-2);
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.7rem 0.9rem;
+            font-size: 1rem;
+            border: 1px solid var(--stroke);
+            border-radius: 8px;
+            background-color: var(--white);
+            color: var(--morandi-slate);
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .input-group input:focus {
+            border-color: var(--morandi-denim);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 0.7rem;
+            border-radius: 8px;
+            border: 1px solid var(--stroke);
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .modal-btn.cancel {
+            background-color: transparent;
+            color: var(--text-2);
+        }
+
+        .modal-btn.confirm {
+            background-color: var(--morandi-denim);
+            border-color: var(--morandi-denim);
+            color: var(--white);
+        }
+
+        .modal-btn:active {
+            opacity: 0.85;
+        }
+    </style>
+    <!-- 统一皮肤：须位于本页样式之后以便生效 -->
+    <link rel="stylesheet" href="morandi.css">
+    <script src="i18n.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- 坐标来源与当前坐标 -->
+    <div class="location-bar" id="locationBar">
+        <div>
+            <div class="location-text" id="locationText">正在准备坐标…</div>
+            <div class="location-source" id="locationSource"></div>
+        </div>
+        <button class="loc-btn" id="locBtn">改坐标</button>
+    </div>
+
+    <!-- 太阳高度角：半圆弧指示 -->
+    <div class="sun-card">
+        <div class="sun-arc-wrap">
+            <svg viewBox="0 0 200 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+                <!-- 地平线 -->
+                <line class="arc-horizon" x1="0" y1="92" x2="200" y2="92"
+                      stroke-width="1.5" stroke-linecap="round"/>
+                <!-- 天顶弧（半圆：圆心 100,92，半径 84） -->
+                <path class="arc-path" d="M16,92 A84,84 0 0 1 184,92"
+                      fill="none" stroke-width="2" stroke-linecap="round"/>
+                <!--
+                  当前太阳位置（示意）：
+                  沿弧按「白天的时间进度」移动 —— 左端 = 日出、弧顶 = 正午、右端 = 日落。
+                  这是形象化的示意，**不代表真实方位**；真实方位角由下方读数给出。
+                -->
+                <circle id="sunDot" cx="16" cy="92" r="6"/>
+                <!-- 正午位置参考刻度 -->
+                <line class="arc-noon-tick" x1="100" y1="84" x2="100" y2="92"
+                      stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+        </div>
+        <div class="sun-readings">
+            <div class="sun-reading-item">
+                <div class="sun-reading-label">当前太阳高度</div>
+                <div class="sun-reading-value" id="sunAltitude">-°</div>
+            </div>
+            <div class="sun-reading-item">
+                <div class="sun-reading-label">当前方位角</div>
+                <div class="sun-reading-value" id="sunAzimuth">-°</div>
+            </div>
+        </div>
+        <div class="sun-state" id="sunState">-</div>
+    </div>
+
+    <!-- 关键数据 -->
+    <div class="grid">
+        <div class="cell accent">
+            <div class="cell-label">日出</div>
+            <div class="cell-value" id="sunrise">-</div>
+            <div class="cell-sub" id="sunriseSub">-</div>
+        </div>
+        <div class="cell accent">
+            <div class="cell-label">日落</div>
+            <div class="cell-value" id="sunset">-</div>
+            <div class="cell-sub" id="sunsetSub">-</div>
+        </div>
+        <div class="cell teal">
+            <div class="cell-label">正午太阳高度</div>
+            <div class="cell-value" id="noonAngle">-</div>
+            <div class="cell-sub" id="noonSub">-</div>
+        </div>
+        <div class="cell rose">
+            <div class="cell-label">昼长</div>
+            <div class="cell-value" id="dayLength">-</div>
+            <div class="cell-sub" id="dayLengthSub">-</div>
+        </div>
+    </div>
+
+    <!-- 日出日落方位 -->
+    <div class="direction-card">
+        <div class="direction-title">日出日落方位（以正北为 0°，顺时针）</div>
+        <div class="direction-item">
+            <span class="direction-label">日出方位</span>
+            <span class="direction-value" id="riseDir">-</span>
+        </div>
+        <div class="direction-item">
+            <span class="direction-label">日落方位</span>
+            <span class="direction-value" id="setDir">-</span>
+        </div>
+    </div>
+
+    <!-- 地方时 -->
+    <div class="local-time-card">
+        <div>
+            <div class="lt-label">当地地方时</div>
+            <div class="lt-main" id="localTime">-</div>
+        </div>
+        <div style="text-align:right">
+            <div class="lt-label" id="localDate">-</div>
+            <div class="lt-diff" id="timeDiff">-</div>
+        </div>
+    </div>
+
+    <div class="disclaimer">
+        太阳高度角与日出日落时刻按天文公式本地计算，未计入海拔与地形遮挡，结果仅供参考。<br>
+        坐标只在本机参与计算，不会上传。
+    </div>
+</div>
+
+<!-- 手动输入经纬度（定位不可用或用户想换地点时使用） -->
+<div class="modal-overlay" id="inputModal">
+    <div class="modal">
+        <h2>输入经纬度</h2>
+        <p id="modalHint"></p>
+        <div class="input-group">
+            <label>纬度（-90°~90°，北纬正，南纬负）</label>
+            <input type="number" id="latInput" step="0.01" min="-90" max="90" inputmode="decimal">
+        </div>
+        <div class="input-group">
+            <label>经度（-180°~180°，东经正，西经负）</label>
+            <input type="number" id="lngInput" step="0.01" min="-180" max="180" inputmode="decimal">
+        </div>
+        <div class="modal-buttons">
+            <button class="modal-btn cancel" id="cancelBtn">取消</button>
+            <button class="modal-btn confirm" id="confirmBtn">确定查询</button>
+        </div>
+    </div>
+</div>
+
+<script>
+/* =========================================================================
+ * 太阳情况 —— 单页离线计算
+ *
+ * 坐标来源优先级：
+ *   1. URL 上的 lat / lon（安卓侧调系统定位后传入，见 WebPages.withSkinParams）
+ *   2. 手动输入弹窗（定位被拒绝 / 无信号 / 用户主动改坐标）
+ *
+ * 算法说明（本次重写的核心）：
+ *   旧版用「日出 6:30、日落 18:30 ± 整小时」估算，误差可达 1 小时以上，
+ *   而且正午高度角直接套 90-|φ-δ| 会在极昼/极夜时算出负值。
+ *   现在改为标准的天文公式：
+ *     · 太阳赤纬 δ 用 Cooper 公式（精度约 ±0.5°，对民用场景足够）
+ *     · 时角 ω₀ 用 cos ω₀ = -tan φ · tan δ 求日出日落
+ *     · 日出日落时刻把时角换算成分钟，再用**经度做地方时修正**
+ *     · 高度角 h = asin(sin φ sin δ + cos φ cos δ cos ω)
+ *   并用 JS 原生 Date 处理日期，不再手工算 dayOfYear。
+ * ======================================================================= */
+
+/** 当前生效的坐标；null 表示还没拿到坐标 */
+var current = null;
+
+/*
+ * 动态文案翻译。
+ *
+ * 为什么不能用 i18n.js 的 DOM 字典替换：本页的方位名、状态文案是由 render()
+ * **每秒重写**一次文本节点的（太阳位置一直在变），DOM 遍历既追不上、写完也会被冲掉。
+ * 所以在渲染处逐段调 t()。
+ *
+ * ⚠ 关键约定：**key 必须就是简体要显示的那段原文**。
+ *   简体没有字典表，t() 是直通的（返回 key 本身），所以 key 若不是原文，
+ *   简体界面就会把内部 key 名显示出来（踩过：显示成「时长单位时」）。
+ *
+ * @param key  字典键 —— 正常情况下它本身就是简体原文，如 '极昼'、'北京時間'。
+ * @param zhCn 仅给「合成 key」用：页面原文里没有这个词、纯粹为了区分上下文才另起的 key
+ *             （见 hoursToDuration 里的时长单位）。这类 key 在简体下没有原文可直通，
+ *             必须把简体写法显式传进来。
+ */
+function t(key, zhCn) {
+    var api = window.AppI18n;
+    // 简体，或没有 i18n.js（单独用浏览器打开本页）—— 合成 key 走显式传入的简体写法
+    if (!api || api.lang === 'zh-CN') return zhCn !== undefined ? zhCn : key;
+    return api.t(key);
+}
+
+/** 取 URL 参数（由安卓侧注入 lang / theme / lat / lon） */
+function queryParam(name) {
+    try {
+        return new URLSearchParams(window.location.search).get(name);
+    } catch (e) {
+        return null;
+    }
+}
+
+/* ==================== 天文计算 ==================== */
+
+var DEG = Math.PI / 180;
+
+/** 一年中的第几天（1~366） */
+function dayOfYear(date) {
+    var start = new Date(date.getFullYear(), 0, 0);
+    return Math.floor((date - start) / 86400000);
+}
+
+/**
+ * 太阳赤纬（弧度）。
+ * Cooper 公式：δ = 23.45° × sin(360° × (284 + N) / 365)
+ * 用 284 而不是 81：两者等价（81+203=284），284 是公式的标准写法。
+ */
+function declination(date) {
+    var n = dayOfYear(date);
+    return 23.45 * Math.sin(360 * (284 + n) / 365 * DEG) * DEG;
+}
+
+/** 时差方程（分钟）—— 真太阳时与平太阳时之差。用 NOAA 的简化近似，精度约 ±0.5 分钟。 */
+function equationOfTime(date) {
+    var n = dayOfYear(date);
+    var b = 360 * (n - 81) / 364 * DEG;
+    return 9.87 * Math.sin(2 * b) - 7.53 * Math.cos(b) - 1.5 * Math.sin(b);
+}
+
+/**
+ * 计算某地某日的太阳数据。
+ *
+ * @param lat 纬度（度，北正）
+ * @param lon 经度（度，东正）
+ * @param date 用于取日期的 Date（默认今天）
+ */
+function computeSun(lat, lon, date) {
+    date = date || new Date();
+    var phi = lat * DEG;
+    var decl = declination(date);
+
+    // ---- 正午太阳高度角：h = 90° - |φ - δ| ----
+    // 极昼极夜时这个差值可能超过 90，需要分别处理：
+    //   太阳整日在地平线下（极夜）→ 正午高度为负，显示 0
+    //   太阳整日在地平线上（极昼）→ 正午高度取 90° 的补角
+    var noonAltitude = 90 - Math.abs(lat - decl / DEG);
+
+    // ---- 时角 ω₀：cos ω₀ = -tan φ · tan δ ----
+    // 太阳高度为 -0.833°（含大气折射与太阳视半径）时才算日出日落，
+    // 这里按民用惯例直接把地平线当作 -0.833°，能显著改善日出日落精度。
+    var h0 = -0.833 * DEG;
+    var cosOmega = (Math.sin(h0) - Math.sin(phi) * Math.sin(decl)) /
+        (Math.cos(phi) * Math.cos(decl));
+
+    // 太阳上中天的时刻（地方时，小时）。因时差方程的存在，正午并非恰在 12:00。
+    // 太阳正午的地方平太阳时 = 12 - EoT/60
+    var solarNoonHours = 12 - equationOfTime(date) / 60;
+
+    var polarDay = false, polarNight = false;
+    var halfDayHours = 0;  // 半天时长（小时）
+
+    if (cosOmega < -1) {
+        // 极昼：太阳全天不落
+        polarDay = true;
+        halfDayHours = 12;
+    } else if (cosOmega > 1) {
+        // 极夜：太阳全天不升
+        polarNight = true;
+        halfDayHours = 0;
+    } else {
+        // 时角转小时：ω(度) / 15 = 小时
+        halfDayHours = Math.acos(cosOmega) / DEG / 15;
+    }
+
+    // ---- 把「地方时」换算成「北京时间」----
+    // 页面上的其它时间都是手机系统时间（东八区），因此这里要把地方时折算回东八区。
+    // 经度每偏离 120°E 一度，地方时就比北京时间差 4 分钟。
+    var lonCorrectionHours = (lon - 120) * 4 / 60;
+
+    var sunriseLocal = solarNoonHours - halfDayHours;   // 地方时
+    var sunsetLocal = solarNoonHours + halfDayHours;    // 地方时
+
+    return {
+        lat: lat,
+        lon: lon,
+        declination: decl / DEG,
+        noonAltitude: noonAltitude,
+        solarNoonLocal: solarNoonHours,
+        sunriseLocal: sunriseLocal,
+        sunsetLocal: sunsetLocal,
+        sunrise: sunriseLocal - lonCorrectionHours,   // 北京时间
+        sunset: sunsetLocal - lonCorrectionHours,     // 北京时间
+        dayLength: halfDayHours * 2,
+        polarDay: polarDay,
+        polarNight: polarNight,
+        lonCorrectionHours: lonCorrectionHours,
+        hasRiseSet: !polarDay && !polarNight
+    };
+}
+
+/** 当前太阳高度角（度）。用真太阳时求时角，比直接用地方时更准。 */
+function currentAltitude(lat, lon, date) {
+    date = date || new Date();
+    var phi = lat * DEG;
+    var decl = declination(date);
+
+    // 真太阳时（小时）：
+    //   真太阳时 = 世界时 + 经度/15 + 时差方程
+    // 注意这里**必须用 UTC**，不能用 getHours()：
+    //   手机的系统时区不一定是东八区（用户可能在国外、或把时区改成了别的），
+    //   一旦用本地时间，同一条公式在不同时区的设备上会算出完全不同的高度角。
+    //   UTC 是唯一与设备设置无关的基准。
+    var utcHours = date.getUTCHours() + date.getUTCMinutes() / 60 + date.getUTCSeconds() / 3600;
+    var trueSolarHours = utcHours + lon / 15 + equationOfTime(date) / 60;
+    // 归一到 [0,24)
+    trueSolarHours = ((trueSolarHours % 24) + 24) % 24;
+
+    // 时角：正午为 0，每小时 15°
+    var omega = (trueSolarHours - 12) * 15 * DEG;
+
+    // h = asin(sin φ sin δ + cos φ cos δ cos ω)
+    var sinH = Math.sin(phi) * Math.sin(decl) + Math.cos(phi) * Math.cos(decl) * Math.cos(omega);
+    var altitude = Math.asin(Math.max(-1, Math.min(1, sinH))) / DEG;
+
+    // 方位角：以正北为 0°，顺时针。
+    // 用 atan2 求，避免 acos 在早/晚两侧给出对称结果而无法区分东西。
+    var azimuth = Math.atan2(
+        -Math.cos(decl) * Math.sin(omega),
+        Math.sin(decl) * Math.cos(phi) - Math.cos(decl) * Math.sin(phi) * Math.cos(omega)
+    ) / DEG;
+    azimuth = (azimuth + 360) % 360;
+
+    return { altitude: altitude, azimuth: azimuth, trueSolarHours: trueSolarHours };
+}
+
+/**
+ * 日出 / 日落时的方位角（度，正北为 0）。
+ * 用高度角 -0.833° 对应的时角 ω₀ 与赤纬 δ 求：
+ *   cos A = (sin δ - sin h · sin φ) / (cos h · cos φ)
+ * 再按半球决定是偏东还是偏西，避免 acos 只给一半答案。
+ */
+function riseSetAzimuth(lat, decl, isRise) {
+    var h0 = -0.833 * DEG;
+    var phi = lat * DEG;
+    var cosA = (Math.sin(decl) - Math.sin(h0) * Math.sin(phi)) / (Math.cos(h0) * Math.cos(phi));
+    cosA = Math.max(-1, Math.min(1, cosA));
+    var a = Math.acos(cosA) / DEG;
+    // 日出在东侧（0~180 之外），日落在西侧
+    return isRise ? (180 - a) : (180 + a);
+}
+
+/** 角度 → 八方位（含 16 方位的细分描述） */
+function dirName(angle) {
+    var a = ((Number(angle) % 360) + 360) % 360;
+    var names = ['正北','东北偏北','东北','东北偏东','正东','东南偏东','东南','东南偏南',
+                 '正南','西南偏南','西南','西南偏西','正西','西北偏西','西北','西北偏北'];
+    var idx = Math.round(a / 22.5) % 16;
+    return t(names[idx]);
+}
+
+/* ==================== 格式化 ==================== */
+
+/** 小时小数 → "HH:MM"（超范围返回占位符） */
+function hoursToClock(hours) {
+    if (!isFinite(hours)) return '--:--';
+    var h = Math.floor(((hours % 24) + 24) % 24);
+    var m = Math.round((hours - Math.floor(hours)) * 60);
+    if (m === 60) { m = 0; h = (h + 1) % 24; }
+    return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+}
+
+/** 小时数 → "X 小时 Y 分"（英文 "3 h 20 min"）。单位词也走 t()，两处译法不同故用独立 key。 */
+function hoursToDuration(hours) {
+    if (!isFinite(hours) || hours <= 0) return t('0 小时');
+    var total = Math.round(hours * 60);
+    var h = Math.floor(total / 60);
+    var m = total % 60;
+    // 「合成 key」：单位列表里要全称（Hour / Minute），时长句子里英文要用缩写（h / min），
+    // 同一个中文词只能有一个译法，共用一个 key 会被对象字面量里后写的静默覆盖，
+    // 所以另起 key；第二个参数是它在简体下该显示的写法（见 t() 的说明）。
+    var hourUnit = t('时长单位时', '小时');
+    var minUnit = t('时长单位分', '分');
+    return h > 0 ? (h + ' ' + hourUnit + ' ' + m + ' ' + minUnit) : (m + ' ' + minUnit);
+}
+
+/** 当前太阳状态文案（枚举，逐条走 t()） */
+function stateText(altitude, sun) {
+    if (altitude >= 60) return t('接近天顶 · 阳光强烈');
+    if (altitude >= 30) return t('高空 · 光照充足');
+    if (altitude >= 10) return t('斜射 · 光线偏暖');
+    if (altitude >= 0) return t('贴近地平线 · 黄金时刻');
+    if (altitude >= -6) return t('民用曙暮光 · 天仍亮');
+    if (altitude >= -18) return t('天文曙暮光');
+    return sun.polarNight ? t('极夜 · 太阳全天不升') : t('夜间 · 太阳在地平线下');
+}
+
+/* ==================== 渲染 ==================== */
+
+function render() {
+    var now = new Date();
+    var sun = computeSun(current.lat, current.lon, now);
+    var live = currentAltitude(current.lat, current.lon, now);
+
+    renderLocation();
+
+    /*
+     * ---- 太阳在半圆上的位置（示意）----
+     *
+     * 刻意**不**按高度角映射：那样日出（高度角 0°）会跑到弧顶附近，
+     * 一天里的移动方向也是反的，看着很反直觉。
+     * 这里改按「白天的时间进度」铺开：
+     *   日出 → 左地平线，正午（上中天）→ 弧顶，日落 → 右地平线。
+     * 这是纯粹的示意图（像天气应用那样），**与真实方位角无关**；
+     * 真实方位角由下方「当前方位角」的读数负责。
+     */
+    var progress;
+    if (sun.polarDay) {
+        progress = 0.5;        // 极昼：太阳整天不落，示意在弧顶
+    } else if (sun.polarNight) {
+        progress = null;       // 极夜：太阳整天不升，不画圆点
+    } else {
+        progress = (live.trueSolarHours - sun.sunriseLocal) /
+            (sun.sunsetLocal - sun.sunriseLocal);
+        // 日出前 / 日落后钉在两端，避免跑到弧外面去
+        progress = Math.max(0, Math.min(1, progress));
+    }
+
+    var dot = document.getElementById('sunDot');
+    if (progress === null) {
+        dot.style.display = 'none';
+    } else {
+        dot.style.display = '';
+        // 0 → 左端(16,92)、90° → 弧顶(100,8)、180° → 右端(184,92)
+        var rad = progress * 180 * DEG;
+        dot.setAttribute('cx', (100 - 84 * Math.cos(rad)).toFixed(1));
+        dot.setAttribute('cy', (92 - 84 * Math.sin(rad)).toFixed(1));
+    }
+    // 在地平线下就换色压暗。用 class 而不是 fill 属性：CSS 会压掉呈现属性
+    // （配色规则见 .sun-arc-wrap #sunDot 的注释）。
+    dot.classList.toggle('is-below', live.altitude < 0);
+
+    // ---- 当前读数：高度角与方位角分开标注，「·」之类分隔符一律不用 ----
+    document.getElementById('sunAltitude').innerText =
+        (live.altitude >= 0 ? '' : '-') + Math.abs(live.altitude).toFixed(1) + '°';
+    document.getElementById('sunAzimuth').innerText =
+        live.azimuth.toFixed(1) + '°';
+    document.getElementById('sunState').innerText = stateText(live.altitude, sun);
+
+    // 日出 / 日落
+    if (sun.polarDay) {
+        document.getElementById('sunrise').innerText = t('极昼');
+        document.getElementById('sunset').innerText = t('极昼');
+        document.getElementById('sunriseSub').innerText = t('太阳全天不落');
+        document.getElementById('sunsetSub').innerText = t('太阳全天不落');
+    } else if (sun.polarNight) {
+        document.getElementById('sunrise').innerText = t('极夜');
+        document.getElementById('sunset').innerText = t('极夜');
+        document.getElementById('sunriseSub').innerText = t('太阳全天不升');
+        document.getElementById('sunsetSub').innerText = t('太阳全天不升');
+    } else {
+        document.getElementById('sunrise').innerText = hoursToClock(sun.sunrise);
+        document.getElementById('sunset').innerText = hoursToClock(sun.sunset);
+        document.getElementById('sunriseSub').innerText = t('北京时间');
+        document.getElementById('sunsetSub').innerText = t('北京时间');
+    }
+
+    // 正午高度角
+    var noon = Math.max(0, sun.noonAltitude);
+    document.getElementById('noonAngle').innerText = noon.toFixed(1) + '°';
+    document.getElementById('noonSub').innerText =
+        sun.noonAltitude < 0 ? t('太阳未升起')
+            : t('出现在地方时 ') + hoursToClock(sun.solarNoonLocal);
+
+    // 昼长
+    document.getElementById('dayLength').innerText = hoursToDuration(sun.dayLength);
+    document.getElementById('dayLengthSub').innerText =
+        sun.polarDay ? t('极昼') : (sun.polarNight ? t('极夜') : t('日出至日落'));
+
+    // 日出日落方位
+    var declRad = sun.declination * DEG;
+    if (sun.hasRiseSet) {
+        var riseAz = riseSetAzimuth(current.lat, declRad, true);
+        var setAz = riseSetAzimuth(current.lat, declRad, false);
+        document.getElementById('riseDir').innerText =
+            dirName(riseAz) + ' · ' + riseAz.toFixed(1) + '°';
+        document.getElementById('setDir').innerText =
+            dirName(setAz) + ' · ' + setAz.toFixed(1) + '°';
+    } else {
+        document.getElementById('riseDir').innerText = t('无');
+        document.getElementById('setDir').innerText = t('无');
+    }
+
+    renderLocalTime(sun);
+}
+
+/** 地方时卡片：显示真太阳时（天文意义上的「当地正午 = 12:00」） */
+function renderLocalTime(sun) {
+    var now = new Date();
+    var live = currentAltitude(current.lat, current.lon, now);
+
+    var h = Math.floor(live.trueSolarHours);
+    var m = Math.floor((live.trueSolarHours - h) * 60);
+    document.getElementById('localTime').innerText =
+        String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+
+    document.getElementById('localDate').innerText =
+        now.getFullYear() + '-' +
+        String(now.getMonth() + 1).padStart(2, '0') + '-' +
+        String(now.getDate()).padStart(2, '0');
+
+    // 与「北京时间」的差值 = 经度修正 + 时差方程。
+    // 整句前缀直接拿完整的简体短语当 key（「比北京时间快」），
+    // 这样简体直通得到的就是「比北京时间快」，英文换成 "Ahead of clock time by"，再接时长。
+    var eot = equationOfTime(now);
+    var totalMin = sun.lonCorrectionHours * 60 + eot;
+    var absMin = Math.abs(Math.round(totalMin));
+    document.getElementById('timeDiff').innerText =
+        totalMin === 0 ? t('与北京时间一致')
+            : t(totalMin >= 0 ? '比北京时间快' : '比北京时间慢')
+                + ' ' + hoursToDuration(absMin / 60);
+}
+
+function renderLocation() {
+    var latStr = current.lat >= 0
+        ? current.lat.toFixed(3) + '° N'
+        : Math.abs(current.lat).toFixed(3) + '° S';
+    var lonStr = current.lon >= 0
+        ? current.lon.toFixed(3) + '° E'
+        : Math.abs(current.lon).toFixed(3) + '° W';
+
+    document.getElementById('locationText').innerHTML =
+        '<b>' + latStr + '</b>，<b>' + lonStr + '</b>';
+    document.getElementById('locationSource').innerText = current.source;
+}
+
+/* ==================== 交互 ==================== */
+
+function showModal(hint) {
+    document.getElementById('modalHint').innerText = hint || '';
+    document.getElementById('latInput').value = current ? current.lat.toFixed(3) : '';
+    document.getElementById('lngInput').value = current ? current.lon.toFixed(3) : '';
+    document.getElementById('inputModal').classList.add('active');
+}
+
+function closeModal() {
+    document.getElementById('inputModal').classList.remove('active');
+}
+
+document.getElementById('locBtn').onclick = function () {
+    showModal(current ? '修改后立即重新计算。' : '输入坐标以计算当地的太阳数据。');
+};
+
+document.getElementById('confirmBtn').onclick = function () {
+    var lat = parseFloat(document.getElementById('latInput').value);
+    var lng = parseFloat(document.getElementById('lngInput').value);
+
+    if (isNaN(lat) || lat < -90 || lat > 90) {
+        alert('纬度必须在 -90 ~ 90 之间');
+        return;
+    }
+    if (isNaN(lng) || lng < -180 || lng > 180) {
+        alert('经度必须在 -180 ~ 180 之间');
+        return;
+    }
+
+    closeModal();
+    current = { lat: lat, lon: lng, source: '手动输入坐标' };
+    render();
+};
+
+document.getElementById('cancelBtn').onclick = function () {
+    closeModal();
+};
+
+document.getElementById('inputModal').onclick = function (e) {
+    if (e.target === document.getElementById('inputModal')) closeModal();
+};
+
+/* ==================== 启动 ==================== */
+
+function boot() {
+    var latParam = parseFloat(queryParam('lat'));
+    var lonParam = parseFloat(queryParam('lon'));
+
+    if (!isNaN(latParam) && !isNaN(lonParam) &&
+        latParam >= -90 && latParam <= 90 && lonParam >= -180 && lonParam <= 180) {
+        // 安卓侧已经拿到定位：直接用，不打扰用户
+        current = { lat: latParam, lon: lonParam, source: '来自系统定位' };
+        render();
+    } else {
+        // 定位不可用（拒绝授权 / 无信号 / 超时）：退回手动输入，功能不受影响
+        document.getElementById('locationText').innerText = '未获取到坐标';
+        document.getElementById('locationSource').innerText =
+            '定位不可用时，可手动输入经纬度继续使用';
+        showModal('未获取到定位坐标。你可以在系统设置里允许「大致位置」，或直接手动输入经纬度。');
+    }
+
+    // 每秒刷新一次：太阳高度角与地方时都在走动。
+    // 每小时才需要重算的天文量（日出日落等）也一并重算 —— 开销极小，
+    // 而且能自然处理「跨零点」的情况。
+    setInterval(function () {
+        if (current) render();
+    }, 1000);
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+} else {
+    boot();
+}
+</script>
+</body>
+</html>

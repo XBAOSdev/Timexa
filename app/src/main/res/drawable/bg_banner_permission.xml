@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 权限说明横幅底板：与普通卡片同源（surface + 1dp 淡描边 + 14dp 圆角），无阴影 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/surface" />
+    <corners android:radius="@dimen/radius_card" />
+    <stroke
+        android:width="@dimen/stroke_hairline"
+        android:color="@color/stroke" />
+</shape>

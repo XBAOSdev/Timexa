@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  复合秒表。
+  结构：顶部统一顶栏（返回 + 居中标题 + 右侧圆形“说明”图标）／中部秒表列表／底部两行操作条。
+  操作条 = 上行三个等宽等高按钮 + 下行通栏「新建秒表」，避免旧版三个浮动按钮纵向堆叠造成的层级混乱，
+  也避免四键挤一行时「全部暂停」等文案显示不全。
+  顶栏复用 item_topbar，右侧“说明”以 FrameLayout 叠加、且与返回键同为 40dp 圆形图标按钮，
+  这样标题仍严格居中、左右视觉也对称（原先是一枚带文字的胶囊，右侧明显偏重）。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_light"
+    android:orientation="vertical"
+    tools:context=".appyy.miaobiao">
+
+    <!-- 顶栏 -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/item_topbar" />
+
+        <!--
+          右侧「说明」按钮。
+          必须是 ImageButton 而不是「TextView + drawableEnd」：
+          TextView 的 drawable 定位由 padding 决定、**不受 gravity 控制**，
+          没有文字时图标会整体偏到一侧（实测偏下偏右），不可能真正居中。
+          ImageButton + scaleType="fitCenter" 才是与返回键一致的居中做法。
+        -->
+        <!--
+          ⚠ layout_marginEnd 是必须的：这个顶栏容器现在通栏（为了让底部分割线顶到屏幕两边），
+          容器宽度从「屏宽 − 2×screen_padding」变成整屏宽，靠 end 定位的按钮若不补回来就会贴到屏幕右缘。
+        -->
+        <ImageButton
+            android:id="@+id/Tips"
+            android:layout_width="@dimen/back_button_size"
+            android:layout_height="@dimen/back_button_size"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="@dimen/screen_padding"
+            android:background="@drawable/bg_circle"
+            android:contentDescription="@string/stopwatch_tips_title"
+            android:padding="@dimen/icon_button_padding"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_about"
+            android:tint="@color/text_secondary" />
+    </FrameLayout>
+
+    <!-- 秒表列表 -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginStart="@dimen/screen_padding"
+        android:layout_marginEnd="@dimen/screen_padding">
+
+        <ScrollView
+            android:id="@+id/stopwatch_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingTop="@dimen/topbar_gap"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/stopwatchContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/space_m" />
+        </ScrollView>
+
+        <TextView
+            android:id="@+id/empty_hint"
+            style="@style/Text.Caption"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/space_xl"
+            android:text="@string/stopwatch_empty"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </FrameLayout>
+
+    <!--
+      内容区与底部操作条的交界：1dp hairline。有了它，列表滚到底时
+      最后一行不会与按钮糊在一起。
+    -->
+    <include layout="@layout/item_bottom_divider" />
+
+    <!--
+      底部操作条：等高，无容器背景，保持页面素净。
+      四个按钮**排成两行**：一行塞四个时，「全部暂停」「全部继续」这类三/四字文案
+      在等宽四分之一的格子里放不下（Flex 自动缩字号也顶到底了，实测显示不全）。
+      改为「上行三个控制键 + 下行通栏『新建秒表』」：控制键从 1/4 宽升到 1/3 宽，
+      文案放得下；最高频的「新建」独占一行也更好按。
+      到小白条的间距由本页自己写 marginBottom 决定（screen_padding_bottom）——
+      BaseActivity 只负责「不被系统栏盖住」，不负责「主动多留一条」。
+    -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_s"
+        android:layout_marginBottom="@dimen/screen_padding_bottom"
+        android:orientation="vertical"
+        android:layout_marginStart="@dimen/screen_padding"
+        android:layout_marginEnd="@dimen/screen_padding">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/fabReset"
+                style="@style/Btn.Danger.Flex"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="@string/stopwatch_reset" />
+
+            <TextView
+                android:id="@+id/fabPauseAll"
+                style="@style/Btn.Secondary.Flex"
+                android:layout_width="0dp"
+                android:layout_marginStart="@dimen/space_s"
+                android:layout_weight="1"
+                android:text="@string/stopwatch_pause_all" />
+
+            <TextView
+                android:id="@+id/fabResumeAll"
+                style="@style/Btn.Secondary.Flex"
+                android:layout_width="0dp"
+                android:layout_marginStart="@dimen/space_s"
+                android:layout_weight="1"
+                android:text="@string/stopwatch_resume_all" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/fabAdd"
+            style="@style/Btn.Primary.Flex"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/space_s"
+            android:text="@string/stopwatch_add" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  桌面小组件的底板：莫兰迪淡黄纯色。
+
+  为什么不做毛玻璃（历史方案的取舍，记在这里免得又被改回去）：
+  AppWidget 跑在宿主（桌面）进程里，无法对桌面壁纸做实时取样与模糊 —— 这是 Android 的硬限制。
+  历史做法是「半透明白 + 白色高光边」来近似，但它有个治不好的毛病：
+  透出来的底色由壁纸决定，壁纸一深一浅，同一个小工具的可读性就一好一坏，
+  而且半透明会让数字看起来发虚。改纯色之后，任何壁纸下观感一致、数字也更实在。
+
+  不画描边：既是「纯色填充」的初衷，也避免浅色壁纸上多出一圈硬边。
+
+  圆角取 20dp：组件比应用内卡片大，小圆角在大尺寸下显方硬；
+  但也比旧的 24dp（4×2 时代）收了一档 —— 2×2 的块头小，圆角太大就没有「面」了。
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <solid android:color="@color/widget_solid_fill" />
+
+    <corners android:radius="@dimen/widget_radius" />
+</shape>

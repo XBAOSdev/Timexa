@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 竖向选择弹窗里的一行：整行按钮，选中态由代码换成主按钮样式 -->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Btn.Secondary"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/button_height"
+    android:layout_marginBottom="@dimen/space_s" />

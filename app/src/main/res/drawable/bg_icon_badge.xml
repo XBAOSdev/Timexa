@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 图标底座：低饱和淡底 + 小圆角，替代大面积彩色块 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/accent_tint" />
+    <corners android:radius="@dimen/radius_badge" />
+</shape>

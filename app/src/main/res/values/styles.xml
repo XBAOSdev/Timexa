@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      公共样式表。布局里只写结构与 id，视觉全部收敛到这里，
+      保证全 App 风格统一、也避免逐处硬编码造成风格漂移。
+
+      命名约定：
+        Text.*   文字角色
+        Card.*   容器
+        Btn.*    按钮（一律由 TextView 承载，避开 Material Button 的 tint / 大写 / minHeight 干扰）
+        Field    输入框       Result  结果展示
+    -->
+
+    <!-- ==================== 文字角色 ==================== -->
+
+    <!--
+      基样式：必须存在。
+      带点号的样式名会隐式继承点号之前的部分（Text.Title 的父样式是 Text），
+      若这一层不存在，aapt2 会直接报 "resource style/Text not found" 而链接失败。
+      这里保持空壳，只作为继承根，不注入任何默认值。
+    -->
+    <style name="Text" />
+
+    <!-- 页面主标题：置顶居中 -->
+    <style name="Text.Title">
+        <item name="android:textSize">@dimen/text_title</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <!-- 深色屏（时钟立台）上的主标题 -->
+    <style name="Text.Title.Oled">
+        <item name="android:textColor">@color/oled_text_dim</item>
+    </style>
+
+    <!-- 超大展示数字。字号由布局给出，这里只定颜色与留白策略 -->
+    <style name="Text.Display">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <!-- 深色屏（时钟立台）上的展示数字：柔白而非纯白，减少 OLED 烧屏与夜间刺眼 -->
+    <style name="Text.Display.Oled">
+        <item name="android:textColor">@color/oled_text_bright</item>
+    </style>
+
+    <!-- 分区标题 / 卡片内主文案 -->
+    <style name="Text.Section">
+        <item name="android:textSize">@dimen/text_body_large</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- 设置行的标题：与正文同字号但不加粗，让整页更素 -->
+    <style name="Text.Row">
+        <item name="android:textSize">@dimen/text_body_large</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <!-- 字段标签 -->
+    <style name="Text.Label">
+        <item name="android:textSize">@dimen/text_body</item>
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+
+    <!-- 数值 / 只读展示 -->
+    <style name="Text.Value">
+        <item name="android:textSize">@dimen/text_body_large</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <!-- 辅助说明 -->
+    <style name="Text.Caption">
+        <item name="android:textSize">@dimen/text_caption</item>
+        <item name="android:textColor">@color/text_tertiary</item>
+    </style>
+
+    <!-- ==================== 容器 ==================== -->
+
+    <!-- 卡片：白底 + 1dp 淡描边。不用阴影堆叠层次，保持素净 -->
+    <style name="Card">
+        <item name="android:background">@drawable/bg_card</item>
+        <item name="android:padding">@dimen/card_padding</item>
+    </style>
+
+    <!-- 卡片内部的可点击行：无描边，仅按压变色 -->
+    <style name="Card.Row">
+        <item name="android:background">@drawable/bg_row_tappable</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <!-- 输入框 -->
+    <style name="Field">
+        <item name="android:background">@drawable/bg_input</item>
+        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="android:textSize">@dimen/text_body_large</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textColorHint">@color/text_tertiary</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:paddingStart">@dimen/space_m</item>
+        <item name="android:paddingEnd">@dimen/space_m</item>
+    </style>
+
+    <!-- ==================== 控件 ==================== -->
+
+    <style name="Btn">
+        <item name="android:layout_height">@dimen/button_height</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/text_body_large</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:paddingStart">@dimen/space_m</item>
+        <item name="android:paddingEnd">@dimen/space_m</item>
+        <!--
+          高度是固定的 button_height，文字一旦折成两行就会被上下裁掉，
+          看起来像「按钮没对齐」。所以这里锁死单行：换语言后文案变长时，
+          宁可缩小字号（见下面的 Btn.*.Flex）或省略号收尾，也不允许折行。
+        -->
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <!-- 主操作：实底强调色 -->
+    <style name="Btn.Primary">
+        <item name="android:background">@drawable/bg_btn_primary</item>
+        <item name="android:textColor">@color/text_on_accent</item>
+    </style>
+
+    <!-- 次操作：白底描边 -->
+    <style name="Btn.Secondary">
+        <item name="android:background">@drawable/bg_btn_secondary</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <!-- 破坏性操作：白底 + 低饱和红描边，不抢视觉 -->
+    <style name="Btn.Danger">
+        <item name="android:background">@drawable/bg_btn_danger</item>
+        <item name="android:textColor">@color/danger</item>
+    </style>
+
+    <!--
+      ========== 等宽操作条里的按钮（自适应字号） ==========
+
+      用于「一排按钮各占 1/N 宽」的操作条（layout_width=0dp + weight=1）。
+      这种按钮的宽度是**确定的**，因此可以安全启用自适应字号 ——
+      中英文文案长度差很多（「暂停」2 字 vs "Pause all" 9 字符），
+      字号能自己缩到放得下，就不会出现英文模式下某个按钮折行、整排高度不齐的问题。
+
+      ⚠ 这套样式加在基类 Btn 上会出事：Btn 也被 wrap_content 的按钮用着，
+        而自适应字号要求宽度确定（官方明确不推荐用在 wrap_content 上）。
+        所以只能按「底色 × 自适应」逐个组合，用显式 parent 叠加。
+
+      ⚠ 三个 Flex 的四个属性必须保持一致，改一个就一起改。
+    -->
+    <style name="Btn.Primary.Flex" parent="Btn.Primary">
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">@dimen/text_caption</item>
+        <item name="autoSizeMaxTextSize">@dimen/text_body_large</item>
+        <item name="autoSizeStepGranularity">1sp</item>
+    </style>
+
+    <style name="Btn.Secondary.Flex" parent="Btn.Secondary">
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">@dimen/text_caption</item>
+        <item name="autoSizeMaxTextSize">@dimen/text_body_large</item>
+        <item name="autoSizeStepGranularity">1sp</item>
+    </style>
+
+    <style name="Btn.Danger.Flex" parent="Btn.Danger">
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">@dimen/text_caption</item>
+        <item name="autoSizeMaxTextSize">@dimen/text_body_large</item>
+        <item name="autoSizeStepGranularity">1sp</item>
+    </style>
+
+    <!--
+      分段控件单元：选中态由 textColor 着色器切换，白底滑块由轨道里的独立 View 承担。
+
+      宽度恒为 0dp + weight=1（宽度确定），因此可以安全启用自适应字号：
+      设置页的语言分段有 4 格、主题分段有 3 格，切到英文后 "System"/"Light"/"Dark"
+      比中文更长，字号能自己缩一档就不会折行 —— 高度是固定的，折行必被裁。
+    -->
+    <style name="Segment">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">@dimen/button_height_small</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/bg_segment</item>
+        <item name="android:textColor">@color/segment_text</item>
+        <item name="android:textSize">@dimen/text_body</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">@dimen/segment_text_min</item>
+        <item name="autoSizeMaxTextSize">@dimen/text_body</item>
+        <item name="autoSizeStepGranularity">1sp</item>
+    </style>
+
+    <!-- ==================== 日期计算器 ==================== -->
+
+    <!--
+      答案：居中的大字，**没有框、没有底色**。
+      旧版结果框与输入框在圆角（radius_input 10dp）、高度（button_height 48dp）、
+      内边距（space_m 16dp）、字号（text_body_large 17sp）上完全相同，底色只差 5 个灰阶
+      （surface #FFFFFF vs surface_sunken #FAFAFA）—— 页面上根本没有「答案」这个角色，
+      用户分不清哪一格要填、哪一格会出结果。去掉框、把字号拉到 28sp 才把角色立起来。
+
+      字号不写在这里，由代码按内容切：数字 28sp / 日期 22sp / 提示与错误 15sp。
+      加粗也不用 textStyle，而是用 StyleSpan **只加粗数字那一段**（单位保持常规字重）。
+    -->
+    <style name="Text.Answer">
+        <item name="android:textSize">@dimen/text_large_title</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:gravity">center</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <!-- 答案下面那行辅助说明（「13 周 1 天」/ 推算出来的那天是星期几） -->
+    <style name="Text.Answer.Aux">
+        <item name="android:textSize">@dimen/text_body</item>
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+
+    <!--
+      快捷日期条里的一枚胶囊（「今天 / 前一天 / 一周后」）。
+      与主按钮的差别：淡底 + 强调色文字，读起来是「一条建议」而不是「一步操作」——
+      这一排东西的身份是「省掉一次 8 位手输」，不该和「算一算」抢同一个视觉层级。
+      ⚠ 文字色走 @color/quick_chip_text 而不是直接给 accent_deep：
+        点中时底色会翻成实心强调色（state_selected），文字必须同时翻成反色才读得清。
+      ⚠ 自适应字号：英文 `1 month ago` 比中文长得多，装不下时由它缩一档。
+        自适应要求宽度确定，所以调用方在整条装不下时会把它改成 0dp + weight=1
+        （见 CalculatorDate.showQuickBar）。
+    -->
+    <style name="QuickChip">
+        <item name="android:background">@drawable/bg_quick_chip</item>
+        <item name="android:textSize">@dimen/text_body</item>
+        <item name="android:textColor">@color/quick_chip_text</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingStart">@dimen/chip_padding_h</item>
+        <item name="android:paddingEnd">@dimen/chip_padding_h</item>
+        <item name="android:paddingTop">@dimen/space_s</item>
+        <item name="android:paddingBottom">@dimen/space_s</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">@dimen/text_caption</item>
+        <item name="autoSizeMaxTextSize">@dimen/text_body</item>
+        <item name="autoSizeStepGranularity">1sp</item>
+    </style>
+</resources>

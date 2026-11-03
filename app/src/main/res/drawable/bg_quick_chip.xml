@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  快捷日期条里的一枚胶囊（「今天 / 明天 / 一周后」）。
+
+  底色取 accent_tint（与「运行中」状态胶囊同源）而不是中性灰：
+    这一排东西是**建议**，点一下就会真的往输入框里填字；中性灰底 + 深灰字读起来像不可点，
+    而 accent_tint 已经是本 App 表达「可点的附加信息」的既有语汇。
+    文字用更深的 accent_deep（accent 在淡蓝底上对比度约 3.4:1，偏弱；deep 约 4.6:1，够 AA）。
+
+  按下态用 accent_tint_pressed（同一色相再沉一档），与全 App 的按压语言一致。
+  不描边：它在白底浮层上，底色本身就够区分了，再加线会让这一排变脏。
+
+  ⚠ state_selected 是「被点中后亮一下」用的，**不是**选中态：
+   这一排胶囊是「相对当前日期的偏移」，点下去会把输入框的日期挪一格、浮层**不收起**，
+   所以它没有「选中」这种持久状态。选中态这里只承担一个职责 ——
+   点完那一下把底色翻成实心，让用户明确看到自己点到了（约 420ms 后落回常态）。
+   文字色同步翻成反色，见 res/color/quick_chip_text.xml。
+   顺序要紧：selected 必须排在 pressed 之前，否则连点时会看不见那一下。
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/accent_deep" />
+            <corners android:radius="@dimen/radius_chip" />
+        </shape>
+    </item>
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/accent_tint_pressed" />
+            <corners android:radius="@dimen/radius_chip" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/accent_tint" />
+            <corners android:radius="@dimen/radius_chip" />
+        </shape>
+    </item>
+</selector>
