@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   单条秒表卡片。
-  可交互元素只有三处，且都给了明确的视觉线索：
+  可交互元素有四处，且都给了明确的视觉线索：
     标题（带铅笔图标 → 重命名）、时间（点 → 打开单表专注页看大图 + 计次）、
-    右侧两枚圆形按钮（暂停/继续、删除）。
+    右侧三枚圆形按钮（归零、暂停/继续、删除）。
   时间使用等宽字体，避免数字跳动时整行宽度抖动。
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -73,8 +73,8 @@
 
     <!--
       第二行：时间 + 控制按钮。
-      时间与两枚按钮在**同一条水平中心线**上，但不共用行高：时间自己带
-      minHeight = icon_button_size，于是这一行至少和两个圆钮一样高，文字永远不会
+      时间与三枚按钮在**同一条水平中心线**上，但不共用行高：时间自己带
+      minHeight = icon_button_size，于是这一行至少和圆钮一样高，文字永远不会
       被比自己还高的相邻控件压在中间；includeFontPadding 也保持开启（Text.Display
       默认关了它，导致等宽字体的数字上下被吃掉一点，正是旧版「数字被裁」的来源），
       这里显式打开，让字身上下的行距空间归位。
@@ -89,9 +89,11 @@
         <!--
           时间文本：可点 → 打开单表专注页（放大展示 + 计次）。
           自适应字号 + 强制单行：时长会一直变宽（`0:00:00.0` → `100:00:00.0`），
-          36sp 等宽字体下 10 个字符就已经超过这一行留给它的宽度，旧版会直接把整串
-          折成两行。宽度方向是「0dp + weight」的确定约束（autosize 的标准用法），
-          数字变长时字号自动降档，绝不换行。
+          宽度方向是「0dp + weight」的确定约束（autosize 的标准用法），
+          数字变长时字号自动降档（36sp → 20sp），绝不换行。
+          2026-11-03 起本行多了一枚「归零」圆钮，留给时间的宽度更窄：autosize 触底
+          20sp 后若仍放不下（约 1000 小时以上的极端时长），靠 ellipsize=end 保底裁尾，
+          保证三个圆钮永远完整可见 —— 时间可以被裁，操作不能被挤出屏幕。
         -->
         <TextView
             android:id="@+id/timeTextView"
@@ -101,6 +103,7 @@
             android:layout_weight="1"
             android:clickable="true"
             android:focusable="true"
+            android:ellipsize="end"
             android:fontFamily="monospace"
             android:gravity="start|center_vertical"
             android:includeFontPadding="true"
@@ -111,10 +114,27 @@
             app:autoSizeMinTextSize="@dimen/text_stopwatch_display_min"
             app:autoSizeTextType="uniform" />
 
+        <!--
+          归零：时长清零并清空本表计次（与专注页「归零」同一套语义与确认弹窗）。
+          颜色刻意用中性灰：这一排从左到右是「中性（归零）→ 主题色（启停）→ 危险色（删除）」，
+          越靠右后果越重，颜色深浅与之对齐。
+        -->
+        <ImageButton
+            android:id="@+id/resetButton"
+            android:layout_width="@dimen/icon_button_size"
+            android:layout_height="@dimen/icon_button_size"
+            android:background="@drawable/bg_circle"
+            android:contentDescription="@string/stopwatch_focus_reset"
+            android:padding="@dimen/row_action_padding"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_reset"
+            app:tint="@color/text_secondary" />
+
         <ImageButton
             android:id="@+id/toggleButton"
             android:layout_width="@dimen/icon_button_size"
             android:layout_height="@dimen/icon_button_size"
+            android:layout_marginStart="@dimen/space_s"
             android:background="@drawable/bg_circle"
             android:contentDescription="@string/stopwatch_pause_all"
             android:padding="@dimen/row_action_padding"

@@ -640,6 +640,7 @@ class miaobiao : BaseActivity() {
         private val statusView: TextView = view.findViewById(R.id.statusChip)
         private val lapBadge: TextView = view.findViewById(R.id.lapBadge)
         private val toggleButton: ImageButton = view.findViewById(R.id.toggleButton)
+        private val resetButton: ImageButton = view.findViewById(R.id.resetButton)
         private val deleteButton: ImageButton = view.findViewById(R.id.deleteButton)
 
         var name: String = record.name
@@ -652,10 +653,11 @@ class miaobiao : BaseActivity() {
             // 改为「点开大图」：进入专注页整页展示这一个表，并能计次。
             timeView.setOnClickListener { openFocus() }
             toggleButton.setOnClickListener { toggle() }
+            resetButton.setOnClickListener { confirmReset() }
             deleteButton.setOnClickListener { removeCard(this) }
             // ⚠ timeView 也要一起挂：它同样是「点了有反应」的控件（进专注页），
             //   之前漏了它，表现为这一行只有名字和两个圆钮按下去有反馈。
-            PressFeedback.attachAll(nameView, timeView, toggleButton, deleteButton)
+            PressFeedback.attachAll(nameView, timeView, resetButton, toggleButton, deleteButton)
             renderState()
             // 首帧就把徽标画上，避免「先没有、onResume 才冒出来」的跳动
             renderLapBadge(lapCounts[record.id] ?: 0)
@@ -700,6 +702,39 @@ class miaobiao : BaseActivity() {
 
         fun toggle() {
             if (record.isRunning) pause() else resume()
+        }
+
+        /**
+         * 归零（列表卡片上的快捷入口，2026-11-03 用户反馈新增）。
+         *
+         * 语义与专注页的「归零」（[StopwatchFocus.confirmReset]）严格一致：
+         * 时长清零 + 清空本表计次，名称与运行状态保留 —— 正在跑的表归零后立刻从 0 继续走，
+         * 这正是「重开一局」类用法想要的节奏，不必先暂停再归零。
+         *
+         * 弹窗与文案也完全复用专注页那套（零新增字符串）：毕竟两处写的是同一个动作，
+         * 用户在哪儿看到它都该长一个样。本表本来就在零点且没有计次时直接不响应
+         * （没有东西可清，弹窗只会让人困惑）。
+         */
+        private fun confirmReset() {
+            val hasLaps = (lapCounts[record.id] ?: 0) > 0
+            if (elapsedMillis() == 0L && !hasLaps) return
+            AppDialog.confirm(
+                context = this@miaobiao,
+                title = getString(R.string.stopwatch_focus_reset),
+                message = getString(R.string.stopwatch_focus_reset_confirm),
+                positive = getString(R.string.dialog_delete),
+                negative = getString(R.string.stopwatch_cancel),
+                positiveIsDanger = true,
+                onPositive = {
+                    clearLapsOf(record.id)
+                    record.pausedElapsed = 0L
+                    // createdTimestamp 重新当「本段起点」用（计时模型决定的，见类注释）
+                    record.createdTimestamp = System.currentTimeMillis()
+                    renderLapBadge(lapCounts[record.id] ?: 0)
+                    renderState()
+                    persist()
+                }
+            )
         }
 
         fun pause(silent: Boolean = false) {
